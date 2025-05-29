@@ -1,6 +1,6 @@
 "use client";
 import React from "react";
-import clsx from "clsx"; // optional for className toggling
+import clsx from "clsx";
 import { useScrollDirection } from "@/lib/hooks/useScrollDirection";
 
 const Header = () => {
