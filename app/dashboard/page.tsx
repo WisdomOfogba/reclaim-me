@@ -26,87 +26,104 @@ import {
 } from "@/components/ui/sidebar";
 // import { ReportsList } from "@/components/reports-list"
 // import { UserProfile } from "@/components/user-profile"
-import { ThemeProvider } from "@/components/theme-provider";
-import dynamic from "next/dynamic";
+// import { ThemeProvider } from "@/components/theme-provider";
 import Link from "next/link";
+
+
+const stats = [
+  {
+    title: "Total Reports",
+    value: "1,247",
+    change: "+12%",
+    icon: FileText,
+    color: "text-blue-600",
+  },
+  {
+    title: "Under Investigation",
+    value: "89",
+    change: "+5%",
+    icon: Clock,
+    color: "text-yellow-600",
+  },
+  {
+    title: "Resolved Cases",
+    value: "1,158",
+    change: "+8%",
+    icon: CheckCircle,
+    color: "text-green-600",
+  },
+  {
+    title: "Active Users",
+    value: "2,341",
+    change: "+15%",
+    icon: Users,
+    color: "text-purple-600",
+  },
+];
+
+const recentReports = [
+  {
+    id: "RPT-2024-001",
+    type: "Financial Fraud",
+    status: "Under Review",
+    date: "2024-01-15",
+    priority: "High",
+  },
+  {
+    id: "RPT-2024-002",
+    type: "Identity Theft",
+    status: "Investigating",
+    date: "2024-01-14",
+    priority: "Medium",
+  },
+  {
+    id: "RPT-2024-003",
+    type: "Online Scam",
+    status: "Resolved",
+    date: "2024-01-13",
+    priority: "Low",
+  },
+  {
+    id: "RPT-2024-004",
+    type: "Investment Fraud",
+    status: "Under Review",
+    date: "2024-01-12",
+    priority: "High",
+  },
+];
+
+const getStatusColor = (status: string) => {
+  switch (status) {
+    case "Under Review":
+      return "bg-yellow-100 text-yellow-800";
+    case "Investigating":
+      return "bg-blue-100 text-blue-800";
+    case "Resolved":
+      return "bg-green-100 text-green-800";
+    default:
+      return "bg-gray-100 text-gray-800";
+  }
+};
+
+const getPriorityColor = (priority: string) => {
+  switch (priority) {
+    case "High":
+      return "bg-red-100 text-red-800";
+    case "Medium":
+      return "bg-yellow-100 text-yellow-800";
+    case "Low":
+      return "bg-green-100 text-green-800";
+    default:
+      return "bg-gray-100 text-gray-800";
+  }
+};
+
 
 export default function Dashboard() {
   const [activeSection, setActiveSection] = useState("overview");
 
-  const recentReports = [
-    {
-      id: "RPT-2024-001",
-      type: "Financial Fraud",
-      status: "Under Review",
-      date: "2024-01-15",
-      priority: "High",
-    },
-    {
-      id: "RPT-2024-002",
-      type: "Identity Theft",
-      status: "Investigating",
-      date: "2024-01-14",
-      priority: "Medium",
-    },
-    {
-      id: "RPT-2024-003",
-      type: "Online Scam",
-      status: "Resolved",
-      date: "2024-01-13",
-      priority: "Low",
-    },
-    {
-      id: "RPT-2024-004",
-      type: "Investment Fraud",
-      status: "Under Review",
-      date: "2024-01-12",
-      priority: "High",
-    },
-  ];
-
-  const getStatusColor = (status: string) => {
-    switch (status) {
-      case "Under Review":
-        return "bg-yellow-100 text-yellow-800";
-      case "Investigating":
-        return "bg-blue-100 text-blue-800";
-      case "Resolved":
-        return "bg-green-100 text-green-800";
-      default:
-        return "bg-gray-100 text-gray-800";
-    }
-  };
-
-  const getPriorityColor = (priority: string) => {
-    switch (priority) {
-      case "High":
-        return "bg-red-100 text-red-800";
-      case "Medium":
-        return "bg-yellow-100 text-yellow-800";
-      case "Low":
-        return "bg-green-100 text-green-800";
-      default:
-        return "bg-gray-100 text-gray-800";
-    }
-  };
-
   return (
-    <ThemeProvider defaultTheme="light" storageKey="reclaimme-theme">
-      <SidebarProvider>
-        <AppSidebar
-          activeSection={activeSection}
-          setActiveSection={setActiveSection}
-        />
-        <SidebarInset>
-          <header className="flex h-16 shrink-0 items-center gap-2 border-b px-4">
-            <SidebarTrigger className="-ml-1" />
-            <div className="flex items-center gap-2">
-              <AlertTriangle className="h-6 w-6 text-red-600" />
-              <h1 className="text-xl font-semibold">ReclaimMe Dashboard</h1>
-            </div>
-          </header>
-
-          <main className="flex-1 space-y-4 p-4 md:p-8 pt-6">
+   activeSection === "overview" && (
               <>
                 <div className="flex items-center justify-between space-y-2">
                   <h2 className="text-3xl font-bold tracking-tight">
@@ -187,102 +204,53 @@ export default function Dashboard() {
                       </CardDescription>
                     </CardHeader>
                     <CardContent className="space-y-4">
-                      <Button
-                        className="w-full justify-start"
-                        variant="outline"
-                        onClick={() => setActiveSection("submit")}
+                      <Link
+                        href="/dashboard/reports/new"
+                        className="w-full block justify-start"
                       >
-                        <FileText className="mr-2 h-4 w-4" />
-                        Submit New Report
-                      </Button>
-                      <Link href="/dashboard/reports">
                         <Button
-                          className="w-full justify-start"
+                          className="w-full"
                           variant="outline"
-                          // onClick={() => setActiveSection("reports")}
                         >
+                          <FileText className="mr-2 h-4 w-4" />
+                          Submit New Report
+                        </Button>
+                      </Link>
+                      <Link
+                        href="/dashboard/reports"
+                        className="w-full block justify-start"
+                      >
+                        <Button className="w-full" variant="outline">
                           <Clock className="mr-2 h-4 w-4" />
                           Check Report Status
                         </Button>
                       </Link>
 
-                      <Button
-                        className="w-full justify-start"
-                        variant="outline"
+                      <Link
+                        href="/dashboard/analytics"
+                        className="w-full block justify-start"
                       >
-                        <TrendingUp className="mr-2 h-4 w-4" />
-                        View Analytics
-                      </Button>
+                        <Button
+                          className="w-full"
+                          variant="outline"
+                        >
+                          <TrendingUp className="mr-2 h-4 w-4" />
+                          View Analytics
+                        </Button>
+                      </Link>
+                      <Link href="/contact-support" className="w-full block justify-start">
                       <Button
-                        className="w-full justify-start"
+                        className="w-full"
                         variant="outline"
-                      >
+                        >
                         <Users className="mr-2 h-4 w-4" />
                         Contact Support
                       </Button>
+                    </Link>
                     </CardContent>
                   </Card>
                 </div>
               </>
-            
-            {/* {activeSection === "reports" && <ReportsList />}
-
-            {activeSection === "profile" && <UserProfile />}
-
-            {activeSection === "submit" && (
-              <div className="space-y-6">
-                <div>
-                  <h2 className="text-3xl font-bold tracking-tight">
-                    Submit Report
-                  </h2>
-                  <p className="text-muted-foreground">
-                    This feature will be available soon
-                  </p>
-                </div>
-              </div>
-            )}
-
-            {activeSection === "search" && (
-              <div className="space-y-6">
-                <div>
-                  <h2 className="text-3xl font-bold tracking-tight">
-                    Search Cases
-                  </h2>
-                  <p className="text-muted-foreground">
-                    This feature will be available soon
-                  </p>
-                </div>
-              </div>
-            )}
-
-            {activeSection === "analytics" && (
-              <div className="space-y-6">
-                <div>
-                  <h2 className="text-3xl font-bold tracking-tight">
-                    Analytics
-                  </h2>
-                  <p className="text-muted-foreground">
-                    This feature will be available soon
-                  </p>
-                </div>
-              </div>
-            )}
-
-            {activeSection === "settings" && (
-              <div className="space-y-6">
-                <div>
-                  <h2 className="text-3xl font-bold tracking-tight">
-                    Settings
-                  </h2>
-                  <p className="text-muted-foreground">
-                    This feature will be available soon
-                  </p>
-                </div>
-              </div>
-            )} */}
-          </main>
-        </SidebarInset>
-      </SidebarProvider>
-    </ThemeProvider>
+            )
   );
 }

@@ -13,49 +13,38 @@ import {
   SidebarMenuButton,
   SidebarMenuItem,
 } from "@/components/ui/sidebar"
+import Link from "next/link"
 
 const menuItems = [
   {
     title: "Overview",
     url: "#",
     icon: Home,
-    id: "overview",
+    href: "/dashboard"
   },
   {
     title: "Submit Report",
     url: "#",
     icon: Plus,
-    id: "submit",
+    href: "/dashboard/reports/new"
   },
   {
     title: "My Reports",
     url: "#",
     icon: FileText,
-    id: "reports",
-  },
-  {
-    title: "Search Cases",
-    url: "#",
-    icon: Search,
-    id: "search",
+    href: "/dashboard/reports"
   },
   {
     title: "Analytics",
     url: "#",
     icon: BarChart3,
-    id: "analytics",
-  },
-  {
-    title: "Profile",
-    url: "#",
-    icon: User,
-    id: "profile",
+    href: "/dashboard/analytics"
   },
   {
     title: "Settings",
     url: "#",
     icon: Settings,
-    id: "settings",
+    href: "/dashboard/settings"
   },
 ]
 
@@ -86,10 +75,12 @@ export function AppSidebar({ activeSection, setActiveSection }: AppSidebarProps)
             <SidebarMenu>
               {menuItems.map((item) => (
                 <SidebarMenuItem key={item.title}>
-                  <SidebarMenuButton onClick={() => setActiveSection(item.id)} isActive={activeSection === item.id}>
+                  <Link href={item.href} className="w-full block justify-start">
+                  <SidebarMenuButton onClick={() => setActiveSection(item.href)} isActive={activeSection === item.href}>
                     <item.icon />
                     <span>{item.title}</span>
                   </SidebarMenuButton>
+                  </Link>
                 </SidebarMenuItem>
               ))}
             </SidebarMenu>
