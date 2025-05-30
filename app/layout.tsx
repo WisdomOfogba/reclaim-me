@@ -1,33 +1,32 @@
-import type { Metadata } from "next";
-import { Roboto } from "next/font/google";
-import "./globals.css";
+import type React from "react"
+import type { Metadata } from "next"
+import { Inter } from "next/font/google"
+import "@/styles/globals.css"
+import { Toaster } from "@/components/ui/toaster"
 
-const roboto = Roboto({
-  variable: "--font-roboto",
-  subsets: ["latin"],
-});
+const inter = Inter({ subsets: ["latin"] })
 
 export const metadata: Metadata = {
   title: {
-    default: "ReclaimMe - AI Legal Letter Generator",
+    default: "ReclaimMe - Victim Support Portal",
     template: "%s | ReclaimMe",
   },
-  description:
-    "Easily generate professional legal letters for scams or incidents using AI. Streamline your response and protect your rights with ReclaimMe.",
-};
+  description: "Report illegal or fraudulent activities to government officials",
+}
 
 export default function RootLayout({
   children,
-}: Readonly<{
-  children: React.ReactNode;
-}>) {
+}: {
+  children: React.ReactNode
+}) {
   return (
     <html lang="en" className="scroll-smooth">
-      <body className={`${roboto.variable} antialiased`}>
+      <body className={`${inter.className} antialiased`}>
         <div className=" font-[family-name:var(--font-roboto)]">
           {children}
+          <Toaster />
         </div>
       </body>
     </html>
-  );
+  )
 }
