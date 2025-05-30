@@ -1,32 +1,39 @@
-import type React from "react"
-import type { Metadata } from "next"
-import { Inter } from "next/font/google"
-import "@/styles/globals.css"
-import { Toaster } from "@/components/ui/toaster"
+import type React from "react";
+import type { Metadata } from "next";
+import { Inter } from "next/font/google";
+import "@/styles/globals.css";
+import { Toaster } from "@/components/ui/toaster";
+import { ThemeProviders } from "@/lib/context/ThemeProviders";
 
-const inter = Inter({ subsets: ["latin"] })
+const inter = Inter({ subsets: ["latin"] });
 
 export const metadata: Metadata = {
   title: {
     default: "ReclaimMe - Victim Support Portal",
     template: "%s | ReclaimMe",
   },
-  description: "Report illegal or fraudulent activities to government officials",
-}
+  description:
+    "Report illegal or fraudulent activities to government officials",
+};
 
 export default function RootLayout({
   children,
 }: {
-  children: React.ReactNode
+  children: React.ReactNode;
 }) {
   return (
-    <html lang="en" className="scroll-smooth">
+    <html lang="en" className="scroll-smooth" suppressHydrationWarning>
       <body className={`${inter.className} antialiased`}>
-        <div className=" font-[family-name:var(--font-roboto)]">
+        <ThemeProviders
+          attribute="class"
+          defaultTheme="system"
+          enableSystem
+          disableTransitionOnChange
+        >
           {children}
-          <Toaster />
-        </div>
+        </ThemeProviders>
+        <Toaster />
       </body>
     </html>
-  )
+  );
 }

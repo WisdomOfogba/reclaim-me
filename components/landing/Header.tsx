@@ -4,6 +4,7 @@ import clsx from "clsx";
 import { useScrollDirection } from "@/lib/hooks/useScrollDirection";
 import Image from "next/image";
 import Link from "next/link";
+import { ThemeToggle } from "../ThemeToggle";
 
 const Header = () => {
   const scrollDirection = useScrollDirection();
@@ -20,18 +21,19 @@ const Header = () => {
           <Link href="/">
             <Image src="/assets/logo.png" alt="Logo" width={100} height={40} />
           </Link>
-            <nav className="hidden md:flex space-x-4">
+          <nav className="hidden md:flex space-x-4">
+            <ThemeToggle />
             <Link href="/signup">
               <button className="px-4 py-2 rounded bg-blue-600 text-white hover:bg-blue-700 transition">
-              Signup
+                Signup
               </button>
             </Link>
             <Link href="/login">
               <button className="px-4 py-2 rounded border border-blue-600 text-blue-600 hover:bg-blue-50 transition">
-              Login
+                Login
               </button>
             </Link>
-            </nav>
+          </nav>
         </div>
       </div>
     </header>
