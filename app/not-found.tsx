@@ -41,9 +41,9 @@ export default function NotFound() {
             asChild
             variant="outline"
             size="lg"
-            className="border-2 border-purple-200 hover:border-purple-300 hover:bg-purple-50 px-8 py-3 rounded-lg transition-all duration-300 w-full"
+            className="border-2 border-purple-200 hover:border-purple-300 hover:bg-purple-50 hover:text-black px-8 py-3 rounded-lg transition-all duration-300 w-full"
           >
-            <Link href="/contact" className="flex items-center gap-2">
+            <Link href="/contact-support" className="flex items-center gap-2">
               <ArrowLeft className="h-5 w-5" />
               Contact Support
             </Link>
@@ -61,7 +61,7 @@ export default function NotFound() {
             </Link>{" "}
             or{" "}
             <Link
-              href="/contact"
+              href="/contact-support"
               className="text-purple-600 hover:text-purple-700 font-medium underline underline-offset-2"
             >
               get in touch
