@@ -23,7 +23,7 @@ const menuItems = [
     href: "/dashboard"
   },
   {
-    title: "Submit Report",
+    title: "Create Report",
     url: "#",
     icon: Plus,
     href: "/dashboard/reports/new"
