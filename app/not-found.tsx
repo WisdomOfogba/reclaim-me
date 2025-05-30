@@ -1,7 +1,7 @@
 import Link from "next/link";
 import { Button } from "@/components/ui/button";
 
-import { Home, ArrowLeft } from "lucide-react";
+import { Home, Phone } from "lucide-react";
 
 export default function NotFound() {
   return (
@@ -15,7 +15,7 @@ export default function NotFound() {
         </div>
 
         <div className="space-y-4">
-          <h2 className="text-3xl md:text-4xl font-bold text-gray-900">
+          <h2 className="text-3xl md:text-4xl font-bold text-gray-900 dark:text-white">
             Oops! Page Not Found
           </h2>
           <p className="text-lg text-gray-600 dark:text-gray-300 max-w-md mx-auto leading-relaxed">
@@ -43,9 +43,9 @@ export default function NotFound() {
             size="lg"
             className="border-2 border-purple-200 hover:border-purple-300 hover:bg-purple-50 dark:bg-black px-8 py-3 rounded-lg transition-all duration-300 w-full"
           >
-            <Link href="/contact-support" className="flex items-center gap-2">
-              <ArrowLeft className="h-5 w-5" />
-              Contact Support
+            <Link href="/contact" className="flex items-center gap-2">
+              <Phone className="h-5 w-5" />
+              Contact
             </Link>
           </Button>
         </div>
@@ -61,7 +61,7 @@ export default function NotFound() {
             </Link>{" "}
             or{" "}
             <Link
-              href="/contact-support"
+              href="/contact"
               className="text-purple-600 hover:text-purple-700 font-medium underline underline-offset-2"
             >
               get in touch
