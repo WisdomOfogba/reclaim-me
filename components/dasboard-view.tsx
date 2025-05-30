@@ -2,27 +2,12 @@
 
 import {
   AlertTriangle,
-  Badge,
-  FileText,
-  Clock,
-  TrendingUp,
-  Users,
-  CheckCircle,
 } from "lucide-react";
 import { ThemeProvider } from "next-themes";
-import { Button } from "@/components/ui/button";
 import { Toaster } from "sonner";
 import { AppSidebar } from "./app-sidebar";
-import {
-  Card,
-  CardHeader,
-  CardTitle,
-  CardContent,
-  CardDescription,
-} from "./ui/card";
 import { SidebarProvider, SidebarInset, SidebarTrigger } from "./ui/sidebar";
 import { useState } from "react";
-import Link from "next/link";
 
 
 

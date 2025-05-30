@@ -24,6 +24,7 @@ const actionTypes = {
   DISMISS_TOAST: "DISMISS_TOAST",
   REMOVE_TOAST: "REMOVE_TOAST",
 } as const
+console.log("actionTypes", actionTypes)
 
 let count = 0
 
@@ -158,10 +159,10 @@ function toast({ ...props }: Toast) {
       ...props,
       id,
       open: true,
-      onOpenChange: (open) => {
+      onOpenChange: (open: boolean) => {
         if (!open) dismiss()
       },
-    },
+    } as ToasterToast,
   })
 
   return {

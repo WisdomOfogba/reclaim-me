@@ -1,6 +1,6 @@
 "use client"
 
-import { AlertTriangle, FileText, BarChart3, Settings, User, Home, Plus, Search, Shield } from "lucide-react"
+import { AlertTriangle, FileText, BarChart3, Settings, Home, Plus, Shield } from "lucide-react"
 import {
   Sidebar,
   SidebarContent,

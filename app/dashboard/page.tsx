@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import {
   Card,
   CardContent,
@@ -10,25 +10,8 @@ import {
 } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
-import {
-  AlertTriangle,
-  FileText,
-  Clock,
-  CheckCircle,
-  Users,
-  TrendingUp,
-} from "lucide-react";
-import { AppSidebar } from "@/components/app-sidebar";
-import {
-  SidebarProvider,
-  SidebarInset,
-  SidebarTrigger,
-} from "@/components/ui/sidebar";
-// import { ReportsList } from "@/components/reports-list"
-// import { UserProfile } from "@/components/user-profile"
-// import { ThemeProvider } from "@/components/theme-provider";
+import { FileText, Clock, CheckCircle, Users, TrendingUp } from "lucide-react";
 import Link from "next/link";
-
 
 const stats = [
   {
@@ -118,139 +101,130 @@ const getPriorityColor = (priority: string) => {
   }
 };
 
-
 export default function Dashboard() {
   const [activeSection, setActiveSection] = useState("overview");
 
+  useEffect(() => {
+    setActiveSection("overview");
+  }, []);
+
   return (
-   activeSection === "overview" && (
-              <>
-                <div className="flex items-center justify-between space-y-2">
-                  <h2 className="text-3xl font-bold tracking-tight">
-                    Overview
-                  </h2>
-                  <div className="flex items-center space-x-2">
-                    <Button>Download Report</Button>
+    activeSection === "overview" && (
+      <>
+        <div className="flex items-center justify-between space-y-2">
+          <h2 className="text-3xl font-bold tracking-tight">Overview</h2>
+          <div className="flex items-center space-x-2">
+            <Button>Download Report</Button>
+          </div>
+        </div>
+
+        <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-4">
+          {stats.map((stat, index) => (
+            <Card key={index}>
+              <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
+                <CardTitle className="text-sm font-medium">
+                  {stat.title}
+                </CardTitle>
+                <stat.icon className={`h-4 w-4 ${stat.color}`} />
+              </CardHeader>
+              <CardContent>
+                <div className="text-2xl font-bold">{stat.value}</div>
+                <p className="text-xs text-muted-foreground">
+                  <span className="text-green-600">{stat.change}</span> from
+                  last month
+                </p>
+              </CardContent>
+            </Card>
+          ))}
+        </div>
+
+        <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-7">
+          <Card className="col-span-4">
+            <CardHeader>
+              <CardTitle>Recent Reports</CardTitle>
+              <CardDescription>
+                Latest incident reports submitted to the system
+              </CardDescription>
+            </CardHeader>
+            <CardContent>
+              <div className="space-y-4">
+                {recentReports.map((report) => (
+                  <div
+                    key={report.id}
+                    className="flex items-center justify-between p-4 border rounded-lg"
+                  >
+                    <div className="space-y-1">
+                      <p className="text-sm font-medium leading-none">
+                        {report.id}
+                      </p>
+                      <p className="text-sm text-muted-foreground">
+                        {report.type}
+                      </p>
+                      <p className="text-xs text-muted-foreground">
+                        {report.date}
+                      </p>
+                    </div>
+                    <div className="flex items-center space-x-2">
+                      <Badge className={getPriorityColor(report.priority)}>
+                        {report.priority}
+                      </Badge>
+                      <Badge className={getStatusColor(report.status)}>
+                        {report.status}
+                      </Badge>
+                    </div>
                   </div>
-                </div>
+                ))}
+              </div>
+            </CardContent>
+          </Card>
 
-                <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-4">
-                  {stats.map((stat, index) => (
-                    <Card key={index}>
-                      <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-                        <CardTitle className="text-sm font-medium">
-                          {stat.title}
-                        </CardTitle>
-                        <stat.icon className={`h-4 w-4 ${stat.color}`} />
-                      </CardHeader>
-                      <CardContent>
-                        <div className="text-2xl font-bold">{stat.value}</div>
-                        <p className="text-xs text-muted-foreground">
-                          <span className="text-green-600">{stat.change}</span>{" "}
-                          from last month
-                        </p>
-                      </CardContent>
-                    </Card>
-                  ))}
-                </div>
+          <Card className="col-span-3">
+            <CardHeader>
+              <CardTitle>Quick Actions</CardTitle>
+              <CardDescription>Common tasks and shortcuts</CardDescription>
+            </CardHeader>
+            <CardContent className="space-y-4">
+              <Link
+                href="/dashboard/reports/new"
+                className="w-full block justify-start"
+              >
+                <Button className="w-full" variant="outline">
+                  <FileText className="mr-2 h-4 w-4" />
+                  Submit New Report
+                </Button>
+              </Link>
+              <Link
+                href="/dashboard/reports"
+                className="w-full block justify-start"
+              >
+                <Button className="w-full" variant="outline">
+                  <Clock className="mr-2 h-4 w-4" />
+                  Check Report Status
+                </Button>
+              </Link>
 
-                <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-7">
-                  <Card className="col-span-4">
-                    <CardHeader>
-                      <CardTitle>Recent Reports</CardTitle>
-                      <CardDescription>
-                        Latest incident reports submitted to the system
-                      </CardDescription>
-                    </CardHeader>
-                    <CardContent>
-                      <div className="space-y-4">
-                        {recentReports.map((report) => (
-                          <div
-                            key={report.id}
-                            className="flex items-center justify-between p-4 border rounded-lg"
-                          >
-                            <div className="space-y-1">
-                              <p className="text-sm font-medium leading-none">
-                                {report.id}
-                              </p>
-                              <p className="text-sm text-muted-foreground">
-                                {report.type}
-                              </p>
-                              <p className="text-xs text-muted-foreground">
-                                {report.date}
-                              </p>
-                            </div>
-                            <div className="flex items-center space-x-2">
-                              <Badge
-                                className={getPriorityColor(report.priority)}
-                              >
-                                {report.priority}
-                              </Badge>
-                              <Badge className={getStatusColor(report.status)}>
-                                {report.status}
-                              </Badge>
-                            </div>
-                          </div>
-                        ))}
-                      </div>
-                    </CardContent>
-                  </Card>
-
-                  <Card className="col-span-3">
-                    <CardHeader>
-                      <CardTitle>Quick Actions</CardTitle>
-                      <CardDescription>
-                        Common tasks and shortcuts
-                      </CardDescription>
-                    </CardHeader>
-                    <CardContent className="space-y-4">
-                      <Link
-                        href="/dashboard/reports/new"
-                        className="w-full block justify-start"
-                      >
-                        <Button
-                          className="w-full"
-                          variant="outline"
-                        >
-                          <FileText className="mr-2 h-4 w-4" />
-                          Submit New Report
-                        </Button>
-                      </Link>
-                      <Link
-                        href="/dashboard/reports"
-                        className="w-full block justify-start"
-                      >
-                        <Button className="w-full" variant="outline">
-                          <Clock className="mr-2 h-4 w-4" />
-                          Check Report Status
-                        </Button>
-                      </Link>
-
-                      <Link
-                        href="/dashboard/analytics"
-                        className="w-full block justify-start"
-                      >
-                        <Button
-                          className="w-full"
-                          variant="outline"
-                        >
-                          <TrendingUp className="mr-2 h-4 w-4" />
-                          View Analytics
-                        </Button>
-                      </Link>
-                      <Link href="/contact-support" className="w-full block justify-start">
-                      <Button
-                        className="w-full"
-                        variant="outline"
-                        >
-                        <Users className="mr-2 h-4 w-4" />
-                        Contact Support
-                      </Button>
-                    </Link>
-                    </CardContent>
-                  </Card>
-                </div>
-              </>
-            )
+              <Link
+                href="/dashboard/analytics"
+                className="w-full block justify-start"
+              >
+                <Button className="w-full" variant="outline">
+                  <TrendingUp className="mr-2 h-4 w-4" />
+                  View Analytics
+                </Button>
+              </Link>
+              <Link
+                href="/contact-support"
+                className="w-full block justify-start"
+              >
+                <Button className="w-full" variant="outline">
+                  <Users className="mr-2 h-4 w-4" />
+                  Contact Support
+                </Button>
+              </Link>
+            </CardContent>
+          </Card>
+        </div>
+      </>
+    )
   );
 }
