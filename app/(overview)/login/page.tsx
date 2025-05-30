@@ -3,7 +3,7 @@ export default function LoginPage(){
 
     return (
 
-        <div>LOGIN</div>
+        <div className="pt-[75px]">LOGIN</div>
 
     )
 }

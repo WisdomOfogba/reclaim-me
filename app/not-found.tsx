@@ -5,7 +5,7 @@ import { Home, ArrowLeft } from "lucide-react";
 
 export default function NotFound() {
   return (
-    <div className="min-h-screen bg-gradient-to-br from-purple-50 via-blue-50 to-indigo-100 flex items-center justify-center p-4">
+    <div className="min-h-screen bg-gradient-to-br from-purple-50 via-blue-50 to-indigo-100 dark:from-black dark:via-gray-900 dark:to-gray-700  flex items-center justify-center p-4">
       <div className="max-w-2xl mx-auto text-center space-y-8">
         <div className="space-y-4">
           <h1 className="text-8xl md:text-9xl font-bold bg-gradient-to-r from-purple-600 via-blue-600 to-indigo-600 bg-clip-text text-transparent">
@@ -18,7 +18,7 @@ export default function NotFound() {
           <h2 className="text-3xl md:text-4xl font-bold text-gray-900">
             Oops! Page Not Found
           </h2>
-          <p className="text-lg text-gray-600 max-w-md mx-auto leading-relaxed">
+          <p className="text-lg text-gray-600 dark:text-gray-300 max-w-md mx-auto leading-relaxed">
             The page you&apos;re looking for seems to have wandered off into the
             digital void. Don&apos;t worry though – we&apos;ll help you find
             your way back!
@@ -41,7 +41,7 @@ export default function NotFound() {
             asChild
             variant="outline"
             size="lg"
-            className="border-2 border-purple-200 hover:border-purple-300 hover:bg-purple-50 hover:text-black px-8 py-3 rounded-lg transition-all duration-300 w-full"
+            className="border-2 border-purple-200 hover:border-purple-300 hover:bg-purple-50 dark:bg-black px-8 py-3 rounded-lg transition-all duration-300 w-full"
           >
             <Link href="/contact-support" className="flex items-center gap-2">
               <ArrowLeft className="h-5 w-5" />
@@ -69,8 +69,8 @@ export default function NotFound() {
           </p>
         </div>
 
-        <div className="absolute top-20 left-20 w-32 h-32 bg-gradient-to-br from-purple-400/20 to-blue-400/20 rounded-full blur-xl"></div>
-        <div className="absolute bottom-20 right-20 w-40 h-40 bg-gradient-to-br from-blue-400/20 to-indigo-400/20 rounded-full blur-xl"></div>
+        <div className="absolute top-20 left-20 w-32 h-32 bg-gradient-to-br from-purple-400/20 to-blue-400/20 dark:from-purple-400/70 dark:to-blue-400/70 rounded-full blur-xl"></div>
+        <div className="absolute bottom-20 right-20 w-40 h-40 bg-gradient-to-br from-blue-400/20 to-indigo-400/20 dark:from-purple-400/70 dark:to-blue-400/70 rounded-full blur-xl"></div>
       </div>
     </div>
   );
