@@ -1,3 +1,5 @@
+import { UserProfile } from "@/components/user-profile";
+
 export default function SettingsPage(){
-    return <div>Settings</div>
+    return <UserProfile />
 }
