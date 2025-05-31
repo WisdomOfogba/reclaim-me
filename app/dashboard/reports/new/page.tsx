@@ -2,7 +2,7 @@
 
 import Quill from "quill/core";
 import { Parchment } from "quill/core";
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useRef } from "react";
 
 import "quill/dist/quill.snow.css";
 
