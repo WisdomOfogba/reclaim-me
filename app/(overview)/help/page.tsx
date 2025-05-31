@@ -25,10 +25,10 @@ export default function HelpPage() {
     {
       question: "What types of scams can I report?",
       answer:
-        "ScamGuard supports reporting for all types of scams including online fraud, identity theft, investment scams, romance scams, phishing attempts, credit card fraud, and more. Our AI adapts the letter content based on the type of incident you're reporting.",
+        "ReclaimMe supports reporting for all types of scams including online fraud, identity theft, investment scams, romance scams, phishing attempts, credit card fraud, and more. Our AI adapts the letter content based on the type of incident you're reporting.",
     },
     {
-      question: "How much does ScamGuard cost?",
+      question: "How much does ReclaimMe cost?",
       answer:
         "We offer flexible pricing plans to make our service accessible to all victims. We have a free tier for basic letter generation, and premium plans with additional features like priority support and advanced customization options.",
     },
@@ -50,7 +50,7 @@ export default function HelpPage() {
   ]
 
   return (
-    <div className="min-h-screen bg-gradient-to-b from-slate-50 to-white dark:from-slate-950 dark:to-slate-900">
+    <div className="min-h-screen bg-gradient-to-b pt-12 from-slate-50 to-white dark:from-slate-950 dark:to-slate-900">
       <section className="container mx-auto px-4 py-16 lg:py-24">
         <div className="max-w-4xl mx-auto text-center">
           <Badge className="mb-6 bg-blue-100 text-blue-800 hover:bg-blue-100 dark:bg-blue-900/30 dark:text-blue-300">
@@ -61,7 +61,7 @@ export default function HelpPage() {
             <span className="text-blue-600 dark:text-blue-400 block">Help You Today?</span>
           </h1>
           <p className="text-xl text-gray-600 dark:text-gray-300 mb-8 leading-relaxed">
-            Find answers to common questions, get support, and learn how to make the most of ScamGuard&apos;s features.
+            Find answers to common questions, get support, and learn how to make the most of ReclaimMe&apos;s features.
           </p>
         </div>
       </section>

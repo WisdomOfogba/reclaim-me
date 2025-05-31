@@ -6,7 +6,7 @@ import Link from "next/link"
 
 export default function LandingPage() {
   return (
-    <div className="min-h-screen bg-gradient-to-b py-12  from-slate-50 to-white dark:from-slate-950 dark:to-slate-900">
+    <div className="min-h-screen bg-gradient-to-b pt-12 py-12  from-slate-50 to-white dark:from-slate-950 dark:to-slate-900">
       <section className="max-w-7xl mx-auto px-4 py-12 lg:py-20">
         <div className="max-w-6xl mx-auto">
           <div className="text-center mb-12">
@@ -114,7 +114,7 @@ export default function LandingPage() {
       <section className="bg-gray-50 dark:bg-slate-900/50 py-16 lg:py-24">
         <div className="container mx-auto px-4">
           <div className="text-center mb-16">
-            <h2 className="text-3xl lg:text-4xl font-bold text-gray-900 dark:text-white mb-4">How ScamGuard Works</h2>
+            <h2 className="text-3xl lg:text-4xl font-bold text-gray-900 dark:text-white mb-4">How ReclaimMe Works</h2>
             <p className="text-lg text-gray-600 dark:text-gray-300">
               Get professional legal documentation in just a few simple steps
             </p>
@@ -159,7 +159,7 @@ export default function LandingPage() {
       <section className="container mx-auto px-4 py-16 lg:py-24">
         <div className="grid lg:grid-cols-2 gap-12 items-center">
           <div>
-            <h2 className="text-3xl lg:text-4xl font-bold text-gray-900 dark:text-white mb-8">Why Choose ScamGuard?</h2>
+            <h2 className="text-3xl lg:text-4xl font-bold text-gray-900 dark:text-white mb-8">Why Choose ReclaimMe?</h2>
             <div className="space-y-6">
               {[
                 {
@@ -193,7 +193,7 @@ export default function LandingPage() {
               ))}
             </div>
           </div>
-          <div className="bg-gradient-to-br from-blue-50 to-indigo-100 dark:from-blue-950/30 dark:to-indigo-950/30 p-8 lg:p-12 rounded-2xl border border-blue-100 dark:border-blue-800/30">
+          <div className="bg-gradient-to-b pt-12r from-blue-50 to-indigo-100 dark:from-blue-950/30 dark:to-indigo-950/30 p-8 lg:p-12 rounded-2xl border border-blue-100 dark:border-blue-800/30">
             <div className="text-center">
               <Mail className="h-20 w-20 text-blue-600 dark:text-blue-400 mx-auto mb-6" />
               <h3 className="text-2xl lg:text-3xl font-bold text-gray-900 dark:text-white mb-4">

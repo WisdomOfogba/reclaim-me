@@ -9,7 +9,7 @@ export default function Footer() {
           <div className="lg:col-span-1">
             <div className="flex items-center space-x-2 mb-4">
               <Shield className="h-8 w-8 text-blue-400" />
-              <span className="text-xl font-bold">ScamGuard</span>
+              <span className="text-xl font-bold">ReclaimMe</span>
             </div>
             <p className="text-gray-400 dark:text-gray-500 text-sm leading-relaxed">
               Empowering scam victims with AI-powered legal assistance and professional documentation to seek justice.
@@ -82,7 +82,7 @@ export default function Footer() {
 
         <div className="border-t border-gray-800 dark:border-slate-800 mt-8 pt-8 text-center">
           <p className="text-gray-400 dark:text-gray-500 text-sm">
-            &copy; 2024 ScamGuard. All rights reserved. Helping victims seek justice through technology.
+            &copy; 2024 ReclaimMe. All rights reserved. Helping victims seek justice through technology.
           </p>
         </div>
       </div>

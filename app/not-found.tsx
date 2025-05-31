@@ -5,7 +5,7 @@ import { Home, Phone } from "lucide-react";
 
 export default function NotFound() {
   return (
-    <div className="min-h-screen bg-gradient-to-br from-purple-50 via-blue-50 to-indigo-100 dark:from-black dark:via-gray-900 dark:to-gray-700  flex items-center justify-center p-4">
+    <div className="min-h-screen bg-gradient-to-b pt-12r from-purple-50 via-blue-50 to-indigo-100 dark:from-black dark:via-gray-900 dark:to-gray-700  flex items-center justify-center p-4">
       <div className="max-w-2xl mx-auto text-center space-y-8">
         <div className="space-y-4">
           <h1 className="text-8xl md:text-9xl font-bold bg-gradient-to-r from-purple-600 via-blue-600 to-indigo-600 bg-clip-text text-transparent">
@@ -69,8 +69,8 @@ export default function NotFound() {
           </p>
         </div>
 
-        <div className="absolute top-20 left-20 w-32 h-32 bg-gradient-to-br from-purple-400/20 to-blue-400/20 dark:from-purple-400/70 dark:to-blue-400/70 rounded-full blur-xl"></div>
-        <div className="absolute bottom-20 right-20 w-40 h-40 bg-gradient-to-br from-blue-400/20 to-indigo-400/20 dark:from-purple-400/70 dark:to-blue-400/70 rounded-full blur-xl"></div>
+        <div className="absolute top-20 left-20 w-32 h-32 bg-gradient-to-b pt-12r from-purple-400/20 to-blue-400/20 dark:from-purple-400/70 dark:to-blue-400/70 rounded-full blur-xl"></div>
+        <div className="absolute bottom-20 right-20 w-40 h-40 bg-gradient-to-b pt-12r from-blue-400/20 to-indigo-400/20 dark:from-purple-400/70 dark:to-blue-400/70 rounded-full blur-xl"></div>
       </div>
     </div>
   );

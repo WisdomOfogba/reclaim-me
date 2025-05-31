@@ -4,7 +4,7 @@ import { Shield, Lock, Eye, UserCheck, Database } from "lucide-react"
 
 export default function PrivacyPage() {
   return (
-    <div className="min-h-screen bg-gradient-to-b from-slate-50 to-white dark:from-slate-950 dark:to-slate-900">
+    <div className="min-h-screen bg-gradient-to-b pt-12 from-slate-50 to-white dark:from-slate-950 dark:to-slate-900">
       <section className="container mx-auto px-4 py-16 lg:py-24">
         <div className="max-w-4xl mx-auto text-center">
           <Badge className="mb-6 bg-blue-100 text-blue-800 hover:bg-blue-100 dark:bg-blue-900/30 dark:text-blue-300">
@@ -225,9 +225,9 @@ export default function PrivacyPage() {
                     If you have any questions about this Privacy Policy or our data practices, please contact us:
                   </p>
                   <ul className="text-blue-700 dark:text-blue-400 space-y-2">
-                    <li>• Email: privacy@scamguard.com</li>
+                    <li>• Email: privacy@ReclaimMe.com</li>
                     <li>• Phone: 1-800-SCAM-HELP</li>
-                    <li>• Mail: ScamGuard Privacy Team, 123 Justice Street, Legal District, LD 12345</li>
+                    <li>• Mail: ReclaimMe Privacy Team, 123 Justice Street, Legal District, LD 12345</li>
                   </ul>
                 </div>
               </div>

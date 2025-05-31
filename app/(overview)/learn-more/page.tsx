@@ -6,12 +6,12 @@ import Link from "next/link"
 
 export default function LearnMorePage() {
   return (
-    <div className="min-h-screen bg-gradient-to-b from-slate-50 to-white dark:from-slate-950 dark:to-slate-900">
+    <div className="min-h-screen bg-gradient-to-b pt-12 from-slate-50 to-white dark:from-slate-950 dark:to-slate-900">
 
       <section className="container mx-auto px-4 py-16 lg:py-24">
         <div className="max-w-4xl mx-auto text-center">
           <Badge className="mb-6 bg-blue-100 text-blue-800 hover:bg-blue-100 dark:bg-blue-900/30 dark:text-blue-300">
-            Learn More About ScamGuard
+            Learn More About ReclaimMe
           </Badge>
           <h1 className="text-4xl lg:text-6xl font-bold text-gray-900 dark:text-white mb-6 leading-tight">
             Empowering Victims with
@@ -72,7 +72,7 @@ export default function LearnMorePage() {
         <div className="container mx-auto px-4">
           <div className="max-w-4xl mx-auto">
             <h2 className="text-3xl lg:text-4xl font-bold text-gray-900 dark:text-white mb-8 text-center">
-              How ScamGuard Solves These Problems
+              How ReclaimMe Solves These Problems
             </h2>
             <div className="grid md:grid-cols-2 gap-8">
               <Card className="bg-green-50 dark:bg-green-950/20 border-green-200 dark:border-green-800">
@@ -213,7 +213,7 @@ export default function LearnMorePage() {
         <div className="max-w-4xl mx-auto text-center">
           <h2 className="text-3xl lg:text-4xl font-bold text-gray-900 dark:text-white mb-6">Ready to Get Started?</h2>
           <p className="text-xl text-gray-600 dark:text-gray-300 mb-8">
-            Join thousands of victims who have successfully used ScamGuard to seek justice and recover their losses.
+            Join thousands of victims who have successfully used ReclaimMe to seek justice and recover their losses.
           </p>
           <div className="flex flex-col sm:flex-row gap-4 justify-center">
             <Link href="/signup">

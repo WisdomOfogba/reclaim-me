@@ -58,7 +58,7 @@ export default function SignInPage() {
   }
 
   return (
-    <div className="min-h-screen bg-gradient-to-b from-slate-50 to-white dark:from-slate-950 dark:to-slate-900">
+    <div className="min-h-screen bg-gradient-to-b pt-12 from-slate-50 to-white dark:from-slate-950 dark:to-slate-900">
       <div className="container mx-auto px-4 py-8 lg:py-16">
         <div className="max-w-6xl mx-auto">
           <div className="grid lg:grid-cols-2 gap-12 items-center">
@@ -72,7 +72,7 @@ export default function SignInPage() {
                 <span className="text-blue-600 dark:text-blue-400 block">Fight for Justice</span>
               </h1>
               <p className="text-lg text-gray-600 dark:text-gray-300 mb-8 leading-relaxed">
-                Sign in to your ScamGuard account to access your reports, generate new legal documents, and continue
+                Sign in to your ReclaimMe account to access your reports, generate new legal documents, and continue
                 seeking justice against scammers.
               </p>
 

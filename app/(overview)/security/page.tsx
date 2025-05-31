@@ -4,7 +4,7 @@ import { Lock, Eye, Server, Key, AlertTriangle, CheckCircle, Globe } from "lucid
 
 export default function SecurityPage() {
   return (
-    <div className="min-h-screen bg-gradient-to-b from-slate-50 to-white dark:from-slate-950 dark:to-slate-900">
+    <div className="min-h-screen bg-gradient-to-b pt-12 from-slate-50 to-white dark:from-slate-950 dark:to-slate-900">
       <section className="container mx-auto px-4 py-16 lg:py-24">
         <div className="max-w-4xl mx-auto text-center">
           <Badge className="mb-6 bg-blue-100 text-blue-800 hover:bg-blue-100 dark:bg-blue-900/30 dark:text-blue-300">
@@ -220,7 +220,7 @@ export default function SecurityPage() {
             <div className="bg-white dark:bg-slate-900 p-8 rounded-lg border border-gray-200 dark:border-gray-700">
               <h3 className="text-xl font-bold text-gray-900 dark:text-white mb-4">Employee Security Training</h3>
               <p className="text-gray-600 dark:text-gray-300 mb-4">
-                All ScamGuard employees undergo comprehensive security training:
+                All ReclaimMe employees undergo comprehensive security training:
               </p>
               <ul className="text-gray-600 dark:text-gray-300 space-y-2">
                 <li>• Security awareness training</li>
@@ -246,7 +246,7 @@ export default function SecurityPage() {
                 discover a security issue, please contact our security team immediately.
               </p>
               <div className="space-y-2 text-red-700 dark:text-red-400">
-                <p>Email: security@scamguard.com</p>
+                <p>Email: security@ReclaimMe.com</p>
                 <p>PGP Key: Available upon request</p>
                 <p>Response Time: Within 24 hours</p>
               </div>
