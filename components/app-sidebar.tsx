@@ -56,7 +56,7 @@ interface AppSidebarProps {
 export function AppSidebar({ activeSection, setActiveSection }: AppSidebarProps) {
   return (
     <Sidebar>
-      <SidebarHeader>
+      <SidebarHeader className="bg-slate-50 dark:bg-slate-950">
         <div className="flex items-center gap-2 px-2 py-2">
           <div className="flex h-8 w-8 items-center justify-center rounded-lg bg-red-600 text-white">
             <Shield className="h-4 w-4" />
@@ -68,7 +68,7 @@ export function AppSidebar({ activeSection, setActiveSection }: AppSidebarProps)
         </div>
       </SidebarHeader>
 
-      <SidebarContent>
+      <SidebarContent className="bg-slate-50 dark:bg-slate-950">
         <SidebarGroup>
           <SidebarGroupLabel>Navigation</SidebarGroupLabel>
           <SidebarGroupContent>
@@ -88,7 +88,7 @@ export function AppSidebar({ activeSection, setActiveSection }: AppSidebarProps)
         </SidebarGroup>
       </SidebarContent>
 
-      <SidebarFooter>
+      <SidebarFooter className="bg-slate-50 dark:bg-slate-950">
         <div className="p-2">
           <div className="rounded-lg bg-red-50 p-3 text-sm">
             <div className="flex items-center gap-2 font-medium text-red-800">

@@ -120,7 +120,7 @@ export default function Dashboard() {
 
         <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-4">
           {stats.map((stat, index) => (
-            <Card key={index}>
+            <Card key={index} className="bg-grad-back">
               <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
                 <CardTitle className="text-sm font-medium">
                   {stat.title}
@@ -139,7 +139,7 @@ export default function Dashboard() {
         </div>
 
         <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-7">
-          <Card className="col-span-4">
+          <Card className="col-span-4 bg-grad-back">
             <CardHeader>
               <CardTitle>Recent Reports</CardTitle>
               <CardDescription>
@@ -178,7 +178,7 @@ export default function Dashboard() {
             </CardContent>
           </Card>
 
-          <Card className="col-span-3">
+          <Card className="col-span-3 bg-grad-back">
             <CardHeader>
               <CardTitle>Quick Actions</CardTitle>
               <CardDescription>Common tasks and shortcuts</CardDescription>
