@@ -5,7 +5,7 @@ import { useEffect, useRef, useState } from "react";
 import Quill from "quill"; // Import Quill directly
 import "quill/dist/quill.snow.css"; // Import Quill's CSS (choose your theme)
 
-const toolbarOptions = [
+ export const toolbarOptions = [
   ["bold", "italic", "underline", "strike"], // toggled buttons
   ["blockquote", "code-block"],
   ["link", "image", "video", "formula"],
