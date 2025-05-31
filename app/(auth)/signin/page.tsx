@@ -1,61 +1,75 @@
-"use client"
-import { useState } from "react"
-import type React from "react"
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
-import { Button } from "@/components/ui/button"
-import { Input } from "@/components/ui/input"
-import { Badge } from "@/components/ui/badge"
-import { Checkbox } from "@/components/ui/checkbox"
-import { Alert, AlertDescription } from "@/components/ui/alert"
-import { Mail, Lock, Eye, EyeOff, Shield, ArrowRight, AlertCircle } from "lucide-react"
-import Link from "next/link"
+"use client";
+import { useState } from "react";
+import type React from "react";
+import {
+  Card,
+  CardContent,
+  CardDescription,
+  CardHeader,
+  CardTitle,
+} from "@/components/ui/card";
+import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
+import { Badge } from "@/components/ui/badge";
+import { Checkbox } from "@/components/ui/checkbox";
+import { Alert, AlertDescription } from "@/components/ui/alert";
+import {
+  Mail,
+  Lock,
+  Eye,
+  EyeOff,
+  Shield,
+  ArrowRight,
+  AlertCircle,
+} from "lucide-react";
+import Link from "next/link";
 
 export default function SignInPage() {
-  const [showPassword, setShowPassword] = useState(false)
+  const [showPassword, setShowPassword] = useState(false);
   const [formData, setFormData] = useState({
     email: "",
     password: "",
     rememberMe: false,
-  })
-  const [errors, setErrors] = useState<Record<string, string>>({})
-  const [isLoading, setIsLoading] = useState(false)
+  });
+  const [errors, setErrors] = useState<Record<string, string>>({});
+  const [isLoading, setIsLoading] = useState(false);
 
   const validateForm = () => {
-    const newErrors: Record<string, string> = {}
+    const newErrors: Record<string, string> = {};
 
     if (!formData.email.trim()) {
-      newErrors.email = "Email is required"
+      newErrors.email = "Email is required";
     } else if (!/\S+@\S+\.\S+/.test(formData.email)) {
-      newErrors.email = "Please enter a valid email address"
+      newErrors.email = "Please enter a valid email address";
     }
 
     if (!formData.password) {
-      newErrors.password = "Password is required"
+      newErrors.password = "Password is required";
     }
 
-    setErrors(newErrors)
-    return Object.keys(newErrors).length === 0
-  }
+    setErrors(newErrors);
+    return Object.keys(newErrors).length === 0;
+  };
 
   const handleSubmit = async (e: React.FormEvent) => {
-    e.preventDefault()
-    if (!validateForm()) return
+    e.preventDefault();
+    if (!validateForm()) return;
 
-    setIsLoading(true)
+    setIsLoading(true);
     // Simulate API call
-    await new Promise((resolve) => setTimeout(resolve, 2000))
-    setIsLoading(false)
+    await new Promise((resolve) => setTimeout(resolve, 2000));
+    setIsLoading(false);
 
     // In a real app, you would handle the signin here
-    console.log("Sign in data:", formData)
-  }
+    console.log("Sign in data:", formData);
+  };
 
   const handleInputChange = (field: string, value: string | boolean) => {
-    setFormData((prev) => ({ ...prev, [field]: value }))
+    setFormData((prev) => ({ ...prev, [field]: value }));
     if (errors[field]) {
-      setErrors((prev) => ({ ...prev, [field]: "" }))
+      setErrors((prev) => ({ ...prev, [field]: "" }));
     }
-  }
+  };
 
   return (
     <div className="min-h-screen bg-gradient-to-b pt-12 from-slate-50 to-white dark:from-slate-950 dark:to-slate-900">
@@ -69,24 +83,35 @@ export default function SignInPage() {
               </Badge>
               <h1 className="text-3xl lg:text-5xl font-bold text-gray-900 dark:text-white mb-6 leading-tight">
                 Continue Your
-                <span className="text-blue-600 dark:text-blue-400 block">Fight for Justice</span>
+                <span className="text-blue-600 dark:text-blue-400 block">
+                  Fight for Justice
+                </span>
               </h1>
               <p className="text-lg text-gray-600 dark:text-gray-300 mb-8 leading-relaxed">
-                Sign in to your ReclaimMe account to access your reports, generate new legal documents, and continue
-                seeking justice against scammers.
+                Sign in to your ReclaimMe account to access your reports,
+                generate new legal documents, and continue seeking justice
+                against scammers.
               </p>
 
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-6 mb-8">
                 <Card className="bg-blue-50 dark:bg-blue-950/20 border-blue-200 dark:border-blue-800">
                   <CardHeader className="text-center">
-                    <div className="text-2xl font-bold text-blue-600 dark:text-blue-400 mb-2">10,000+</div>
-                    <CardDescription className="text-blue-700 dark:text-blue-400">Letters Generated</CardDescription>
+                    <div className="text-2xl font-bold text-blue-600 dark:text-blue-400 mb-2">
+                      10,000+
+                    </div>
+                    <CardDescription className="text-blue-700 dark:text-blue-400">
+                      Letters Generated
+                    </CardDescription>
                   </CardHeader>
                 </Card>
                 <Card className="bg-green-50 dark:bg-green-950/20 border-green-200 dark:border-green-800">
                   <CardHeader className="text-center">
-                    <div className="text-2xl font-bold text-green-600 dark:text-green-400 mb-2">95%</div>
-                    <CardDescription className="text-green-700 dark:text-green-400">Success Rate</CardDescription>
+                    <div className="text-2xl font-bold text-green-600 dark:text-green-400 mb-2">
+                      95%
+                    </div>
+                    <CardDescription className="text-green-700 dark:text-green-400">
+                      Success Rate
+                    </CardDescription>
                   </CardHeader>
                 </Card>
               </div>
@@ -96,9 +121,12 @@ export default function SignInPage() {
                   <div className="flex items-center space-x-2">
                     <Shield className="h-8 w-8 text-purple-600 dark:text-purple-400" />
                     <div>
-                      <CardTitle className="text-purple-800 dark:text-purple-300 text-lg">Secure Access</CardTitle>
+                      <CardTitle className="text-purple-800 dark:text-purple-300 text-lg">
+                        Secure Access
+                      </CardTitle>
                       <CardDescription className="text-purple-700 dark:text-purple-400">
-                        Your account is protected with multi-layered security and encryption.
+                        Your account is protected with multi-layered security
+                        and encryption.
                       </CardDescription>
                     </div>
                   </div>
@@ -129,12 +157,20 @@ export default function SignInPage() {
                         <Input
                           type="email"
                           value={formData.email}
-                          onChange={(e) => handleInputChange("email", e.target.value)}
-                          className={`pl-10 ${errors.email ? "border-red-500" : ""}`}
+                          onChange={(e) =>
+                            handleInputChange("email", e.target.value)
+                          }
+                          className={`pl-10 bg-gray-50 dark:bg-slate-800 ${
+                            errors.email ? "border-red-500" : ""
+                          }`}
                           placeholder="john@example.com"
                         />
                       </div>
-                      {errors.email && <p className="text-red-500 text-sm mt-1">{errors.email}</p>}
+                      {errors.email && (
+                        <p className="text-red-500 text-sm mt-1">
+                          {errors.email}
+                        </p>
+                      )}
                     </div>
 
                     {/* Password Field */}
@@ -147,8 +183,12 @@ export default function SignInPage() {
                         <Input
                           type={showPassword ? "text" : "password"}
                           value={formData.password}
-                          onChange={(e) => handleInputChange("password", e.target.value)}
-                          className={`pl-10 pr-10 ${errors.password ? "border-red-500" : ""}`}
+                          onChange={(e) =>
+                            handleInputChange("password", e.target.value)
+                          }
+                          className={`pl-10 pr-10 bg-gray-50 dark:bg-slate-800 ${
+                            errors.password ? "border-red-500" : ""
+                          }`}
                           placeholder="Enter your password"
                         />
                         <Button
@@ -165,7 +205,11 @@ export default function SignInPage() {
                           )}
                         </Button>
                       </div>
-                      {errors.password && <p className="text-red-500 text-sm mt-1">{errors.password}</p>}
+                      {errors.password && (
+                        <p className="text-red-500 text-sm mt-1">
+                          {errors.password}
+                        </p>
+                      )}
                     </div>
 
                     {/* Remember Me and Forgot Password */}
@@ -174,9 +218,14 @@ export default function SignInPage() {
                         <Checkbox
                           id="remember"
                           checked={formData.rememberMe}
-                          onCheckedChange={(checked) => handleInputChange("rememberMe", checked as boolean)}
+                          onCheckedChange={(checked) =>
+                            handleInputChange("rememberMe", checked as boolean)
+                          }
                         />
-                        <label htmlFor="remember" className="text-sm text-gray-600 dark:text-gray-300">
+                        <label
+                          htmlFor="remember"
+                          className="text-sm text-gray-600 dark:text-gray-300"
+                        >
                           Remember me
                         </label>
                       </div>
@@ -237,7 +286,8 @@ export default function SignInPage() {
               <Alert className="mt-6 border-green-200 dark:border-green-800 bg-green-50 dark:bg-green-950/20">
                 <Shield className="h-4 w-4 text-green-600 dark:text-green-400" />
                 <AlertDescription className="text-green-700 dark:text-green-400">
-                  All sign-ins are monitored for security. We&apos;ll notify you of any suspicious activity on your account.
+                  All sign-ins are monitored for security. We&apos;ll notify you
+                  of any suspicious activity on your account.
                 </AlertDescription>
               </Alert>
 
@@ -245,7 +295,8 @@ export default function SignInPage() {
               <Alert className="mt-4 border-orange-200 dark:border-orange-800 bg-orange-50 dark:bg-orange-950/20">
                 <AlertCircle className="h-4 w-4 text-orange-600 dark:text-orange-400" />
                 <AlertDescription className="text-orange-700 dark:text-orange-400">
-                  If you&apos;re in immediate danger, please contact law enforcement at 911 before using our platform.
+                  If you&apos;re in immediate danger, please contact law
+                  enforcement at 911 before using our platform.
                 </AlertDescription>
               </Alert>
             </div>
@@ -253,5 +304,5 @@ export default function SignInPage() {
         </div>
       </div>
     </div>
-  )
+  );
 }
