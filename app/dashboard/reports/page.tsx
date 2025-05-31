@@ -1,11 +1,5 @@
 import { ReportsList } from "@/components/reports-list";
 
-
-export default function ReportsPage(){
-
-    return (
-    
-        <ReportsList />
-
-    )
+export default function ReportsPage() {
+  return <ReportsList />;
 }

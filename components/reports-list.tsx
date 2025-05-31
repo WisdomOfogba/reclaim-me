@@ -239,7 +239,7 @@ export function ReportsList() {
         </Button>
       </div>
 
-      <Card>
+      <Card className="slate-50 dark:bg-slate-950">
         <CardHeader>
           <CardTitle>Filter Reports</CardTitle>
           <CardDescription>Search and filter your reports</CardDescription>
@@ -275,7 +275,7 @@ export function ReportsList() {
 
       <div className="space-y-4">
         {filteredReports.map((report) => (
-          <Card key={report.id} className="hover:shadow-md transition-shadow">
+          <Card key={report.id} className="hover:shadow-md transition-shadow slate-50 dark:bg-slate-950">
             <CardHeader>
               <div className="flex items-center justify-between">
                 <div>
