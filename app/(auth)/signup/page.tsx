@@ -169,7 +169,7 @@ export default function SignUpPage() {
                 <CardContent>
                   <form onSubmit={handleSubmit} className="space-y-6">
                     {/* Name Fields */}
-                    <div className="grid grid-cols-2 gap-4">
+                    <div className="grid sm:grid-cols-2 gap-4">
                       <div>
                         <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
                           First Name *
@@ -182,7 +182,7 @@ export default function SignUpPage() {
                             onChange={(e) =>
                               handleInputChange("firstName", e.target.value)
                             }
-                            className={`pl-10 ${
+                            className={`pl-10 bg-gray-50 dark:bg-slate-800 ${
                               errors.firstName ? "border-red-500" : ""
                             }`}
                             placeholder="John"
@@ -206,7 +206,7 @@ export default function SignUpPage() {
                             onChange={(e) =>
                               handleInputChange("lastName", e.target.value)
                             }
-                            className={`pl-10 ${
+                            className={`pl-10 bg-gray-50 dark:bg-slate-800 ${
                               errors.lastName ? "border-red-500" : ""
                             }`}
                             placeholder="Doe"
@@ -233,7 +233,7 @@ export default function SignUpPage() {
                           onChange={(e) =>
                             handleInputChange("email", e.target.value)
                           }
-                          className={`pl-10 ${
+                          className={`pl-10 bg-gray-50 dark:bg-slate-800 ${
                             errors.email ? "border-red-500" : ""
                           }`}
                           placeholder="john@example.com"
@@ -259,7 +259,7 @@ export default function SignUpPage() {
                           onChange={(e) =>
                             handleInputChange("password", e.target.value)
                           }
-                          className={`pl-10 pr-10 ${
+                          className={`pl-10 pr-10 bg-gray-50 dark:bg-slate-800 ${
                             errors.password ? "border-red-500" : ""
                           }`}
                           placeholder="Enter your password"
@@ -298,7 +298,7 @@ export default function SignUpPage() {
                           onChange={(e) =>
                             handleInputChange("confirmPassword", e.target.value)
                           }
-                          className={`pl-10 pr-10 ${
+                          className={`pl-10 pr-10 bg-gray-50 dark:bg-slate-800 ${
                             errors.confirmPassword ? "border-red-500" : ""
                           }`}
                           placeholder="Confirm your password"

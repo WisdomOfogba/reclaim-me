@@ -81,7 +81,7 @@ const Header = () => {
                     <span className="sr-only">Toggle menu</span>
                   </Button>
                 </SheetTrigger>
-                <SheetContent side="right" className="w-[300px] sm:w-[400px]">
+                <SheetContent side="right" className="w-[300px] sm:w-[400px] dark:bg-gradient-to-b">
                   <div className="flex flex-col space-y-4 mt-8">
                     {navItems.map((item) => (
                       <Link
@@ -93,7 +93,7 @@ const Header = () => {
                         {item.label}
                       </Link>
                     ))}
-                    <div className="border-t pt-4 space-y-2">
+                    <div className="border-t pt-4 flex flex-col space-y-2">
                       <Link href="/signin" onClick={() => setIsOpen(false)}>
                         <Button variant="outline" className="w-full">
                           Sign In
