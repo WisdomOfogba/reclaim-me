@@ -19,9 +19,8 @@ const Header = () => {
   const [isOpen, setIsOpen] = useState(false);
 
   const navItems = [
-    { href: "/learn-more", label: "Learn More" },
-    { href: "/help", label: "Help" },
     { href: "/contact", label: "Contact" },
+    { href: "/about", label: "About" },
     { href: "/dashboard", label: "Dashboard" },
   ];
   const scrollDirection = useScrollDirection();

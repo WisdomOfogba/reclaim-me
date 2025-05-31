@@ -16,7 +16,7 @@ import {
   Clock,
   CheckCircle,
   ArrowRight,
-  Star,
+  // Star,
 } from "lucide-react";
 import Link from "next/link";
 
@@ -46,7 +46,7 @@ export default function LandingPage() {
                   size="lg"
                   className="text-lg px-8 py-4 bg-blue-600 hover:bg-blue-700 dark:bg-blue-500 dark:hover:bg-blue-600 w-full sm:w-auto"
                 >
-                  Start Your Report
+                  Start now
                   <FileText className="ml-2 h-5 w-5" />
                 </Button>
               </Link>
@@ -64,7 +64,7 @@ export default function LandingPage() {
           </div>
 
           {/* Trust Indicators */}
-          <div className="grid grid-cols-1 sm:grid-cols-3 gap-6 mt-16">
+          {/* <div className="grid grid-cols-1 sm:grid-cols-3 gap-6 mt-16">
             <div className="text-center">
               <div className="text-3xl font-bold text-blue-600 dark:text-blue-400 mb-2">
                 10,000+
@@ -90,7 +90,7 @@ export default function LandingPage() {
               </div>
               <p className="text-gray-600 dark:text-gray-300">User Rating</p>
             </div>
-          </div>
+          </div> */}
         </div>
       </section>
 
