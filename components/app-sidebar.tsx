@@ -34,12 +34,12 @@ const menuItems = [
     icon: FileText,
     href: "/dashboard/reports"
   },
-  {
-    title: "Analytics",
-    url: "#",
-    icon: BarChart3,
-    href: "/dashboard/analytics"
-  },
+  // {
+  //   title: "Analytics",
+  //   url: "#",
+  //   icon: BarChart3,
+  //   href: "/dashboard/analytics"
+  // },
   {
     title: "Settings",
     url: "#",
