@@ -16,7 +16,7 @@ export function DashboardView({ children }: { children: React.ReactNode }) {
   const [activeSection, setActiveSection] = useState("overview");
 
   return (
-    <ThemeProvider defaultTheme="dark" storageKey="reclaimme-theme">
+    // <ThemeProvider defaultTheme="dark" storageKey="reclaimme-theme">
       <SidebarProvider>
         <AppSidebar
           activeSection={activeSection}
@@ -39,6 +39,6 @@ export function DashboardView({ children }: { children: React.ReactNode }) {
           <Toaster />
         </SidebarInset>
       </SidebarProvider>
-    </ThemeProvider>
+    // </ThemeProvider>
   );
 }
