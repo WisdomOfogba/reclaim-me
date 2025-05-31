@@ -7,8 +7,6 @@ import Link from "next/link";
 import { ThemeToggle } from "../ThemeToggle";
 import { useState } from "react";
 import { Button } from "@/components/ui/button";
-import Logo from "@/public/assets/logo.png";
-import LogoWhite from "@/public/assets/logo-white.png";
 import {
   Sheet,
   SheetContent,
@@ -40,14 +38,14 @@ const Header = () => {
           {/* Logo */}
           <Link href="/" className="flex items-center space-x-2">
             <Image
-              src={Logo}
+              src="assets/logo.png"
               alt="Reclaimme Logo"
               width={100}
               height={50}
               className="dark:hidden"
             />
             <Image
-              src={LogoWhite}
+              src="assets/logo-white.png"
               alt="Reclaimme Logo"
               width={100}
               height={50}
