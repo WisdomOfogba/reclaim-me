@@ -104,7 +104,7 @@ const SidebarProvider = React.forwardRef<
           (event.metaKey || event.ctrlKey)
         ) {
           event.preventDefault()
-          toggleSidebar()
+          // toggleSidebar()
         }
       }
 
