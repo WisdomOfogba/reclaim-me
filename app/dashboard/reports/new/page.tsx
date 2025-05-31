@@ -1,7 +1,7 @@
 "use client"
 
 import dynamic from "next/dynamic";
-import { useCallback } from "react";
+// import { useCallback } from "react";
 
 const EditorUI = dynamic(
   () => import("@/components/editor-ui").then(({ EditorUI }) => EditorUI),
