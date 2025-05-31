@@ -20,6 +20,7 @@ import {
 } from "@/components/ui/select";
 import {
   Dialog,
+  DialogClose,
   DialogContent,
   DialogDescription,
   DialogHeader,
@@ -36,19 +37,35 @@ import {
   MapPin,
   User,
   FileText,
+  X,
 } from "lucide-react";
 import { ComplaintObj } from "@/lib/types";
 import { getPriorityColor, getStatusColor, complaints } from "@/lib/utils";
 import { useIsMobile } from "@/lib/hooks/use-mobile";
-import { Tooltip, TooltipContent, TooltipTrigger } from "@radix-ui/react-tooltip";
 
 
 export function ReportsList() {
   const [searchTerm, setSearchTerm] = useState("");
   const [statusFilter, setStatusFilter] = useState("all");
-  const [selectedComplaint, setSelectedComplaint] = useState<ComplaintObj | null>(null);
-  const isMobile = useIsMobile();
+  const [selectedComplaint, setSelectedComplaint] = useState<{
+    id: string;
+    type: string;
+    status: string;
+    date: string;
+    priority: string;
+    description: string;
+    lastUpdate: string;
+    amount: string;
+    location: string;
+    assignedAgent: string;
+    timeline: { date: string; action: string; status: string }[];
+    evidence: string[];
+    notes: string;
+  } | null>(null);
 
+  useEffect(() => {
+    console.log("Selected :", selectedComplaint);
+  }, [selectedComplaint]);
 
   const filteredComplaints = complaints.filter((complaint) => {
     const matchesSearch =
@@ -69,10 +86,9 @@ export function ReportsList() {
             Track the status of your submitted complaints
           </p>
         </div>
-        <Button className="bg-slate-950 text-white dark:bg-slate-50 dark:text-black">
+        <Button>
           <Download className="mr-2 h-4 w-4" />
-          {/** // TODO: Add various export modes */}
-          Export
+          Export Complaints
         </Button>
       </div>
 
@@ -163,19 +179,11 @@ export function ReportsList() {
                       View Details
                     </Button>
                   </DialogTrigger>
-                  <DialogContent className="max-w-4xl max-h-[80vh] overflow-y-auto bg-slate-50 dark:bg-slate-950">
-                    <DialogHeader className="mt-10 text-left bg-slate-50 dark:bg-slate-950">
-                      <DialogTitle className="flex items-center justify-between">
-                        <Tooltip>
-                          <TooltipTrigger asChild>
-                           <span title={`Complaint Details - ${complaint.id}`} className="max-w-[350px] truncate">Complaint Details - {complaint.id}jghgjj,</span>
-                          </TooltipTrigger>
 
-                          <TooltipContent className="py-1.5 px-2.5 mb-3 dark:bg-stone-50 dark:text-black rounded-md">
-                           <span className="text-sm">Complaint Details - {complaint.id}</span>
-                          </TooltipContent>
-                        </Tooltip>
-                        
+                  <DialogContent className="max-w-4xl max-h-[80vh] overflow-y-auto bg-slate-50 dark:bg-slate-950">
+                    <DialogHeader className="mt-10 bg-slate-50 dark:bg-slate-950">
+                      <DialogTitle className="flex items-center justify-between">
+                        <span className="max-w-[350px] truncate">Complaint Details - {complaint.id}</span>
                         <div className="hidden xsm:flex gap-2">
                           <Badge className={getPriorityColor(complaint.priority)}>
                             {complaint.priority}
@@ -190,8 +198,8 @@ export function ReportsList() {
                       </DialogDescription>
                     </DialogHeader>
 
-                    <Tabs defaultValue="overview" className="w-full">
-                      <TabsList className="grid w-full grid-cols-4 bg-gray-800 overflow-auto ">
+                    <Tabs defaultValue="overview" className="w-full overflow-auto">
+                      <TabsList className="grid w-full grid-cols-4 gap-1 bg-gray-800 min-w-[400px]">
                         <TabsTrigger value="overview" className="text-xs sm:text-sm text-gray-50 dark:hover:bg-gray-200 dark:hover:text-black data-[state=active]:bg-gray-200 data-[state=active]:text-black">Overview</TabsTrigger>
                         <TabsTrigger value="timeline" className="text-xs sm:text-sm text-gray-50 dark:hover:bg-gray-200 dark:hover:text-black data-[state=active]:bg-gray-200 data-[state=active]:text-black">Timeline</TabsTrigger>
                         <TabsTrigger value="evidence" className="text-xs sm:text-sm text-gray-50 dark:hover:bg-gray-200 dark:hover:text-black data-[state=active]:bg-gray-200 data-[state=active]:text-black">Evidence</TabsTrigger>
@@ -343,11 +351,11 @@ export function ReportsList() {
                           <CardHeader>
                             <CardTitle>Communication Log</CardTitle>
                           </CardHeader>
-                          <CardContent>
-                            <div className="space-y-4">
-                              <div className="p-3 bg-blue-50 rounded-lg">
-                                <div className="flex items-center gap-2 mb-2">
-                                  <MessageSquare className="h-4 w-4" />
+                          <CardContent className="">
+                            <div className="space-y-4 ">
+                              <div className="p-3 rounded-lg bg-slate-50 dark:bg-slate-950 text-black dark:text-white">
+                                <div className="flex items-center gap-2 mb-2 ">
+                                  <MessageSquare className="h-4 w-4 " />
                                   <span className="text-sm font-medium">
                                     {complaint.assignedAgent}
                                   </span>
@@ -356,10 +364,9 @@ export function ReportsList() {
                                   </span>
                                 </div>
                                 <p className="text-sm">
-                                  Thank you for your input. We've escalated your criminal complaint to the appropriate authorities and will provide updates as they become available. 
-                                  {/* We have begun our
+                                  Thank you for your complaint. We have begun our
                                   investigation and will keep you updated on our
-                                  progress. */}
+                                  progress.
                                 </p>
                               </div>
                               <Button className="w-full">
