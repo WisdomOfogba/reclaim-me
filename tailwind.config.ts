@@ -11,6 +11,9 @@ const config: Config = {
   ],
   theme: {
   	extend: {
+		screens: {
+        'xsm': '600px', 
+      },
   		colors: {
   			background: 'hsl(var(--background))',
   			foreground: 'hsl(var(--foreground))',
@@ -90,7 +93,7 @@ const config: Config = {
   			'accordion-down': 'accordion-down 0.2s ease-out',
   			'accordion-up': 'accordion-up 0.2s ease-out'
   		}
-  	}
+  	},
   },
   plugins: [TailwindAnimate],
 };

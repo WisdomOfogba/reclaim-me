@@ -226,14 +226,14 @@ export function UserProfile() {
 
       <Tabs defaultValue="personal" className="space-y-6">
         <TabsList className="grid grid-cols-4 w-full max-w-2xl">
-          <TabsTrigger className="shadow-none" value="personal">Personal Info</TabsTrigger>
+          <TabsTrigger value="personal">Personal Info</TabsTrigger>
           <TabsTrigger value="security">Security</TabsTrigger>
           <TabsTrigger value="appearance">Appearance</TabsTrigger>
           <TabsTrigger value="downloads">Downloads</TabsTrigger>
         </TabsList>
 
         <TabsContent value="personal" className="space-y-6">
-          <Card className="slate-50 dark:bg-slate-950">
+          <Card>
             <CardHeader>
               <CardTitle className="flex items-center gap-2">
                 <User className="h-5 w-5" />
@@ -324,7 +324,7 @@ export function UserProfile() {
             </CardFooter>
           </Card>
 
-          <Card className="slate-50 dark:bg-slate-950">
+          <Card>
             <CardHeader>
               <CardTitle className="flex items-center gap-2">
                 <Shield className="h-5 w-5" />
@@ -376,7 +376,7 @@ export function UserProfile() {
         </TabsContent>
 
         <TabsContent value="security" className="space-y-6">
-          <Card className="slate-50 dark:bg-slate-950">
+          <Card>
             <CardHeader>
               <CardTitle className="flex items-center gap-2">
                 <Lock className="h-5 w-5" />
@@ -456,7 +456,7 @@ export function UserProfile() {
             </CardFooter>
           </Card>
 
-          <Card className="slate-50 dark:bg-slate-950">
+          <Card>
             <CardHeader>
               <CardTitle>Two-Factor Authentication</CardTitle>
               <CardDescription>Add an extra layer of security to your account</CardDescription>
@@ -466,7 +466,7 @@ export function UserProfile() {
             </CardContent>
           </Card>
 
-          <Card className="slate-50 dark:bg-slate-950">
+          <Card>
             <CardHeader>
               <CardTitle className="text-red-600">Danger Zone</CardTitle>
               <CardDescription>Irreversible account actions</CardDescription>
@@ -495,7 +495,7 @@ export function UserProfile() {
         </TabsContent>
 
         <TabsContent value="appearance" className="space-y-6">
-          <Card className="slate-50 dark:bg-slate-950">
+          <Card>
             <CardHeader>
               <CardTitle>Theme Settings</CardTitle>
               <CardDescription>Customize the appearance of the application</CardDescription>
@@ -547,7 +547,7 @@ export function UserProfile() {
         </TabsContent>
 
         <TabsContent value="downloads" className="space-y-6">
-          <Card className="slate-50 dark:bg-slate-950">
+          <Card>
             <CardHeader>
               <CardTitle className="flex items-center gap-2">
                 <FileArchive className="h-5 w-5" />
@@ -622,7 +622,7 @@ export function UserProfile() {
             </CardContent>
           </Card>
 
-          <Card className="slate-50 dark:bg-slate-950">
+          <Card>
             <CardHeader>
               <CardTitle>Export Account Data</CardTitle>
               <CardDescription>Download all your personal data</CardDescription>
