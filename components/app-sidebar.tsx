@@ -23,13 +23,13 @@ const menuItems = [
     href: "/dashboard"
   },
   {
-    title: "Create Report",
+    title: "File Complaint",
     url: "#",
     icon: Plus,
     href: "/dashboard/reports/new"
   },
   {
-    title: "My Reports",
+    title: "My Complaints",
     url: "#",
     icon: FileText,
     href: "/dashboard/reports"
@@ -58,7 +58,7 @@ export function AppSidebar({ activeSection, setActiveSection }: AppSidebarProps)
     <Sidebar>
       <SidebarHeader className="bg-slate-50 dark:bg-slate-950">
         <div className="flex items-center gap-2 px-2 py-2">
-          <div className="flex h-8 w-8 items-center justify-center rounded-lg bg-red-600 text-white">
+          <div className="flex h-8 w-8 items-center justify-center rounded-lg bg-blue-900 dark:bg-slate-50 text-white dark:text-black">
             <Shield className="h-4 w-4" />
           </div>
           <div className="grid flex-1 text-left text-sm leading-tight">
@@ -89,13 +89,13 @@ export function AppSidebar({ activeSection, setActiveSection }: AppSidebarProps)
       </SidebarContent>
 
       <SidebarFooter className="bg-slate-50 dark:bg-slate-950">
-        <div className="p-2">
-          <div className="rounded-lg bg-red-50 p-3 text-sm">
-            <div className="flex items-center gap-2 font-medium text-red-800">
+        <div className="rounded-lg p-2 bg-slate-700 dark:bg-red-50 text-gray-200">
+          <div className="p-3 text-sm">
+            <div className="flex items-center gap-2 font-medium text-white dark:text-red-800">
               <AlertTriangle className="h-4 w-4" />
               Emergency?
             </div>
-            <p className="text-red-700 mt-1">Call 911 for immediate assistance</p>
+            <p className="dark:text-red-700 mt-1">Call 911 for immediate assistance</p>
           </div>
         </div>
       </SidebarFooter>

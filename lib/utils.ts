@@ -5,9 +5,9 @@ export function cn(...inputs: ClassValue[]) {
   return twMerge(clsx(inputs))
 }
 
-export const reports = [
+export const complaints = [
     {
-      id: "RPT-2024-001",
+      id: "CMPT-2024-001",
       type: "Financial Fraud",
       status: "Under Review",
       date: "2024-01-15",
@@ -35,7 +35,7 @@ export const reports = [
         "Case has been escalated to the financial crimes unit. Investigation is ongoing with the merchant's bank.",
     },
     {
-      id: "RPT-2024-002",
+      id: "CMPT-2024-002",
       type: "Identity Theft",
       status: "Investigating",
       date: "2024-01-14",
@@ -63,7 +63,7 @@ export const reports = [
         "Working with credit bureaus to freeze accounts. Suspect information being gathered.",
     },
     {
-      id: "RPT-2024-003",
+      id: "CMPT-2024-003",
       type: "Online Scam",
       status: "Resolved",
       date: "2024-01-13",
@@ -96,7 +96,7 @@ export const reports = [
         "Full refund obtained from payment processor. Website has been reported to hosting provider.",
     },
     {
-      id: "RPT-2024-004",
+      id: "CMPT-2024-004",
       type: "Investment Fraud",
       status: "Under Review",
       date: "2024-01-12",

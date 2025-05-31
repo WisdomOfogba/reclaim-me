@@ -37,23 +37,25 @@ import {
   User,
   FileText,
 } from "lucide-react";
-import { ReportObj } from "@/lib/types";
-import { getPriorityColor, getStatusColor, reports } from "@/lib/utils";
+import { ComplaintObj } from "@/lib/types";
+import { getPriorityColor, getStatusColor, complaints } from "@/lib/utils";
+import { useIsMobile } from "@/lib/hooks/use-mobile";
 
 
 export function ReportsList() {
   const [searchTerm, setSearchTerm] = useState("");
   const [statusFilter, setStatusFilter] = useState("all");
-  const [selectedReport, setSelectedReport] = useState<ReportObj | null>(null);
+  const [selectedComplaint, setSelectedComplaint] = useState<ComplaintObj | null>(null);
+  const isMobile = useIsMobile();
 
 
-  const filteredReports = reports.filter((report) => {
+  const filteredComplaints = complaints.filter((complaint) => {
     const matchesSearch =
-      report.id.toLowerCase().includes(searchTerm.toLowerCase()) ||
-      report.type.toLowerCase().includes(searchTerm.toLowerCase()) ||
-      report.description.toLowerCase().includes(searchTerm.toLowerCase());
+      complaint.id.toLowerCase().includes(searchTerm.toLowerCase()) ||
+      complaint.type.toLowerCase().includes(searchTerm.toLowerCase()) ||
+      complaint.description.toLowerCase().includes(searchTerm.toLowerCase());
     const matchesStatus =
-      statusFilter === "all" || report.status === statusFilter;
+      statusFilter === "all" || complaint.status === statusFilter;
     return matchesSearch && matchesStatus;
   });
 
@@ -61,21 +63,22 @@ export function ReportsList() {
     <div className="space-y-6">
       <div className="flex items-center justify-between">
         <div>
-          <h2 className="text-3xl font-bold tracking-tight">My Reports</h2>
+          <h2 className="text-3xl font-bold tracking-tight">My Complaints</h2>
           <p className="text-muted-foreground">
-            Track the status of your submitted reports
+            Track the status of your submitted complaints
           </p>
         </div>
-        <Button>
+        <Button className="bg-slate-950 text-white dark:bg-slate-50 dark:text-black">
           <Download className="mr-2 h-4 w-4" />
-          Export Reports
+          {/** // TODO: Add various export modes */}
+          Export
         </Button>
       </div>
 
       <Card className="bg-slate-50 dark:bg-slate-950">
         <CardHeader>
-          <CardTitle>Filter Reports</CardTitle>
-          <CardDescription>Search and filter your reports</CardDescription>
+          <CardTitle>Filter Complaints</CardTitle>
+          <CardDescription>Search and filter your complaints</CardDescription>
         </CardHeader>
         <CardContent>
           <div className="flex gap-4">
@@ -83,7 +86,7 @@ export function ReportsList() {
               <div className="relative">
                 <Search className="absolute left-2 top-2.5 h-4 w-4 text-muted-foreground" />
                 <Input
-                  placeholder="Search reports..."
+                  placeholder="Search complaints..."
                   value={searchTerm}
                   onChange={(e) => setSearchTerm(e.target.value)}
                   className="pl-8"
@@ -107,88 +110,88 @@ export function ReportsList() {
       </Card>
 
       <div className="space-y-4">
-        {filteredReports.map((report) => (
-          <Card key={report.id} className="hover:shadow-md transition-shadow bg-slate-50 dark:bg-slate-950">
+        {filteredComplaints.map((complaint) => (
+          <Card key={complaint.id} className="hover:shadow-md transition-shadow bg-slate-50 dark:bg-slate-950">
             <CardHeader>
               <div className="flex items-center justify-between">
                 <div>
-                  <CardTitle className="text-lg">{report.id}</CardTitle>
+                  <CardTitle className="text-lg">{complaint.id}</CardTitle>
                   <CardDescription className="flex items-center gap-4 mt-1">
-                    <span>{report.type}</span>
+                    <span>{complaint.type}</span>
                     <span className="flex items-center gap-1">
                       <Calendar className="h-3 w-3" />
-                      {report.date}
+                      {complaint.date}
                     </span>
                     <span className="flex items-center gap-1">
                       <MapPin className="h-3 w-3" />
-                      {report.location}
+                      {complaint.location}
                     </span>
                   </CardDescription>
                 </div>
                 <div className="flex items-center space-x-2">
-                  <Badge className={getPriorityColor(report.priority)}>
-                    {report.priority}
+                  <Badge className={getPriorityColor(complaint.priority)}>
+                    {complaint.priority}
                   </Badge>
-                  <Badge className={getStatusColor(report.status)}>
-                    {report.status}
+                  <Badge className={getStatusColor(complaint.status)}>
+                    {complaint.status}
                   </Badge>
                 </div>
               </div>
             </CardHeader>
             <CardContent>
               <p className="text-sm text-muted-foreground mb-4">
-                {report.description}
+                {complaint.description}
               </p>
               <div className="flex items-center justify-between">
                 <div className="text-sm text-muted-foreground">
                   <p className="flex items-center gap-1">
                     <User className="h-3 w-3" />
-                    {report.assignedAgent}
+                    {complaint.assignedAgent}
                   </p>
-                  <p>Last Update: {report.lastUpdate}</p>
-                  {report.amount && <p>Amount: {report.amount}</p>}
+                  <p>Last Update: {complaint.lastUpdate}</p>
+                  {complaint.amount && <p>Amount: {complaint.amount}</p>}
                 </div>
                 <Dialog>
                   <DialogTrigger asChild>
                     <Button
                       variant="outline"
                       size="sm"
-                      onClick={() => setSelectedReport(report)}
+                      onClick={() => setSelectedComplaint(complaint)}
                     >
                       <Eye className="mr-2 h-4 w-4" />
                       View Details
                     </Button>
                   </DialogTrigger>
-                  <DialogContent className="max-w-4xl max-h-[80vh] overflow-y-auto">
-                    <DialogHeader>
+                  <DialogContent className="max-w-4xl max-h-[80vh] overflow-y-auto bg-slate-50 dark:bg-slate-950">
+                    <DialogHeader className="bg-slate-50 dark:bg-slate-950">
                       <DialogTitle className="flex items-center justify-between">
-                        <span>Report Details - {report.id}</span>
+                        <span>Complaint Details - {complaint.id}</span>
                         <div className="flex gap-2">
-                          <Badge className={getPriorityColor(report.priority)}>
-                            {report.priority}
+                          <Badge className={getPriorityColor(complaint.priority)}>
+                            {complaint.priority}
                           </Badge>
-                          <Badge className={getStatusColor(report.status)}>
-                            {report.status}
+                          <Badge className={getStatusColor(complaint.status)}>
+                            {complaint.status}
                           </Badge>
                         </div>
                       </DialogTitle>
                       <DialogDescription>
-                        {report.type} - {report.date}
+                        {complaint.type} - {complaint.date}
                       </DialogDescription>
                     </DialogHeader>
 
-                    <Tabs defaultValue="overview" className="w-full">
-                      <TabsList className="grid w-full grid-cols-4">
-                        <TabsTrigger value="overview">Overview</TabsTrigger>
-                        <TabsTrigger value="timeline">Timeline</TabsTrigger>
-                        <TabsTrigger value="evidence">Evidence</TabsTrigger>
-                        <TabsTrigger value="communication">
+                    <Tabs defaultValue="overview" className="w-full overflow-auto">
+                      <TabsList className="grid w-full grid-cols-4 bg-gray-800 min-w-[400px]">
+                        <TabsTrigger value="overview" className="text-xs sm:text-sm text-gray-50 dark:hover:bg-gray-200 dark:hover:text-black data-[state=active]:bg-gray-200 data-[state=active]:text-black">Overview</TabsTrigger>
+                        <TabsTrigger value="timeline" className="text-xs sm:text-sm text-gray-50 dark:hover:bg-gray-200 dark:hover:text-black data-[state=active]:bg-gray-200 data-[state=active]:text-black">Timeline</TabsTrigger>
+                        <TabsTrigger value="evidence" className="text-xs sm:text-sm text-gray-50 dark:hover:bg-gray-200 dark:hover:text-black data-[state=active]:bg-gray-200 data-[state=active]:text-black">Evidence</TabsTrigger>
+                        <TabsTrigger value="communication" className="text-xs sm:text-sm text-gray-50 dark:hover:bg-gray-200 dark:hover:text-black data-[state=active]:bg-gray-200 data-[state=active]:text-black">
                           Communication
                         </TabsTrigger>
                       </TabsList>
 
                       <TabsContent value="overview" className="space-y-4">
-                        <Card>
+                        <Card className="bg-slate-50 dark:bg-slate-950">
                           <CardHeader>
                             <CardTitle>Incident Details</CardTitle>
                           </CardHeader>
@@ -196,10 +199,10 @@ export function ReportsList() {
                             <div className="grid grid-cols-2 gap-4">
                               <div>
                                 <label className="text-sm font-medium">
-                                  Report ID
+                                  Complaint ID
                                 </label>
                                 <p className="text-sm text-muted-foreground">
-                                  {report.id}
+                                  {complaint.id}
                                 </p>
                               </div>
                               <div>
@@ -207,7 +210,7 @@ export function ReportsList() {
                                   Type
                                 </label>
                                 <p className="text-sm text-muted-foreground">
-                                  {report.type}
+                                  {complaint.type}
                                 </p>
                               </div>
                               <div>
@@ -215,7 +218,7 @@ export function ReportsList() {
                                   Date Occurred
                                 </label>
                                 <p className="text-sm text-muted-foreground">
-                                  {report.date}
+                                  {complaint.date}
                                 </p>
                               </div>
                               <div>
@@ -223,7 +226,7 @@ export function ReportsList() {
                                   Location
                                 </label>
                                 <p className="text-sm text-muted-foreground">
-                                  {report.location}
+                                  {complaint.location}
                                 </p>
                               </div>
                               <div>
@@ -231,7 +234,7 @@ export function ReportsList() {
                                   Amount Involved
                                 </label>
                                 <p className="text-sm text-muted-foreground">
-                                  {report.amount}
+                                  {complaint.amount}
                                 </p>
                               </div>
                               <div>
@@ -239,7 +242,7 @@ export function ReportsList() {
                                   Assigned Agent
                                 </label>
                                 <p className="text-sm text-muted-foreground">
-                                  {report.assignedAgent}
+                                  {complaint.assignedAgent}
                                 </p>
                               </div>
                             </div>
@@ -248,7 +251,7 @@ export function ReportsList() {
                                 Description
                               </label>
                               <p className="text-sm text-muted-foreground mt-1">
-                                {report.description}
+                                {complaint.description}
                               </p>
                             </div>
                             <div>
@@ -256,7 +259,7 @@ export function ReportsList() {
                                 Investigation Notes
                               </label>
                               <p className="text-sm text-muted-foreground mt-1">
-                                {report.notes}
+                                {complaint.notes}
                               </p>
                             </div>
                           </CardContent>
@@ -270,7 +273,7 @@ export function ReportsList() {
                           </CardHeader>
                           <CardContent>
                             <div className="space-y-4">
-                              {report.timeline.map((event, index) => (
+                              {complaint.timeline.map((event, index) => (
                                 <div
                                   key={index}
                                   className="flex items-start gap-4 pb-4 border-b last:border-b-0"
@@ -304,7 +307,7 @@ export function ReportsList() {
                           </CardHeader>
                           <CardContent>
                             <div className="space-y-2">
-                              {report.evidence.map((item, index) => (
+                              {complaint.evidence.map((item, index) => (
                                 <div
                                   key={index}
                                   className="flex items-center gap-2 p-2 border rounded"
@@ -336,16 +339,17 @@ export function ReportsList() {
                                 <div className="flex items-center gap-2 mb-2">
                                   <MessageSquare className="h-4 w-4" />
                                   <span className="text-sm font-medium">
-                                    {report.assignedAgent}
+                                    {complaint.assignedAgent}
                                   </span>
                                   <span className="text-xs text-muted-foreground">
-                                    {report.lastUpdate}
+                                    {complaint.lastUpdate}
                                   </span>
                                 </div>
                                 <p className="text-sm">
-                                  Thank you for your report. We have begun our
+                                  Thank you for your input. We've escalated your criminal complaint to the appropriate authorities and will provide updates as they become available. 
+                                  {/* We have begun our
                                   investigation and will keep you updated on our
-                                  progress.
+                                  progress. */}
                                 </p>
                               </div>
                               <Button className="w-full">
@@ -365,15 +369,15 @@ export function ReportsList() {
         ))}
       </div>
 
-      {filteredReports.length === 0 && (
+      {filteredComplaints.length === 0 && (
         <Card className="bg-slate-50 dark:bg-slate-950">
           <CardContent className="text-center py-8">
             <FileText className="h-12 w-12 text-muted-foreground mx-auto mb-4" />
             <p className="text-muted-foreground">
-              No reports found matching your criteria.
+              No complaints found matching your criteria.
             </p>
             <Button className="mt-4" variant="outline">
-              Submit Your First Report
+              File Your First Complaint
             </Button>
           </CardContent>
         </Card>
