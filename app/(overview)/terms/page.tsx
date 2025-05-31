@@ -4,7 +4,7 @@ import { Scale, FileText, AlertTriangle, Shield } from "lucide-react"
 
 export default function TermsPage() {
   return (
-    <div className="min-h-screen bg-gradient-to-b from-slate-50 to-white dark:from-slate-950 dark:to-slate-900">
+    <div className="min-h-screen bg-gradient-to-b pt-12 from-slate-50 to-white dark:from-slate-950 dark:to-slate-900">
       <section className="container mx-auto px-4 py-16 lg:py-24">
         <div className="max-w-4xl mx-auto text-center">
           <Badge className="mb-6 bg-blue-100 text-blue-800 hover:bg-blue-100 dark:bg-blue-900/30 dark:text-blue-300">
@@ -15,7 +15,7 @@ export default function TermsPage() {
             <span className="text-blue-600 dark:text-blue-400 block">Service</span>
           </h1>
           <p className="text-xl text-gray-600 dark:text-gray-300 mb-8 leading-relaxed">
-            Please read these terms carefully before using ScamGuard. By accessing our platform, you agree to be bound
+            Please read these terms carefully before using ReclaimMe. By accessing our platform, you agree to be bound
             by these terms and conditions.
           </p>
           <p className="text-sm text-gray-500 dark:text-gray-400">Last updated: December 2024</p>
@@ -33,7 +33,7 @@ export default function TermsPage() {
                 <CardTitle className="text-gray-900 dark:text-white">Legal Assistance Tool</CardTitle>
                 <CardContent className="p-0">
                   <p className="text-gray-600 dark:text-gray-300 text-sm">
-                    ScamGuard provides AI-generated legal documents but does not constitute legal advice or
+                    ReclaimMe provides AI-generated legal documents but does not constitute legal advice or
                     representation.
                   </p>
                 </CardContent>
@@ -88,7 +88,7 @@ export default function TermsPage() {
                 <h2 className="text-2xl font-bold text-gray-900 dark:text-white mb-4">1. Acceptance of Terms</h2>
                 <div className="bg-white dark:bg-slate-900 p-6 rounded-lg border border-gray-200 dark:border-gray-700">
                   <p className="text-gray-600 dark:text-gray-300">
-                    By accessing and using ScamGuard, you accept and agree to be bound by the terms and provision of
+                    By accessing and using ReclaimMe, you accept and agree to be bound by the terms and provision of
                     this agreement. If you do not agree to abide by the above, please do not use this service.
                   </p>
                 </div>
@@ -98,7 +98,7 @@ export default function TermsPage() {
                 <h2 className="text-2xl font-bold text-gray-900 dark:text-white mb-4">2. Description of Service</h2>
                 <div className="bg-white dark:bg-slate-900 p-6 rounded-lg border border-gray-200 dark:border-gray-700">
                   <p className="text-gray-600 dark:text-gray-300 mb-4">
-                    ScamGuard is an AI-powered platform that assists users in generating legal documents and letters for
+                    ReclaimMe is an AI-powered platform that assists users in generating legal documents and letters for
                     reporting scams and illegal activities. Our service includes:
                   </p>
                   <ul className="text-gray-600 dark:text-gray-300 space-y-2">
@@ -131,7 +131,7 @@ export default function TermsPage() {
                 <h2 className="text-2xl font-bold text-gray-900 dark:text-white mb-4">4. Acceptable Use Policy</h2>
                 <div className="bg-white dark:bg-slate-900 p-6 rounded-lg border border-gray-200 dark:border-gray-700">
                   <p className="text-gray-600 dark:text-gray-300 mb-4">
-                    You agree not to use ScamGuard for any unlawful purpose or in any way that could damage, disable, or
+                    You agree not to use ReclaimMe for any unlawful purpose or in any way that could damage, disable, or
                     impair the service. Prohibited activities include:
                   </p>
                   <ul className="text-gray-600 dark:text-gray-300 space-y-2">
@@ -149,7 +149,7 @@ export default function TermsPage() {
                 <div className="bg-yellow-50 dark:bg-yellow-950/20 p-6 rounded-lg border border-yellow-200 dark:border-yellow-800">
                   <p className="text-yellow-800 dark:text-yellow-300 font-semibold mb-2">IMPORTANT DISCLAIMER:</p>
                   <p className="text-yellow-700 dark:text-yellow-400">
-                    ScamGuard is a document generation tool and does not provide legal advice. The AI-generated
+                    ReclaimMe is a document generation tool and does not provide legal advice. The AI-generated
                     documents are templates and suggestions only. We strongly recommend consulting with a qualified
                     attorney for legal advice specific to your situation. We are not responsible for the legal
                     effectiveness or accuracy of generated documents.
@@ -163,7 +163,7 @@ export default function TermsPage() {
                 </h2>
                 <div className="bg-white dark:bg-slate-900 p-6 rounded-lg border border-gray-200 dark:border-gray-700">
                   <p className="text-gray-600 dark:text-gray-300 mb-4">
-                    The ScamGuard platform, including its AI technology, design, and content, is protected by
+                    The ReclaimMe platform, including its AI technology, design, and content, is protected by
                     intellectual property laws. You retain ownership of the content you input, while we retain ownership
                     of our platform and technology.
                   </p>
@@ -174,7 +174,7 @@ export default function TermsPage() {
                 <h2 className="text-2xl font-bold text-gray-900 dark:text-white mb-4">7. Limitation of Liability</h2>
                 <div className="bg-white dark:bg-slate-900 p-6 rounded-lg border border-gray-200 dark:border-gray-700">
                   <p className="text-gray-600 dark:text-gray-300">
-                    To the maximum extent permitted by law, ScamGuard shall not be liable for any indirect, incidental,
+                    To the maximum extent permitted by law, ReclaimMe shall not be liable for any indirect, incidental,
                     special, consequential, or punitive damages, including without limitation, loss of profits, data,
                     use, goodwill, or other intangible losses, resulting from your use of the service.
                   </p>
@@ -210,9 +210,9 @@ export default function TermsPage() {
                     If you have any questions about these Terms of Service, please contact us:
                   </p>
                   <ul className="text-blue-700 dark:text-blue-400 space-y-2">
-                    <li>• Email: legal@scamguard.com</li>
+                    <li>• Email: legal@ReclaimMe.com</li>
                     <li>• Phone: 1-800-SCAM-HELP</li>
-                    <li>• Mail: ScamGuard Legal Team, 123 Justice Street, Legal District, LD 12345</li>
+                    <li>• Mail: ReclaimMe Legal Team, 123 Justice Street, Legal District, LD 12345</li>
                   </ul>
                 </div>
               </div>

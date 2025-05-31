@@ -7,7 +7,7 @@ import { Mail, Phone, MapPin, Clock, MessageCircle, Send } from "lucide-react"
 
 export default function ContactPage() {
   return (
-    <div className="min-h-screen bg-gradient-to-b from-slate-50 to-white dark:from-slate-950 dark:to-slate-900">
+    <div className="min-h-screen bg-gradient-to-b pt-12 from-slate-50 to-white dark:from-slate-950 dark:to-slate-900">
 
       {/* Hero Section */}
       <section className="container mx-auto px-4 py-16 lg:py-24">
@@ -20,7 +20,7 @@ export default function ContactPage() {
             <span className="text-blue-600 dark:text-blue-400 block">We&apos;re Here to Help</span>
           </h1>
           <p className="text-xl text-gray-600 dark:text-gray-300 mb-8 leading-relaxed">
-            Have questions about ScamGuard? Need assistance with your case? Our dedicated support team is ready to help
+            Have questions about ReclaimMe? Need assistance with your case? Our dedicated support team is ready to help
             you every step of the way.
           </p>
         </div>
@@ -34,7 +34,7 @@ export default function ContactPage() {
               <Mail className="h-12 w-12 text-blue-600 dark:text-blue-400 mb-4 mx-auto" />
               <CardTitle className="text-gray-900 dark:text-white">Email Support</CardTitle>
               <CardDescription className="text-gray-600 dark:text-gray-300">
-                support@scamguard.com
+                support@ReclaimMe.com
                 <br />
                 Response within 24 hours
               </CardDescription>
