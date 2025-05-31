@@ -40,6 +40,7 @@ import {
 import { ComplaintObj } from "@/lib/types";
 import { getPriorityColor, getStatusColor, complaints } from "@/lib/utils";
 import { useIsMobile } from "@/lib/hooks/use-mobile";
+import { Tooltip, TooltipContent, TooltipTrigger } from "@radix-ui/react-tooltip";
 
 
 export function ReportsList() {
@@ -163,10 +164,19 @@ export function ReportsList() {
                     </Button>
                   </DialogTrigger>
                   <DialogContent className="max-w-4xl max-h-[80vh] overflow-y-auto bg-slate-50 dark:bg-slate-950">
-                    <DialogHeader className="bg-slate-50 dark:bg-slate-950">
+                    <DialogHeader className="mt-10 text-left bg-slate-50 dark:bg-slate-950">
                       <DialogTitle className="flex items-center justify-between">
-                        <span>Complaint Details - {complaint.id}</span>
-                        <div className="flex gap-2">
+                        <Tooltip>
+                          <TooltipTrigger asChild>
+                           <span title={`Complaint Details - ${complaint.id}`} className="max-w-[350px] truncate">Complaint Details - {complaint.id}jghgjj,</span>
+                          </TooltipTrigger>
+
+                          <TooltipContent className="py-1.5 px-2.5 mb-3 dark:bg-stone-50 dark:text-black rounded-md">
+                           <span className="text-sm">Complaint Details - {complaint.id}</span>
+                          </TooltipContent>
+                        </Tooltip>
+                        
+                        <div className="hidden xsm:flex gap-2">
                           <Badge className={getPriorityColor(complaint.priority)}>
                             {complaint.priority}
                           </Badge>
@@ -180,8 +190,8 @@ export function ReportsList() {
                       </DialogDescription>
                     </DialogHeader>
 
-                    <Tabs defaultValue="overview" className="w-full overflow-auto">
-                      <TabsList className="grid w-full grid-cols-4 bg-gray-800 min-w-[400px]">
+                    <Tabs defaultValue="overview" className="w-full">
+                      <TabsList className="grid w-full grid-cols-4 bg-gray-800 overflow-auto ">
                         <TabsTrigger value="overview" className="text-xs sm:text-sm text-gray-50 dark:hover:bg-gray-200 dark:hover:text-black data-[state=active]:bg-gray-200 data-[state=active]:text-black">Overview</TabsTrigger>
                         <TabsTrigger value="timeline" className="text-xs sm:text-sm text-gray-50 dark:hover:bg-gray-200 dark:hover:text-black data-[state=active]:bg-gray-200 data-[state=active]:text-black">Timeline</TabsTrigger>
                         <TabsTrigger value="evidence" className="text-xs sm:text-sm text-gray-50 dark:hover:bg-gray-200 dark:hover:text-black data-[state=active]:bg-gray-200 data-[state=active]:text-black">Evidence</TabsTrigger>
