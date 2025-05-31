@@ -13,5 +13,5 @@ export const EditorUI = dynamic(
 export default function NewReportPage() {
   // const onChange = useCallback(()=>{}, [])
 
-  return 
+  return <EditorUI value="" onChange={()=>{}} />
 }
