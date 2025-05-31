@@ -78,9 +78,9 @@ export default function LandingPage() {
         </div>
 
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-          <Card className="border-2 hover:border-blue-200 dark:hover:border-blue-700 transition-all duration-300 hover:shadow-lg bg-white dark:bg-slate-900 border-gray-200 dark:border-gray-700">
+          <Card className="border-2 hover:border-blue-200  pb-2 dark:hover:border-blue-700 transition-all duration-300 hover:shadow-lg bg-white dark:bg-slate-900 border-gray-200 dark:border-gray-700">
             <CardHeader className="text-center">
-              <FileText className="h-16 w-16 text-blue-600 dark:text-blue-400 mb-4 mx-auto" />
+              <FileText className="size-10 text-blue-600 dark:text-blue-400 mb-4 mx-auto" />
               <CardTitle className="text-gray-900 dark:text-white text-xl">AI Letter Generation</CardTitle>
               <CardDescription className="text-gray-600 dark:text-gray-300">
                 Advanced AI creates professional, legally-sound letters tailored to your specific incident
@@ -88,9 +88,9 @@ export default function LandingPage() {
             </CardHeader>
           </Card>
 
-          <Card className="border-2 hover:border-blue-200 dark:hover:border-blue-700 transition-all duration-300 hover:shadow-lg bg-white dark:bg-slate-900 border-gray-200 dark:border-gray-700">
+          <Card className="border-2 hover:border-blue-200  pb-2 dark:hover:border-blue-700 transition-all duration-300 hover:shadow-lg bg-white dark:bg-slate-900 border-gray-200 dark:border-gray-700">
             <CardHeader className="text-center">
-              <Edit className="h-16 w-16 text-green-600 dark:text-green-400 mb-4 mx-auto" />
+              <Edit className="size-10 text-green-600 dark:text-green-400 mb-4 mx-auto" />
               <CardTitle className="text-gray-900 dark:text-white text-xl">Edit & Customize</CardTitle>
               <CardDescription className="text-gray-600 dark:text-gray-300">
                 Full editing capabilities to personalize your letters and add specific details about your case
@@ -98,9 +98,9 @@ export default function LandingPage() {
             </CardHeader>
           </Card>
 
-          <Card className="border-2 hover:border-blue-200 dark:hover:border-blue-700 transition-all duration-300 hover:shadow-lg bg-white dark:bg-slate-900 border-gray-200 dark:border-gray-700 md:col-span-2 lg:col-span-1">
+          <Card className="border-2 hover:border-blue-200 pb-2 dark:hover:border-blue-700 transition-all duration-300 hover:shadow-lg bg-white dark:bg-slate-900 border-gray-200 dark:border-gray-700 md:col-span-2 lg:col-span-1">
             <CardHeader className="text-center">
-              <Eye className="h-16 w-16 text-purple-600 dark:text-purple-400 mb-4 mx-auto" />
+              <Eye className="size-10 text-purple-600 dark:text-purple-400 mb-4 mx-auto" />
               <CardTitle className="text-gray-900 dark:text-white text-xl">Preview & Send</CardTitle>
               <CardDescription className="text-gray-600 dark:text-gray-300">
                 Preview your letters before sending via email or downloading as PDF documents

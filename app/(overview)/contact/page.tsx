@@ -17,7 +17,7 @@ export default function ContactPage() {
           </Badge>
           <h1 className="text-4xl lg:text-6xl font-bold text-gray-900 dark:text-white mb-6 leading-tight">
             Get in Touch
-            <span className="text-blue-600 dark:text-blue-400 block">We're Here to Help</span>
+            <span className="text-blue-600 dark:text-blue-400 block">We&apos;re Here to Help</span>
           </h1>
           <p className="text-xl text-gray-600 dark:text-gray-300 mb-8 leading-relaxed">
             Have questions about ScamGuard? Need assistance with your case? Our dedicated support team is ready to help
@@ -85,7 +85,7 @@ export default function ContactPage() {
             <CardHeader>
               <CardTitle className="text-gray-900 dark:text-white text-2xl">Send Us a Message</CardTitle>
               <CardDescription className="text-gray-600 dark:text-gray-300">
-                Fill out the form below and we'll get back to you as soon as possible.
+                Fill out the form below and we&apos;ll get back to you as soon as possible.
               </CardDescription>
             </CardHeader>
             <CardContent className="space-y-6">
@@ -162,7 +162,7 @@ export default function ContactPage() {
                 <CardContent className="p-0">
                   <p className="text-purple-700 dark:text-purple-400">
                     For urgent matters, use our live chat feature or call our emergency support line. We understand that
-                    scam situations can be time-sensitive and we're here to help immediately.
+                    scam situations can be time-sensitive and we&apos;re here to help immediately.
                   </p>
                 </CardContent>
               </CardHeader>
