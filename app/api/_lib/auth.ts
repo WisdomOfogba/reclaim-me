@@ -6,7 +6,6 @@ import { hash, verify } from "@node-rs/argon2";
 
 type AuthReq = {
   firstname: string;
-  lastname: string;
   email: string;
 };
 
@@ -33,8 +32,8 @@ export const totp = new TOTP({
 
 /** Liable to throw */
 export async function verifyToken(token: string) {
-  const isValid = await jwtVerify(token, publicKeyBuffer);
-  return isValid.payload as JWTPayload & AuthReq;
+  const isValid = await jwtVerify<AuthReq>(token, publicKeyBuffer);
+  return isValid.payload;
 }
 
 export async function createToken(authData: AuthReq) {
@@ -48,6 +47,11 @@ export async function createToken(authData: AuthReq) {
 
   return token;
 }
+
+// /** @param exp The current expiry date  */
+// export async function refreshToken(exp: number) {
+   
+// }
 
 export async function hashPassword(password: string) {
   return hash(password, {
