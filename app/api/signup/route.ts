@@ -1,10 +1,10 @@
 import { NextRequest, NextResponse } from "next/server";
-import { loginSchema, signupSchema } from "../_lib/validation-schemas";
-import z from "zod/v4-mini";
+import { signupSchema } from "../_lib/validation-schemas";
+import * as z from "zod/v4-mini";
 import { db } from "../_lib/drizzle";
 import { users } from "../_lib/drizzle/schema";
 import { eq } from "drizzle-orm";
-import { createToken, hashPassword, verifyPassword } from "../_lib/auth";
+import { createToken, hashPassword } from "../_lib/auth";
 
 export async function POST(request: NextRequest) {
   const body: z.infer<typeof signupSchema> = await request.json();

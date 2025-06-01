@@ -20,7 +20,7 @@ import {
 } from "@/components/ui/select";
 import {
   Dialog,
-  DialogClose,
+  // DialogClose,
   DialogContent,
   DialogDescription,
   DialogHeader,
@@ -35,13 +35,11 @@ import {
   MessageSquare,
   Calendar,
   MapPin,
-  User,
   FileText,
-  X,
 } from "lucide-react";
 import { ComplaintObj } from "@/lib/types";
 import { getPriorityColor, getStatusColor, complaints } from "@/lib/utils";
-import { useIsMobile } from "@/lib/hooks/use-mobile";
+// import { useIsMobile } from "@/lib/hooks/use-mobile";
 
 
 export function ReportsList() {

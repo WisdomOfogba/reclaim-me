@@ -1,6 +1,6 @@
 import { NextRequest, NextResponse } from "next/server";
 import { loginSchema } from "../_lib/validation-schemas";
-import z from "zod/v4-mini";
+import * as z from "zod/v4-mini";
 import { db } from "../_lib/drizzle";
 import { users } from "../_lib/drizzle/schema";
 import { eq } from "drizzle-orm";
@@ -64,7 +64,7 @@ export async function POST(request: NextRequest) {
     });
 
     return response;
-  } catch (error) {
+  } catch {
     return NextResponse.json(
       {
         message: "SSomething went wrong... \nPlease try again later",

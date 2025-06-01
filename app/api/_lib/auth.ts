@@ -1,6 +1,5 @@
 import { SignJWT } from "jose/jwt/sign";
 import { jwtVerify } from "jose/jwt/verify";
-import { JWTPayload } from "jose";
 import { HOTP, Secret, TOTP } from "otpauth";
 import { hash, verify } from "@node-rs/argon2";
 
