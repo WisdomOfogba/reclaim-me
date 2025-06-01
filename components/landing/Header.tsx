@@ -37,14 +37,14 @@ const Header = () => {
           {/* Logo */}
           <Link href="/" className="flex items-center space-x-2">
             <Image
-              src="/assets/logo.png"
+              src="/assets/Logo.png"
               alt="Reclaimme Logo"
               width={100}
               height={50}
               className="dark:hidden"
             />
             <Image
-              src="/assets/logo-white.png"
+              src="/assets/Logo-white.png"
               alt="Reclaimme Logo"
               width={100}
               height={50}
