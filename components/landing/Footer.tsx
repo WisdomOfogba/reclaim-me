@@ -55,11 +55,6 @@ export default function Footer() {
                   Contact Us
                 </Link>
               </li>
-              <li>
-                <Link href="/security" className="text-gray-400 hover:text-white transition-colors">
-                  Security
-                </Link>
-              </li>
             </ul>
           </div>
 
