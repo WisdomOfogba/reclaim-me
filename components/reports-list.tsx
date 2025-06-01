@@ -47,21 +47,8 @@ import { useIsMobile } from "@/lib/hooks/use-mobile";
 export function ReportsList() {
   const [searchTerm, setSearchTerm] = useState("");
   const [statusFilter, setStatusFilter] = useState("all");
-  const [selectedComplaint, setSelectedComplaint] = useState<{
-    id: string;
-    type: string;
-    status: string;
-    date: string;
-    priority: string;
-    description: string;
-    lastUpdate: string;
-    amount: string;
-    location: string;
-    assignedAgent: string;
-    timeline: { date: string; action: string; status: string }[];
-    evidence: string[];
-    notes: string;
-  } | null>(null);
+  const [selectedComplaint, setSelectedComplaint] =
+    useState<ComplaintObj | null>(null);
 
   useEffect(() => {
     console.log("Selected :", selectedComplaint);
