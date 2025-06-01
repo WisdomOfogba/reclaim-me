@@ -9,9 +9,7 @@ import { createToken, hashPassword, verifyPassword } from "../_lib/auth";
 export async function POST(request: NextRequest) {
   const body: z.infer<typeof signupSchema> = await request.json();
   //   const token = request.cookies.get("token");
-  try {
-    signupSchema.parse(body);
-  } catch {
+  if (!signupSchema.safeParse(body).success) {
     return NextResponse.json(
       {
         message: "Invalid Schema provided",

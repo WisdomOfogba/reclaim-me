@@ -91,8 +91,8 @@ export function ReportsList() {
           <CardDescription>Search and filter your complaints</CardDescription>
         </CardHeader>
         <CardContent>
-          <div className="flex gap-4">
-            <div className="flex-1">
+          <div className="flex flex-col fourf:flex-row gap-4">
+            <div className="w-full">
               <div className="relative">
                 <Search className="absolute left-2 top-2.5 h-4 w-4 text-muted-foreground" />
                 <Input
@@ -104,15 +104,25 @@ export function ReportsList() {
               </div>
             </div>
             <Select value={statusFilter} onValueChange={setStatusFilter}>
-              <SelectTrigger className="w-[180px]">
+              <SelectTrigger className="w-full max-w-[220px] ml-auto">
                 <SelectValue placeholder="Filter by status" />
               </SelectTrigger>
               <SelectContent>
-                <SelectItem value="all">All Statuses</SelectItem>
-                <SelectItem value="Under Review">Under Review</SelectItem>
-                <SelectItem value="Investigating">Investigating</SelectItem>
-                <SelectItem value="Resolved">Resolved</SelectItem>
-                <SelectItem value="Closed">Closed</SelectItem>
+                <SelectItem className="cursor-pointer" value="all">
+                  All Statuses
+                </SelectItem>
+                <SelectItem className="cursor-pointer" value="Under Review">
+                  Under Review
+                </SelectItem>
+                <SelectItem className="cursor-pointer" value="Investigating">
+                  Investigating
+                </SelectItem>
+                <SelectItem className="cursor-pointer" value="Resolved">
+                  Resolved
+                </SelectItem>
+                <SelectItem className="cursor-pointer" value="Closed">
+                  Closed
+                </SelectItem>
               </SelectContent>
             </Select>
           </div>
@@ -156,7 +166,7 @@ export function ReportsList() {
                 {complaint.description}
               </p>
               <div className="flex flex-col fourf:flex-row items-center justify-between gap-5 fourf:gap-0">
-                <div className="flex fourf:flex-col gap-2.5 justify-center items-center text-sm">
+                <div className="flex fourf:flex-col gap-x-5 gap-y-2.5 justify-center fourf:items-start items-center text-sm flex-wrap">
                   <p className="flex items-center gap-1 w-fit font-bold text-gray-700 dark:text-white">
                     {/* <User className="h-3 w-3" /> */}
                     {complaint.assignedAgent}
