@@ -13,6 +13,24 @@ type AuthReq = {
 const privateKeyBuffer = Buffer.from(process.env.PRIVATE_KEY!, "base64");
 const publicKeyBuffer = Buffer.from(process.env.PUBLIC_KEY!, "base64");
 
+/** One Time OTP */
+export const hotp = new HOTP({
+  algorithm: "SHA256",
+  secret: new Secret(),
+  issuer: "ReclaimMe",
+  digits: 8,
+});
+
+/** Recurring OTP 30s */
+export const totp = new TOTP({
+  label: "ReclaimMe OTP",
+  algorithm: "SHA256",
+  issuer: "ReclaimMe",
+  digits: 6,
+  period: 30,
+  secret: new Secret(),
+});
+
 /** Liable to throw */
 export async function verifyToken(token: string) {
   const isValid = await jwtVerify(token, publicKeyBuffer);
@@ -40,13 +58,3 @@ export async function hashPassword(password: string) {
 export async function verifyPassword(hash: string, password: string) {
   return verify(hash, password, { secret: privateKeyBuffer });
 }
-
-/** One time OTP */
-export async function generateHOTP() {
-  const hotp = new HOTP({
-    secret: new Secret({ buffer: privateKeyBuffer.buffer }),
-  });
-}
-
-/** Generate timer OTP for 2FA */
-export async function generateTOTP() {}
