@@ -39,16 +39,16 @@ const Header = () => {
             <Image
               src="/assets/Logo.png"
               alt="Reclaimme Logo"
-              width={100}
-              height={50}
-              className="dark:hidden"
+              width={700}
+              height={300}
+              className="dark:hidden w-[100px]"
             />
             <Image
               src="/assets/Logo-white.png"
               alt="Reclaimme Logo"
-              width={100}
-              height={50}
-              className="dark:flex hidden"
+              width={500}
+              height={150}
+              className="dark:flex hidden w-[100px]"
             />
           </Link>
 
