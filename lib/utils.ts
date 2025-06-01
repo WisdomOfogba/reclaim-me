@@ -5,6 +5,8 @@ export function cn(...inputs: ClassValue[]) {
   return twMerge(clsx(inputs))
 }
 
+export const broadcastChannel = new BroadcastChannel("reclaimMe");
+
 export const complaints = [
     {
       id: "CMPT-2024-001",

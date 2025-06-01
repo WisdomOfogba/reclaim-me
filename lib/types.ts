@@ -14,7 +14,7 @@ export type ComplaintObj = {
   notes: string;
 };
 
-export type GeneratedDocument = {
+export type ScamReportData = {
   name: string;
   phone: string;
   email: string;
