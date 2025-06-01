@@ -43,7 +43,7 @@ export const complaints = pgTable("complaints", {
   }),
 });
 
-
+/** For storing reset link tokens */
 export const tokenTable = pgTable("tokens", {
   token: text("token").notNull(),
   expDate: date("exp_date", { mode: "date" }).notNull(),
