@@ -66,16 +66,22 @@ export function ReportsList() {
 
   return (
     <div className="space-y-6">
-      <div className="flex items-center justify-between">
+      <div className="flex items-start justify-between gap-5">
         <div>
-          <h2 className="text-3xl font-bold tracking-tight">My Complaints</h2>
+          <h2 className="text-2xl xs:text-3xl font-bold tracking-tight">
+            My Complaints
+          </h2>
           <p className="text-muted-foreground">
             Track the status of your submitted complaints
           </p>
         </div>
-        <Button>
-          <Download className="mr-2 h-4 w-4" />
-          Export Complaints
+        <Button
+          title="Export Complaints"
+          aria-label="Export Complaints"
+          className="text-sm xsm:text-base"
+        >
+          <Download className="xsm:mr-1 w-4 h-4" />
+          <span className="hidden xsm:inline">Export Complaints</span>
         </Button>
       </div>
 
@@ -115,12 +121,15 @@ export function ReportsList() {
 
       <div className="space-y-4">
         {filteredComplaints.map((complaint) => (
-          <Card key={complaint.id} className="hover:shadow-md transition-shadow bg-slate-50 dark:bg-slate-950">
+          <Card
+            key={complaint.id}
+            className="hover:shadow-md transition-shadow bg-slate-50 dark:bg-slate-950"
+          >
             <CardHeader>
-              <div className="flex items-center justify-between">
+              <div className="flex items-start justify-between">
                 <div>
                   <CardTitle className="text-lg">{complaint.id}</CardTitle>
-                  <CardDescription className="flex items-center gap-4 mt-1">
+                  <CardDescription className="hidden fiveh:flex items-center gap-4 mt-1">
                     <span>{complaint.type}</span>
                     <span className="flex items-center gap-1">
                       <Calendar className="h-3 w-3" />
@@ -132,7 +141,7 @@ export function ReportsList() {
                     </span>
                   </CardDescription>
                 </div>
-                <div className="flex items-center space-x-2">
+                <div className="hidden sm:flex items-center space-x-2">
                   <Badge className={getPriorityColor(complaint.priority)}>
                     {complaint.priority}
                   </Badge>
@@ -146,14 +155,26 @@ export function ReportsList() {
               <p className="text-sm text-muted-foreground mb-4">
                 {complaint.description}
               </p>
-              <div className="flex items-center justify-between">
-                <div className="text-sm text-muted-foreground">
-                  <p className="flex items-center gap-1">
-                    <User className="h-3 w-3" />
+              <div className="flex flex-col fourf:flex-row items-center justify-between gap-5 fourf:gap-0">
+                <div className="flex fourf:flex-col gap-2.5 justify-center items-center text-sm text-gray-700 dark:text-white">
+                  <p className="flex items-center gap-1 w-fit font-bold text-gray-700 dark:text-white/70">
+                    {/* <User className="h-3 w-3" /> */}
                     {complaint.assignedAgent}
                   </p>
-                  <p>Last Update: {complaint.lastUpdate}</p>
-                  {complaint.amount && <p>Amount: {complaint.amount}</p>}
+                  <p>
+                    <span className="font-bold text-gray-700 dark:text-white/70">
+                      Last Update:
+                    </span>{" "}
+                    {complaint.lastUpdate}
+                  </p>
+                  {/* {complaint.amount && (
+                    <p className="text-gray-950 dark:text-gray-50">
+                      <span className="font-bold text-gray-950 dark:text-gray-50">
+                        Amount:
+                      </span>{" "}
+                      {complaint.amount}
+                    </p>
+                  )} */}
                 </div>
                 <Dialog>
                   <DialogTrigger asChild>
@@ -170,9 +191,13 @@ export function ReportsList() {
                   <DialogContent className="max-w-4xl max-h-[80vh] overflow-y-auto bg-slate-50 dark:bg-slate-950">
                     <DialogHeader className="mt-10 bg-slate-50 dark:bg-slate-950">
                       <DialogTitle className="flex items-center justify-between">
-                        <span className="max-w-[350px] truncate">Complaint Details - {complaint.id}</span>
+                        <span className="max-w-[350px] truncate">
+                          Complaint Details - {complaint.id}
+                        </span>
                         <div className="hidden xsm:flex gap-2">
-                          <Badge className={getPriorityColor(complaint.priority)}>
+                          <Badge
+                            className={getPriorityColor(complaint.priority)}
+                          >
                             {complaint.priority}
                           </Badge>
                           <Badge className={getStatusColor(complaint.status)}>
@@ -185,12 +210,33 @@ export function ReportsList() {
                       </DialogDescription>
                     </DialogHeader>
 
-                    <Tabs defaultValue="overview" className="w-full overflow-auto">
+                    <Tabs
+                      defaultValue="overview"
+                      className="w-full overflow-auto"
+                    >
                       <TabsList className="grid w-full grid-cols-4 gap-1 bg-gray-800 min-w-[400px]">
-                        <TabsTrigger value="overview" className="text-xs sm:text-sm text-gray-50 dark:hover:bg-gray-200 dark:hover:text-black data-[state=active]:bg-gray-200 data-[state=active]:text-black">Overview</TabsTrigger>
-                        <TabsTrigger value="timeline" className="text-xs sm:text-sm text-gray-50 dark:hover:bg-gray-200 dark:hover:text-black data-[state=active]:bg-gray-200 data-[state=active]:text-black">Timeline</TabsTrigger>
-                        <TabsTrigger value="evidence" className="text-xs sm:text-sm text-gray-50 dark:hover:bg-gray-200 dark:hover:text-black data-[state=active]:bg-gray-200 data-[state=active]:text-black">Evidence</TabsTrigger>
-                        <TabsTrigger value="communication" className="text-xs sm:text-sm text-gray-50 dark:hover:bg-gray-200 dark:hover:text-black data-[state=active]:bg-gray-200 data-[state=active]:text-black">
+                        <TabsTrigger
+                          value="overview"
+                          className="text-xs sm:text-sm text-gray-50 dark:hover:bg-gray-200 dark:hover:text-black data-[state=active]:bg-gray-200 data-[state=active]:text-black"
+                        >
+                          Overview
+                        </TabsTrigger>
+                        <TabsTrigger
+                          value="timeline"
+                          className="text-xs sm:text-sm text-gray-50 dark:hover:bg-gray-200 dark:hover:text-black data-[state=active]:bg-gray-200 data-[state=active]:text-black"
+                        >
+                          Timeline
+                        </TabsTrigger>
+                        <TabsTrigger
+                          value="evidence"
+                          className="text-xs sm:text-sm text-gray-50 dark:hover:bg-gray-200 dark:hover:text-black data-[state=active]:bg-gray-200 data-[state=active]:text-black"
+                        >
+                          Evidence
+                        </TabsTrigger>
+                        <TabsTrigger
+                          value="communication"
+                          className="text-xs sm:text-sm text-gray-50 dark:hover:bg-gray-200 dark:hover:text-black data-[state=active]:bg-gray-200 data-[state=active]:text-black"
+                        >
                           Communication
                         </TabsTrigger>
                       </TabsList>
@@ -351,9 +397,9 @@ export function ReportsList() {
                                   </span>
                                 </div>
                                 <p className="text-sm">
-                                  Thank you for your complaint. We have begun our
-                                  investigation and will keep you updated on our
-                                  progress.
+                                  Thank you for your complaint. We have begun
+                                  our investigation and will keep you updated on
+                                  our progress.
                                 </p>
                               </div>
                               <Button className="w-full">

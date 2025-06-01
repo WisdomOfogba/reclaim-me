@@ -13,6 +13,8 @@ const config: Config = {
     extend: {
       screens: {
         xs: "400px",
+        fourf: "450px",
+        fiveh: "500px",
         xsm: "600px",
         vmain: "1028px",
       },
