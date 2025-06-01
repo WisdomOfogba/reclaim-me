@@ -138,7 +138,7 @@ export default function Dashboard() {
           ))}
         </div>
 
-        <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-7">
+        <div className="grid gap-4 md:grid-cols-2 vmain:grid-cols-7">
           <Card className="col-span-4 bg-grad-back">
             <CardHeader>
               <CardTitle>Recent Reports</CardTitle>
@@ -178,7 +178,7 @@ export default function Dashboard() {
             </CardContent>
           </Card>
 
-          <Card className="col-span-3 bg-grad-back">
+          <Card className="col-span-4 vmain:col-span-3 bg-grad-back w-full">
             <CardHeader>
               <CardTitle>Quick Actions</CardTitle>
               <CardDescription>Common tasks and shortcuts</CardDescription>

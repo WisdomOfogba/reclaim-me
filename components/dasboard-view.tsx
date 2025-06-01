@@ -16,28 +16,28 @@ export function DashboardView({ children }: { children: React.ReactNode }) {
 
   return (
     // <ThemeProvider defaultTheme="dark" storageKey="reclaimme-theme">
-      <SidebarProvider>
-        <AppSidebar
-          activeSection={activeSection}
-          setActiveSection={setActiveSection}
-        />
-        <SidebarInset>
-          <header className="flex h-16 shrink-0 items-center gap-2 border-b px-4 slate-50 dark:bg-slate-950">
-            <SidebarTrigger className="-ml-1" />
-            <div className="flex items-center gap-2">
-              <AlertTriangle className="h-6 w-6 text-red-600" />
-              <h1 className="text-xl font-semibold">ReclaimMe Dashboard</h1>
-            </div>
-            <ThemeToggle />
-          </header>
+    <SidebarProvider>
+      <AppSidebar
+        activeSection={activeSection}
+        setActiveSection={setActiveSection}
+      />
+      <SidebarInset>
+        <header className="flex h-16 shrink-0 items-center gap-2 border-b px-4 slate-50 dark:bg-slate-950">
+          <SidebarTrigger className="-ml-1" />
+          <div className="flex items-center gap-2">
+            <AlertTriangle className="h-6 w-6 text-red-600" />
+            <h1 className="xs:text-xl font-semibold">ReclaimMe Dashboard</h1>
+          </div>
+          <ThemeToggle />
+        </header>
 
-          <main className="flex-1 space-y-4 p-4 md:p-8 pt-6 slate-50 dark:bg-slate-950">
-            {children}
-          </main>
+        <main className="flex-1 space-y-4 p-4 md:p-8 pt-6 slate-50 dark:bg-slate-950">
+          {children}
+        </main>
 
-          <Toaster />
-        </SidebarInset>
-      </SidebarProvider>
+        <Toaster />
+      </SidebarInset>
+    </SidebarProvider>
     // </ThemeProvider>
   );
 }
