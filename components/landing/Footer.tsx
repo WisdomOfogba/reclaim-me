@@ -1,4 +1,5 @@
 import { Shield } from "lucide-react"
+import Image from "next/image"
 import Link from "next/link"
 
 export default function Footer() {
@@ -8,8 +9,7 @@ export default function Footer() {
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
           <div className="lg:col-span-1">
             <div className="flex items-center space-x-2 mb-4">
-              <Shield className="h-8 w-8 text-blue-400" />
-              <span className="text-xl font-bold">ReclaimMe</span>
+              <Image src="/assets/Logo-white.png" alt="ReclaimMe Logo" width={100} height={50} />
             </div>
             <p className="text-gray-400 dark:text-gray-500 text-sm leading-relaxed">
               Empowering scam victims with AI-powered legal assistance and professional documentation to seek justice.

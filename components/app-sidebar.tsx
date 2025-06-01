@@ -14,6 +14,7 @@ import {
   SidebarMenuItem,
 } from "@/components/ui/sidebar"
 import Link from "next/link"
+import Image from "next/image"
 
 const menuItems = [
   {
@@ -58,13 +59,10 @@ export function AppSidebar({ activeSection, setActiveSection }: AppSidebarProps)
     <Sidebar>
       <SidebarHeader className="bg-slate-50 dark:bg-slate-950">
         <div className="flex items-center gap-2 px-2 py-2">
-          <div className="flex h-8 w-8 items-center justify-center rounded-lg bg-blue-900 dark:bg-slate-50 text-white dark:text-black">
-            <Shield className="h-4 w-4" />
-          </div>
-          <div className="grid flex-1 text-left text-sm leading-tight">
-            <span className="truncate font-semibold">ReclaimMe</span>
-            <span className="truncate text-xs text-muted-foreground">Victim Support Portal</span>
-          </div>
+            <Link href="/" className="grid flex-1 text-left text-sm leading-tight no-underline">
+            <Image src="/assets/Logo.png" alt="ReclaimMe Logo" width={100} height={50} className="dark:hidden" />
+            <Image src="/assets/Logo-white.png" alt="ReclaimMe Logo" width={100} height={50} className="hidden dark:block" />
+            </Link>
         </div>
       </SidebarHeader>
 
