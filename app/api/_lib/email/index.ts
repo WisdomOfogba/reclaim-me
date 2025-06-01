@@ -1,22 +1,11 @@
-import 'dotenv/config';
-import { MailerSend, EmailParams, Sender, Recipient } from "mailersend";
+import { Resend, CreateEmailOptions } from "resend";
 
-const mailerSend = new MailerSend({
-  apiKey: process.env.MAILERSEND_KEY!,
-});
+const resend = new Resend(process.env.RESEND_KEY);
 
-const sentFrom = new Sender("you@yourdomain.com", "Your name");
-
-const recipients = [
-  new Recipient("your@client.com", "Your Client")
-];
-
-const emailParams = new EmailParams()
-  .setFrom(sentFrom)
-  .setTo(recipients)
-  .setReplyTo(sentFrom)
-  .setSubject("This is a Subject")
-  .setHtml("<strong>This is the HTML content</strong>")
-  .setText("This is the text content");
-
-await mailerSend.email.send(emailParams);
+/** @throws */
+export async function sendMail(data: Omit<CreateEmailOptions, "from">) {
+  return resend.emails.send({
+    from: "onboarding@resend.dev",
+    ...data,
+  } as CreateEmailOptions);
+}

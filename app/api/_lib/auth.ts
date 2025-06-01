@@ -1,6 +1,8 @@
 import { SignJWT } from "jose/jwt/sign";
 import { jwtVerify } from "jose/jwt/verify";
 import { JWTPayload } from "jose";
+import { HOTP, Secret, TOTP } from "otpauth";
+import { hash, verify } from "@node-rs/argon2";
 
 type AuthReq = {
   firstname: string;
@@ -28,3 +30,23 @@ export async function createToken(authData: AuthReq) {
 
   return token;
 }
+
+export async function hashPassword(password: string) {
+  return hash(password, {
+    secret: privateKeyBuffer,
+  });
+}
+
+export async function verifyPassword(hash: string, password: string) {
+  return verify(hash, password, { secret: privateKeyBuffer });
+}
+
+/** One time OTP */
+export async function generateHOTP() {
+  const hotp = new HOTP({
+    secret: new Secret({ buffer: privateKeyBuffer.buffer }),
+  });
+}
+
+/** Generate timer OTP for 2FA */
+export async function generateTOTP() {}

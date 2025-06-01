@@ -9,8 +9,7 @@ import {
   text,
   varchar,
 } from "drizzle-orm/pg-core";
-import {} from "drizzle-kit";
-import { foreignKey } from "drizzle-orm/gel-core";
+
 
 // TODO: Rememeber to add auth in case of various users
 export const users = pgTable("users", {
@@ -42,4 +41,13 @@ export const complaints = pgTable("complaints", {
   userId: integer("user_id").references(() => users.id, {
     onDelete: "cascade",
   }),
+});
+
+
+export const tokenTable = pgTable("tokens", {
+  token: text("token").notNull(),
+  expDate: date("exp_date", { mode: "date" }).notNull(),
+  userId: integer("user_id")
+    .notNull()
+    .references(() => users.id),
 });
