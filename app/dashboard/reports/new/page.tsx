@@ -92,17 +92,12 @@ export default function ReclaimMePage() {
       case 0:
         return (
           formData.name && formData.phone && formData.email && formData.address
-        );
+        ) ? true : false;
       case 1:
-        return formData.scamType && formData.dateTime && formData.description;
+        return (formData.scamType && formData.dateTime && formData.description) ? true : false;
       case 2:
-        return formData.amount && formData.paymentMethod;
-      case 3:
-        return (
-          formData.beneficiary.name &&
-          formData.beneficiary.bank &&
-          formData.beneficiary.account
-        );
+        return (formData.name && formData.phone && formData.email && formData.address &&
+          formData.scamType && formData.dateTime && formData.description) ? true : false;
       default:
         return false;
     }
@@ -261,47 +256,6 @@ Phone: (555) 234-5678
 Email: sarah.williams@email.com`,
     createdAt: new Date("2024-11-30T14:15:00"),
   },
-  {
-    id: "3",
-    type: "employment-letter",
-    title: "Employment Letter",
-    content: `TECH SOLUTIONS INC.
-1000 Business Park Drive
-Innovation City, ST 54321
-Phone: (555) 100-2000
-Email: hr@techsolutions.com
-
-Date: December 1, 2024
-
-To Whom It May Concern:
-
-This letter serves to confirm the employment of Michael Chen with Tech Solutions Inc.
-
-EMPLOYMENT DETAILS:
-Employee Name: Michael Chen
-Position: Senior Software Developer
-Department: Engineering
-Employment Start Date: January 15, 2022
-Employment Status: Full-time
-Current Annual Salary: $95,000
-
-Michael Chen has been a valuable member of our engineering team and has consistently demonstrated exceptional technical skills, leadership abilities, and dedication to project excellence. His responsibilities include developing and maintaining web applications, mentoring junior developers, and collaborating with cross-functional teams to deliver high-quality software solutions.
-
-During his tenure with our company, Michael has successfully led multiple projects, including the development of our customer portal system and the implementation of our new API infrastructure. He has shown remarkable problem-solving abilities and has been instrumental in improving our development processes.
-
-This letter is issued upon request for mortgage application purposes.
-
-If you require any additional information or verification, please feel free to contact our Human Resources department at (555) 100-2000 or hr@techsolutions.com.
-
-Sincerely,
-
-Jennifer Martinez
-Director of Human Resources
-Tech Solutions Inc.
-Phone: (555) 100-2000
-Email: j.martinez@techsolutions.com`,
-    createdAt: new Date("2024-11-29T09:45:00"),
-  },
 ]
 
   // if (generatedDocs) {
@@ -421,8 +375,11 @@ Email: j.martinez@techsolutions.com`,
           <CardHeader>
             <CardTitle>Tell Us What Happened</CardTitle>
             <CardDescription>
-              We'll guide you through this step by step. Your information is
-              secure and will only be used to generate your documents.
+              We&apos;ll guide you through this step by step. Your information is
+              secure and will only be used to generate your documents. <br /><br />
+              <span className="font-semibold">
+                Fields marked with <span className="text-red-500">*</span> are required
+              </span>
             </CardDescription>
           </CardHeader>
           <CardContent className="space-y-6">
@@ -433,7 +390,7 @@ Email: j.martinez@techsolutions.com`,
               </h3>
               <div className="grid gap-4 md:grid-cols-2">
                 <div className="space-y-2">
-                  <Label htmlFor="name">Full Name</Label>
+                  <Label htmlFor="name">Full Name</Label> <span className="text-red-500">*</span>
                   <Input
                     id="name"
                     value={formData.name}
@@ -442,7 +399,7 @@ Email: j.martinez@techsolutions.com`,
                   />
                 </div>
                 <div className="space-y-2">
-                  <Label htmlFor="phone">Phone Number</Label>
+                  <Label htmlFor="phone">Phone Number</Label> <span className="text-red-500">*</span>
                   <Input
                     id="phone"
                     value={formData.phone}
@@ -452,7 +409,7 @@ Email: j.martinez@techsolutions.com`,
                 </div>
               </div>
               <div className="space-y-2">
-                <Label htmlFor="email">Email Address</Label>
+                <Label htmlFor="email">Email Address</Label> <span className="text-red-500">*</span>
                 <Input
                   id="email"
                   type="email"
@@ -462,7 +419,7 @@ Email: j.martinez@techsolutions.com`,
                 />
               </div>
               <div className="space-y-2">
-                <Label htmlFor="address">Address</Label>
+                <Label htmlFor="address">Address</Label> <span className="text-red-500">*</span>
                 <Textarea
                   id="address"
                   value={formData.address}
@@ -481,7 +438,7 @@ Email: j.martinez@techsolutions.com`,
                 </h3>
                 <div className="grid gap-4 md:grid-cols-2">
                   <div className="space-y-2">
-                    <Label htmlFor="scamType">Type of Scam</Label>
+                    <Label htmlFor="scamType">Type of Scam</Label> <span className="text-red-500">*</span>
                     <Select
                       value={formData.scamType}
                       onValueChange={(value) =>
@@ -510,9 +467,10 @@ Email: j.martinez@techsolutions.com`,
                     </Select>
                   </div>
                   <div className="space-y-2">
-                    <Label htmlFor="dateTime">Date & Time of Incident</Label>
+                    <Label htmlFor="dateTime">Date & Time of Incident</Label> <span className="text-red-500">*</span>
                     <Input
                       id="dateTime"
+                      type="date"
                       value={formData.dateTime}
                       onChange={(e) =>
                         updateFormData("dateTime", e.target.value)
@@ -522,7 +480,7 @@ Email: j.martinez@techsolutions.com`,
                   </div>
                 </div>
                 <div className="space-y-2">
-                  <Label htmlFor="description">What Happened?</Label>
+                  <Label htmlFor="description">What Happened?</Label> <span className="text-red-500">*</span>
                   <Textarea
                     id="description"
                     value={formData.description}
@@ -635,7 +593,7 @@ Email: j.martinez@techsolutions.com`,
             )}
 
             {/* Generate Button */}
-            {isStepComplete(3) && (
+            {isStepComplete(2) && (
               <div className="pt-6 animate-in slide-in-from-bottom-4">
                 <Button
                   onClick={handleGenerate}
@@ -664,24 +622,22 @@ Email: j.martinez@techsolutions.com`,
           <div className="w-3 min-h-[400px] max-h-[600px] bg-gray-200 rounded-full overflow-hidden relative mx-2">
             <div
               className={`absolute left-0 bottom-0 w-full transition-all duration-500 ${
-                isStepComplete(3) ? "bg-green-500" : "bg-blue-500"
+                isStepComplete(2) ? "bg-green-500" : "bg-blue-500"
               }`}
               style={{
-                height: isStepComplete(3)
+                height: isStepComplete(2)
                   ? "100%"
-                  : isStepComplete(2)
-                  ? "75%"
                   : isStepComplete(1)
-                  ? "50%"
+                  ? "70%"
                   : isStepComplete(0)
-                  ? "25%"
+                  ? "35%"
                   : "0%",
               }}
             />
           </div>
         </div>
       </div>
-      {generatedDocs && (
+      {!!generatedDocs && (
         <div ref={resultRef}  className="mt-8">
           <ComplainLetter SAMPLE_DOCUMENTS={SAMPLE_DOCUMENTS} />
         </div>

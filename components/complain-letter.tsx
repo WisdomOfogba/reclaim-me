@@ -72,7 +72,7 @@ export default function ComplainLetter({ SAMPLE_DOCUMENTS }: { SAMPLE_DOCUMENTS:
       <div className="max-w-7xl mx-auto space-y-6">
         {/* Header */}
         <div className="text-center space-y-2">
-          <h1 className="text-3xl font-bold text-green-900">Complaint Generated</h1>
+          <h1 className="text-3xl font-bold text-green-700">Complaints Generated</h1>
         </div>
 
         {/* Documents List */}
@@ -113,7 +113,7 @@ export default function ComplainLetter({ SAMPLE_DOCUMENTS }: { SAMPLE_DOCUMENTS:
         </Card>
          {/* Editor and Preview Section */}
         {selectedDocument && (
-          <div className="grid lg:grid-cols-2 gap-6">
+          <div className="grid 2xl:grid-cols-2 gap-6">
             {/* Editor */}
             <Card>
               <CardHeader>
