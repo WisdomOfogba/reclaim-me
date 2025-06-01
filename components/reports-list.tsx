@@ -156,13 +156,13 @@ export function ReportsList() {
                 {complaint.description}
               </p>
               <div className="flex flex-col fourf:flex-row items-center justify-between gap-5 fourf:gap-0">
-                <div className="flex fourf:flex-col gap-2.5 justify-center items-center text-sm text-gray-700 dark:text-white">
-                  <p className="flex items-center gap-1 w-fit font-bold text-gray-700 dark:text-white/70">
+                <div className="flex fourf:flex-col gap-2.5 justify-center items-center text-sm">
+                  <p className="flex items-center gap-1 w-fit font-bold text-gray-700 dark:text-white">
                     {/* <User className="h-3 w-3" /> */}
                     {complaint.assignedAgent}
                   </p>
                   <p>
-                    <span className="font-bold text-gray-700 dark:text-white/70">
+                    <span className="font-bold text-gray-700 dark:text-white">
                       Last Update:
                     </span>{" "}
                     {complaint.lastUpdate}
