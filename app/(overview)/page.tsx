@@ -35,7 +35,6 @@ function AnimateWhenVisible({ children, className, delay = 0, duration = 0.5 }: 
 }
 
 export default function LandingPage() {
-  // Variants for staggered animations
   const containerVariants = {
     hidden: { opacity: 0 },
     show: {
@@ -186,8 +185,6 @@ export default function LandingPage() {
           </motion.div>
         </motion.div>
       </section>
-
-      {/* How It Works */}
       <section className="bg-gray-50 dark:bg-slate-900/50 py-16 lg:py-24">
         <div className="container mx-auto px-4">
           <AnimateWhenVisible>
@@ -239,8 +236,6 @@ export default function LandingPage() {
           </div>
         </div>
       </section>
-
-      {/* Benefits Section */}
       <section className="container mx-auto px-4 py-16 lg:py-24">
         <div className="grid lg:grid-cols-2 gap-12 items-center">
           <div>

@@ -57,7 +57,15 @@ export default function SignInPage() {
 
     setIsLoading(true);
     // Simulate API call
-    await new Promise((resolve) => setTimeout(resolve, 2000));
+    const data = await fetch("/api/signin", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify(formData),
+    });
+    console.log("Response:", data);
+
     setIsLoading(false);
 
     // In a real app, you would handle the signin here
