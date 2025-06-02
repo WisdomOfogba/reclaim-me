@@ -15,9 +15,14 @@ const LogoutModal = ({ onClose }: { onClose: () => void }) => {
               // Handle logout logic
               try {
                 setIsLoading(true);
-                await fetch("/api/logout")
-                window.location.href = "/signin"; // Redirect to sign-in page
+                await fetch("/api/logout", {
+                  method: "POST",
+                  headers: {
+                    "Content-Type": "application/json",
+                  },
+                });
                 onClose();
+                // window.location.href = "/signin"; // Redirect to sign-in page
               } catch (error) {
                 console.error("Logout failed:", error);
                 toast.error("Logout failed. Please try again.");
