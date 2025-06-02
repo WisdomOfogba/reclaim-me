@@ -1,36 +1,44 @@
-"use client"
+"use client";
 
-import { useState } from "react"
-import { Button } from "@/components/ui/button"
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
-import { Textarea } from "@/components/ui/textarea"
-import { ScrollArea } from "@/components/ui/scroll-area"
-import { FileText, Edit3, Eye, Copy, Download, Check } from "lucide-react"
-import { useToast } from "@/lib/hooks/use-toast"
+import { useState } from "react";
+import { Button } from "@/components/ui/button";
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { Textarea } from "@/components/ui/textarea";
+import { ScrollArea } from "@/components/ui/scroll-area";
+import { FileText, Edit3, Eye, Copy, Download, Check } from "lucide-react";
+import { useToast } from "@/lib/hooks/use-toast";
 
 export interface Document {
-  id: string
-  type: string
-  title: string
-  content: string
-  createdAt: Date
+  id: string;
+  type: string;
+  title: string;
+  content: string;
+  createdAt: Date;
 }
 
-export default function ComplainLetter({ SAMPLE_DOCUMENTS }: { SAMPLE_DOCUMENTS: Document[] }) {
-  const [documents] = useState<Document[]>(SAMPLE_DOCUMENTS)
-  const [selectedDocument, setSelectedDocument] = useState<Document | null>(null)
-  const [editorContent, setEditorContent] = useState<string>(documents[0]?.content || "")
-  const [copied, setCopied] = useState(false)
-  const { toast } = useToast()
+export default function ComplainLetter({
+  SAMPLE_DOCUMENTS,
+}: {
+  SAMPLE_DOCUMENTS: Document[];
+}) {
+  const [documents] = useState<Document[]>(SAMPLE_DOCUMENTS);
+  const [selectedDocument, setSelectedDocument] = useState<Document | null>(
+    null
+  );
+  const [editorContent, setEditorContent] = useState<string>(
+    documents[0]?.content || ""
+  );
+  const [copied, setCopied] = useState(false);
+  const { toast } = useToast();
 
   const selectDocument = (document: Document) => {
-    setSelectedDocument(document)
-    setEditorContent(document.content)
-  }
+    setSelectedDocument(document);
+    setEditorContent(document.content);
+  };
 
   const updateEditorContent = (content: string) => {
-    setEditorContent(content)
-  }
+    setEditorContent(content);
+  };
 
   const copyToClipboard = async () => {
     try {
@@ -48,39 +56,41 @@ export default function ComplainLetter({ SAMPLE_DOCUMENTS }: { SAMPLE_DOCUMENTS:
         variant: "destructive",
       });
     }
-  }
+  };
 
   const downloadDocument = () => {
-    const blob = new Blob([editorContent], { type: "text/plain" })
-    const url = URL.createObjectURL(blob)
-    const a = document.createElement("a")
-    a.href = url
-    a.download = `${selectedDocument?.title.replace(/\s+/g, "_").toLowerCase() || "document"}.txt`
-    document.body.appendChild(a)
-    a.click()
-    document.body.removeChild(a)
-    URL.revokeObjectURL(url)
+    const blob = new Blob([editorContent], { type: "text/plain" });
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement("a");
+    a.href = url;
+    a.download = `${selectedDocument?.title.replace(/\s+/g, "_").toLowerCase() || "document"}.txt`;
+    document.body.appendChild(a);
+    a.click();
+    document.body.removeChild(a);
+    URL.revokeObjectURL(url);
 
     toast({
       title: "Download started",
       description: "Your document is being downloaded.",
-    })
-  }
+    });
+  };
 
   return (
     <div className="min-h-screen bg-gray-50 p-6">
       <div className="max-w-7xl mx-auto space-y-6">
         {/* Header */}
         <div className="text-center space-y-2">
-          <h1 className="text-3xl font-bold text-green-700">Complaints Generated</h1>
+          <h1 className="text-3xl font-bold text-green-700">
+            Complaints Generated
+          </h1>
         </div>
 
         {/* Documents List */}
-        <Card>
+        <Card className="bg-slate-50 dark:bg-slate-950">
           <CardHeader>
             <CardTitle className="flex items-center gap-2">
               <FileText className="h-5 w-5" />
-            Documents ({documents.length})
+              Documents ({documents.length})
             </CardTitle>
           </CardHeader>
           <CardContent>
@@ -99,7 +109,9 @@ export default function ComplainLetter({ SAMPLE_DOCUMENTS }: { SAMPLE_DOCUMENTS:
                     <div className="flex items-center gap-3">
                       <FileText className="h-5 w-5 text-gray-600" />
                       <div>
-                        <h3 className="font-medium text-gray-900">{document.title}</h3>
+                        <h3 className="font-medium text-gray-900">
+                          {document.title}
+                        </h3>
                         {/* <p className="text-sm text-gray-500">
                           Created {document.createdAt.toLocaleDateString()} at {document.createdAt.toLocaleTimeString()}
                         </p> */}
@@ -111,11 +123,11 @@ export default function ComplainLetter({ SAMPLE_DOCUMENTS }: { SAMPLE_DOCUMENTS:
             </div>
           </CardContent>
         </Card>
-         {/* Editor and Preview Section */}
+        {/* Editor and Preview Section */}
         {selectedDocument && (
           <div className="grid 2xl:grid-cols-2 gap-6">
             {/* Editor */}
-            <Card>
+            <Card className="bg-slate-50 dark:bg-slate-950">
               <CardHeader>
                 <div className="flex items-center justify-between">
                   <CardTitle className="flex items-center gap-2">
@@ -123,10 +135,24 @@ export default function ComplainLetter({ SAMPLE_DOCUMENTS }: { SAMPLE_DOCUMENTS:
                     Editor
                   </CardTitle>
                   <div className="flex gap-2">
-                    <Button variant="outline" size="icon" onClick={copyToClipboard} className="flex items-center gap-2">
-                      {copied ? <Check className="h-4 w-4" /> : <Copy className="h-4 w-4" />}
+                    <Button
+                      variant="outline"
+                      size="icon"
+                      onClick={copyToClipboard}
+                      className="flex items-center gap-2"
+                    >
+                      {copied ? (
+                        <Check className="h-4 w-4" />
+                      ) : (
+                        <Copy className="h-4 w-4" />
+                      )}
                     </Button>
-                    <Button variant="outline" size="icon" onClick={downloadDocument} className="flex items-center gap-2">
+                    <Button
+                      variant="outline"
+                      size="icon"
+                      onClick={downloadDocument}
+                      className="flex items-center gap-2"
+                    >
                       <Download className="h-4 w-4" />
                     </Button>
                   </div>
@@ -143,7 +169,7 @@ export default function ComplainLetter({ SAMPLE_DOCUMENTS }: { SAMPLE_DOCUMENTS:
             </Card>
 
             {/* Preview */}
-            <Card>
+            <Card className="bg-slate-50 dark:bg-slate-950">
               <CardHeader>
                 <CardTitle className="flex items-center gap-2">
                   <Eye className="h-5 w-5" />
@@ -164,5 +190,5 @@ export default function ComplainLetter({ SAMPLE_DOCUMENTS }: { SAMPLE_DOCUMENTS:
         )}
       </div>
     </div>
-  )
+  );
 }

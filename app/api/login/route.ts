@@ -4,7 +4,8 @@ import * as z from "zod/v4-mini";
 import { db } from "../_lib/drizzle";
 import { users } from "../_lib/drizzle/schema";
 import { eq } from "drizzle-orm";
-import { createToken, verifyPassword } from "../_lib/auth";
+import { createToken } from "../_lib/auth";
+import { verifyPassword } from "../_lib/auth.argon";
 
 export async function POST(request: NextRequest) {
   const body: z.infer<typeof loginSchema> = await request.json();
@@ -55,7 +56,7 @@ export async function POST(request: NextRequest) {
       firstname: foundUser.firstName,
     });
 
-    const response = NextResponse.next({ status: 200 });
+    const response = NextResponse.redirect(new URL("/dashboard", request.url));
     response.cookies.set({
       name: "token",
       value: token,
@@ -65,6 +66,7 @@ export async function POST(request: NextRequest) {
 
     return response;
   } catch {
+    // console.error(e)
     return NextResponse.json(
       {
         message: "SSomething went wrong... \nPlease try again later",

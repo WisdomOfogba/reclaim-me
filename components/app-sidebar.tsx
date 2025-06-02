@@ -1,6 +1,6 @@
-"use client"
+"use client";
 
-import { AlertTriangle, FileText, BarChart3, Settings, Home, Plus, Shield } from "lucide-react"
+import { AlertTriangle, FileText, Settings, Home, Plus } from "lucide-react";
 import {
   Sidebar,
   SidebarContent,
@@ -12,28 +12,28 @@ import {
   SidebarMenu,
   SidebarMenuButton,
   SidebarMenuItem,
-} from "@/components/ui/sidebar"
-import Link from "next/link"
-import Image from "next/image"
+} from "@/components/ui/sidebar";
+import Link from "next/link";
+import Image from "next/image";
 
 const menuItems = [
   {
     title: "Overview",
     url: "#",
     icon: Home,
-    href: "/dashboard"
+    href: "/dashboard",
   },
   {
     title: "File Complaint",
     url: "#",
     icon: Plus,
-    href: "/dashboard/reports/new"
+    href: "/dashboard/reports/new",
   },
   {
     title: "My Complaints",
     url: "#",
     icon: FileText,
-    href: "/dashboard/reports"
+    href: "/dashboard/reports",
   },
   // {
   //   title: "Analytics",
@@ -45,24 +45,42 @@ const menuItems = [
     title: "Settings",
     url: "#",
     icon: Settings,
-    href: "/dashboard/settings"
+    href: "/dashboard/settings",
   },
-]
+];
 
 interface AppSidebarProps {
-  activeSection: string
-  setActiveSection: (section: string) => void
+  activeSection: string;
+  setActiveSection: (section: string) => void;
 }
 
-export function AppSidebar({ activeSection, setActiveSection }: AppSidebarProps) {
+export function AppSidebar({
+  activeSection,
+  setActiveSection,
+}: AppSidebarProps) {
   return (
     <Sidebar>
       <SidebarHeader className="bg-slate-50 dark:bg-slate-950">
         <div className="flex items-center gap-2 px-2 py-2">
-            <Link href="/" className="grid flex-1 text-left text-sm leading-tight no-underline">
-            <Image src="/assets/Logo.png" alt="ReclaimMe Logo" width={100} height={50} className="dark:hidden" />
-            <Image src="/assets/Logo-white.png" alt="ReclaimMe Logo" width={100} height={50} className="hidden dark:block" />
-            </Link>
+          <Link
+            href="/"
+            className="grid flex-1 text-left text-sm leading-tight no-underline"
+          >
+            <Image
+              src="/assets/Logo.png"
+              alt="ReclaimMe Logo"
+              width={120}
+              height={50}
+              className="dark:hidden w-[120px] h-[50px]"
+            />
+            <Image
+              src="/assets/Logo-white.png"
+              alt="ReclaimMe Logo"
+              width={120}
+              height={50}
+              className="hidden dark:block w-[120px] h-[50px]"
+            />
+          </Link>
         </div>
       </SidebarHeader>
 
@@ -74,10 +92,13 @@ export function AppSidebar({ activeSection, setActiveSection }: AppSidebarProps)
               {menuItems.map((item) => (
                 <SidebarMenuItem key={item.title}>
                   <Link href={item.href} className="w-full block justify-start">
-                  <SidebarMenuButton onClick={() => setActiveSection(item.href)} isActive={activeSection === item.href}>
-                    <item.icon />
-                    <span>{item.title}</span>
-                  </SidebarMenuButton>
+                    <SidebarMenuButton
+                      onClick={() => setActiveSection(item.href)}
+                      isActive={activeSection === item.href}
+                    >
+                      <item.icon />
+                      <span>{item.title}</span>
+                    </SidebarMenuButton>
                   </Link>
                 </SidebarMenuItem>
               ))}
@@ -93,10 +114,12 @@ export function AppSidebar({ activeSection, setActiveSection }: AppSidebarProps)
               <AlertTriangle className="h-4 w-4" />
               Emergency?
             </div>
-            <p className="dark:text-red-700 mt-1">Call 911 for immediate assistance</p>
+            <p className="dark:text-red-700 mt-1">
+              Call 911 for immediate assistance
+            </p>
           </div>
         </div>
       </SidebarFooter>
     </Sidebar>
-  )
+  );
 }
