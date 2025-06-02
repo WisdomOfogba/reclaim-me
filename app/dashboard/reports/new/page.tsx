@@ -20,7 +20,8 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import { ArrowRight } from "lucide-react";
-import ComplainLetter, { Document } from "@/components/complain-letter";
+import ComplainLetter from "@/components/complain-letter";
+import { SAMPLE_DOCUMENTS } from "@/lib/utils";
 
 interface FormData {
   name: string;
@@ -192,83 +193,6 @@ ${formData.name}`,
       setIsGenerating(false);
     }, 2000);
   };
-
-  const SAMPLE_DOCUMENTS: Document[] = [
-    {
-      id: "1",
-      type: "police-report",
-      title: "Police Report",
-      content: `POLICE REPORT
-
-Date: December 1, 2024
-Case Number: PR-2024-001234
-Reporting Officer: Officer Johnson
-
-INCIDENT DETAILS:
-Location: 123 Main Street, Downtown District
-Date/Time of Incident: November 30, 2024, 3:45 PM
-Type of Incident: Vehicle Theft
-
-DESCRIPTION:
-On November 30, 2024, at approximately 3:45 PM, the complainant reported that their vehicle, a 2020 Honda Civic (License Plate: ABC-1234), was stolen from the parking lot at 123 Main Street. The vehicle was parked and locked at approximately 2:00 PM when the complainant entered the nearby shopping center. Upon returning at 3:45 PM, the vehicle was no longer in the parking space.
-
-PARTIES INVOLVED:
-Complainant: John Smith, 456 Oak Avenue, Phone: (555) 123-4567
-Witness(es): Mary Johnson (saw suspicious individual near vehicle), Phone: (555) 987-6543
-Suspect(s): Unknown at this time
-
-EVIDENCE:
-- Security camera footage from parking lot (requested)
-- Photographs of the parking space
-- Vehicle registration and insurance documents
-
-OFFICER NOTES:
-Area canvassed for additional witnesses. Security footage has been requested from the shopping center management. BOLO alert issued for the stolen vehicle. Case assigned to Detective Williams for follow-up investigation.
-
-Report Filed By: Officer Johnson, Badge #4567
-Signature: ________________________
-Date: December 1, 2024`,
-      createdAt: new Date("2024-12-01T10:30:00"),
-    },
-    {
-      id: "2",
-      type: "bank-message",
-      title: "Message to Bank",
-      content: `Dear First National Bank Customer Service,
-
-Subject: Dispute of Unauthorized Transaction
-
-Account Holder: Sarah Williams
-Account Number: ****-****-****-5678
-Date: December 1, 2024
-
-Dear Sir/Madam,
-
-I am writing to formally dispute an unauthorized transaction that appeared on my account statement dated November 28, 2024.
-
-On November 28, 2024, I noticed a charge of $299.99 to "UNKNOWN MERCHANT LLC" that I did not authorize. I have never conducted business with this merchant, and I was not in possession of my card at the time of this transaction as it was securely in my wallet at home. I immediately checked my card and confirmed it was still in my possession and had not been compromised.
-
-I have attached the following supporting documents:
-- Copy of account statement highlighting the disputed transaction
-- Copy of my identification
-- Timeline of my activities on November 28, 2024
-
-I am requesting that this charge be reversed immediately and that you investigate this unauthorized transaction. I have already changed my online banking password as a precautionary measure and am requesting a new debit card.
-
-I would appreciate your prompt attention to this matter and look forward to your response within 10 business days. Please contact me at (555) 234-5678 or sarah.williams@email.com if you need any additional information.
-
-Thank you for your time and assistance.
-
-Sincerely,
-
-Sarah Williams
-789 Pine Street, Apt 4B
-Cityville, ST 12345
-Phone: (555) 234-5678
-Email: sarah.williams@email.com`,
-      createdAt: new Date("2024-11-30T14:15:00"),
-    },
-  ];
 
   // if (generatedDocs) {
   //   return (

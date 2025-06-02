@@ -3,10 +3,11 @@
 import { useState } from "react";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { Textarea } from "@/components/ui/textarea";
+// import { Textarea } from "@/components/ui/textarea";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import { FileText, Edit3, Eye, Copy, Download, Check } from "lucide-react";
 import { useToast } from "@/lib/hooks/use-toast";
+import { EditorUI } from "./editor-ui";
 
 export interface Document {
   id: string;
@@ -159,11 +160,16 @@ export default function ComplainLetter({
                 </div>
               </CardHeader>
               <CardContent>
-                <Textarea
+                {/* <Textarea
                   value={editorContent}
                   onChange={(e) => updateEditorContent(e.target.value)}
                   placeholder="Start editing your document..."
                   className="min-h-[500px] text-sm break-words"
+                /> */}
+
+                <EditorUI
+                  value={editorContent}
+                  onChange={updateEditorContent}
                 />
               </CardContent>
             </Card>
