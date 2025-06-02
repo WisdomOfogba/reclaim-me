@@ -447,7 +447,7 @@ ${formData.name}`,
             {/* Step 3: Financial Information */}
             {isStepComplete(1) && (
               <div className="space-y-4 animate-in slide-in-from-bottom-4">
-                <h3 className="text-lg font-semibold text-gray-900">
+                <h3 className="text-lg font-semibold text-gray-900 dark:text-slate-50">
                   Financial Information
                 </h3>
                 <div className="grid gap-4 md:grid-cols-3">

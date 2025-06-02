@@ -7,7 +7,13 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import { FileText, Edit3, Eye, Copy, Download, Check } from "lucide-react";
 import { useToast } from "@/lib/hooks/use-toast";
-import { EditorUI } from "./editor-ui";
+import dynamic from "next/dynamic";
+// import { EditorUI } from "./editor-ui";
+
+const EditorUI = dynamic(
+  () => import("./editor-ui").then(({ EditorUI }) => EditorUI),
+  { ssr: false }
+);
 
 export interface Document {
   id: string;
