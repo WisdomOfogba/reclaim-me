@@ -1,9 +1,11 @@
 import { Loader2 } from "lucide-react";
+import { useRouter } from "next/navigation";
 import React, { useState } from "react";
 import {toast} from "sonner";
 
 const LogoutModal = ({ onClose }: { onClose: () => void }) => {
   const [isLoading, setIsLoading] = useState(false);
+  const router = useRouter();
   return (
     <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50 z-50">
       <div className="bg-white dark:bg-slate-800 p-6 rounded-lg shadow-lg">
@@ -22,7 +24,7 @@ const LogoutModal = ({ onClose }: { onClose: () => void }) => {
                   },
                 });
                 onClose();
-                // window.location.href = "/signin"; // Redirect to sign-in page
+                router.replace("/signin"); // Redirect to sign-in page
               } catch (error) {
                 console.error("Logout failed:", error);
                 toast.error("Logout failed. Please try again.");

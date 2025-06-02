@@ -1,22 +1,15 @@
-import { NextRequest, NextResponse } from "next/server";
+import { cookies } from "next/headers";
+import { NextResponse } from "next/server";
 
-export function POST(request: NextRequest) {
-  if (!request.cookies.delete("token")) {
-    return NextResponse.json(
-      {
-        message:
-          "Error occurred while logging you out...\nPlease try again later",
-      },
-      { status: 500 }
-    );
-  }
+export async function POST() {
+  const cookieStore = await cookies();
+  cookieStore.delete("token");
 
   return NextResponse.json(
     {
       success: true,
     },
     {
-      ...request,
       status: 200,
     }
   );
