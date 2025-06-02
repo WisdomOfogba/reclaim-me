@@ -1,6 +1,6 @@
 "use client";
 
-import { AlertTriangle, FileText, Settings, Home, Plus } from "lucide-react";
+import { AlertTriangle, FileText, Settings, Home, Plus, LogOut } from "lucide-react";
 import {
   Sidebar,
   SidebarContent,
@@ -15,6 +15,8 @@ import {
 } from "@/components/ui/sidebar";
 import Link from "next/link";
 import Image from "next/image";
+import { useState } from "react";
+import LogoutModal from "./LogoutModal";
 
 const menuItems = [
   {
@@ -58,6 +60,8 @@ export function AppSidebar({
   activeSection,
   setActiveSection,
 }: AppSidebarProps) {
+  const [logoutModalOpen, setLogoutModalOpen] = useState(false);
+
   return (
     <Sidebar>
       <SidebarHeader className="bg-slate-50 dark:bg-slate-950">
@@ -102,6 +106,18 @@ export function AppSidebar({
                   </Link>
                 </SidebarMenuItem>
               ))}
+              <SidebarMenuItem>
+                <div className="w-full block text-red-500 hover:text-red-700 hover:bg-red-100 justify-start">
+                  <SidebarMenuButton
+                    onClick={() => setLogoutModalOpen(true)}
+                    isActive={activeSection === "/logout"}
+                    className="hover:text-red-700 hover:bg-red-100 rounded-lg"
+                  >
+                    <LogOut />
+                    <span>Logout</span>
+                  </SidebarMenuButton>
+                </div>
+              </SidebarMenuItem>
             </SidebarMenu>
           </SidebarGroupContent>
         </SidebarGroup>
@@ -119,7 +135,11 @@ export function AppSidebar({
             </p>
           </div>
         </div>
+
       </SidebarFooter>
+      {logoutModalOpen && (
+        <LogoutModal onClose={() => setLogoutModalOpen(false)} />
+      )}
     </Sidebar>
   );
 }
