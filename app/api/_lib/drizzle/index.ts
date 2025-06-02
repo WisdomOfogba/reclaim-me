@@ -1,5 +1,6 @@
-import { drizzle } from "drizzle-orm/node-postgres";
-import postgres from "postgres"
+import { drizzle } from "drizzle-orm/postgres-js";
+import postgres from "postgres";
+// import {  } from "pg"
 import * as schema from "./schema";
 
 const client = postgres(process.env.DATABASE_URL!, { prepare: false });
