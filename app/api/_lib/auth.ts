@@ -42,7 +42,9 @@ export async function createToken(authData: AuthReq) {
     exp: expirationTime,
     iat: issuedAt,
     ...authData,
-  }).sign(privateKeyBuffer);
+  })
+    .setProtectedHeader({ alg: "RSA256" })
+    .sign(privateKeyBuffer);
 
   return token;
 }
