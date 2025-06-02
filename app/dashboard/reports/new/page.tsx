@@ -90,14 +90,26 @@ export default function ReclaimMePage() {
   const isStepComplete = (step: number): boolean => {
     switch (step) {
       case 0:
-        return (
-          formData.name && formData.phone && formData.email && formData.address
-        ) ? true : false;
+        return formData.name &&
+          formData.phone &&
+          formData.email &&
+          formData.address
+          ? true
+          : false;
       case 1:
-        return (formData.scamType && formData.dateTime && formData.description) ? true : false;
+        return formData.scamType && formData.dateTime && formData.description
+          ? true
+          : false;
       case 2:
-        return (formData.name && formData.phone && formData.email && formData.address &&
-          formData.scamType && formData.dateTime && formData.description) ? true : false;
+        return formData.name &&
+          formData.phone &&
+          formData.email &&
+          formData.address &&
+          formData.scamType &&
+          formData.dateTime &&
+          formData.description
+          ? true
+          : false;
       default:
         return false;
     }
@@ -182,11 +194,11 @@ ${formData.name}`,
   };
 
   const SAMPLE_DOCUMENTS: Document[] = [
-  {
-    id: "1",
-    type: "police-report",
-    title: "Police Report",
-    content: `POLICE REPORT
+    {
+      id: "1",
+      type: "police-report",
+      title: "Police Report",
+      content: `POLICE REPORT
 
 Date: December 1, 2024
 Case Number: PR-2024-001234
@@ -216,13 +228,13 @@ Area canvassed for additional witnesses. Security footage has been requested fro
 Report Filed By: Officer Johnson, Badge #4567
 Signature: ________________________
 Date: December 1, 2024`,
-    createdAt: new Date("2024-12-01T10:30:00"),
-  },
-  {
-    id: "2",
-    type: "bank-message",
-    title: "Message to Bank",
-    content: `Dear First National Bank Customer Service,
+      createdAt: new Date("2024-12-01T10:30:00"),
+    },
+    {
+      id: "2",
+      type: "bank-message",
+      title: "Message to Bank",
+      content: `Dear First National Bank Customer Service,
 
 Subject: Dispute of Unauthorized Transaction
 
@@ -254,9 +266,9 @@ Sarah Williams
 Cityville, ST 12345
 Phone: (555) 234-5678
 Email: sarah.williams@email.com`,
-    createdAt: new Date("2024-11-30T14:15:00"),
-  },
-]
+      createdAt: new Date("2024-11-30T14:15:00"),
+    },
+  ];
 
   // if (generatedDocs) {
   //   return (
@@ -355,14 +367,13 @@ Email: sarah.williams@email.com`,
   //     </div>
   //   )
   // }
-   const resultRef = useRef<HTMLDivElement>(null);
+  const resultRef = useRef<HTMLDivElement>(null);
 
-   
   useEffect(() => {
     if (generatedDocs && resultRef.current) {
       // slight delay to ensure render is done
       setTimeout(() => {
-        resultRef.current?.scrollIntoView({ behavior: 'smooth' });
+        resultRef.current?.scrollIntoView({ behavior: "smooth" });
       }, 100);
     }
   }, [generatedDocs]);
@@ -371,37 +382,43 @@ Email: sarah.williams@email.com`,
     <div className="min-h-screen">
       {/* Form Section */}
       <div className="max-w-2xl mx-auto space-y-6 flex">
-        <Card>
+        <Card className="bg-slate-50 dark:bg-slate-950">
           <CardHeader>
             <CardTitle>Tell Us What Happened</CardTitle>
-            <CardDescription>
-              We&apos;ll guide you through this step by step. Your information is
-              secure and will only be used to generate your documents. <br /><br />
-              <span className="font-semibold">
-                Fields marked with <span className="text-red-500">*</span> are required
+            <CardDescription className="text-white/70">
+              We&apos;ll guide you through this step by step. Your information
+              is secure and will only be used to generate your documents. <br />
+              <br />
+              <span className="font-semibold text-white">
+                Fields marked with <span className="text-red-500">*</span> are
+                required
               </span>
             </CardDescription>
           </CardHeader>
           <CardContent className="space-y-6">
             {/* Step 1: Personal Information */}
             <div className="space-y-4">
-              <h3 className="text-lg font-semibold text-gray-900">
+              <h3 className="text-lg font-semibold text-slate-900 dark:text-slate-50">
                 Personal Information
               </h3>
               <div className="grid gap-4 md:grid-cols-2">
                 <div className="space-y-2">
-                  <Label htmlFor="name">Full Name</Label> <span className="text-red-500">*</span>
+                  <Label htmlFor="name">Full Name</Label>{" "}
+                  <span className="text-red-500">*</span>
                   <Input
                     id="name"
+                    className="bg-slate-50 dark:bg-slate-950"
                     value={formData.name}
                     onChange={(e) => updateFormData("name", e.target.value)}
                     placeholder="Enter your full name"
                   />
                 </div>
                 <div className="space-y-2">
-                  <Label htmlFor="phone">Phone Number</Label> <span className="text-red-500">*</span>
+                  <Label htmlFor="phone">Phone Number</Label>{" "}
+                  <span className="text-red-500">*</span>
                   <Input
                     id="phone"
+                    className="bg-slate-50 dark:bg-slate-950"
                     value={formData.phone}
                     onChange={(e) => updateFormData("phone", e.target.value)}
                     placeholder="+234801234567"
@@ -409,19 +426,23 @@ Email: sarah.williams@email.com`,
                 </div>
               </div>
               <div className="space-y-2">
-                <Label htmlFor="email">Email Address</Label> <span className="text-red-500">*</span>
+                <Label htmlFor="email">Email Address</Label>{" "}
+                <span className="text-red-500">*</span>
                 <Input
                   id="email"
                   type="email"
+                  className="bg-slate-50 dark:bg-slate-950"
                   value={formData.email}
                   onChange={(e) => updateFormData("email", e.target.value)}
                   placeholder="your.email@example.com"
                 />
               </div>
               <div className="space-y-2">
-                <Label htmlFor="address">Address</Label> <span className="text-red-500">*</span>
+                <Label htmlFor="address">Address</Label>{" "}
+                <span className="text-red-500">*</span>
                 <Textarea
                   id="address"
+                  className="bg-slate-50 dark:bg-slate-950"
                   value={formData.address}
                   onChange={(e) => updateFormData("address", e.target.value)}
                   placeholder="Your full address"
@@ -438,17 +459,18 @@ Email: sarah.williams@email.com`,
                 </h3>
                 <div className="grid gap-4 md:grid-cols-2">
                   <div className="space-y-2">
-                    <Label htmlFor="scamType">Type of Scam</Label> <span className="text-red-500">*</span>
+                    <Label htmlFor="scamType">Type of Scam</Label>{" "}
+                    <span className="text-red-500">*</span>
                     <Select
                       value={formData.scamType}
                       onValueChange={(value) =>
                         updateFormData("scamType", value)
                       }
                     >
-                      <SelectTrigger>
+                      <SelectTrigger className="bg-slate-50 dark:bg-slate-950">
                         <SelectValue placeholder="Select scam type" />
                       </SelectTrigger>
-                      <SelectContent>
+                      <SelectContent className="bg-slate-50 dark:bg-slate-950">
                         <SelectItem value="online-shopping">
                           Online Shopping Fraud
                         </SelectItem>
@@ -467,9 +489,11 @@ Email: sarah.williams@email.com`,
                     </Select>
                   </div>
                   <div className="space-y-2">
-                    <Label htmlFor="dateTime">Date & Time of Incident</Label> <span className="text-red-500">*</span>
+                    <Label htmlFor="dateTime">Date & Time of Incident</Label>{" "}
+                    <span className="text-red-500">*</span>
                     <Input
                       id="dateTime"
+                      className="bg-slate-50 dark:bg-slate-950"
                       type="date"
                       value={formData.dateTime}
                       onChange={(e) =>
@@ -480,9 +504,11 @@ Email: sarah.williams@email.com`,
                   </div>
                 </div>
                 <div className="space-y-2">
-                  <Label htmlFor="description">What Happened?</Label> <span className="text-red-500">*</span>
+                  <Label htmlFor="description">What Happened?</Label>{" "}
+                  <span className="text-red-500">*</span>
                   <Textarea
                     id="description"
+                    className="bg-slate-50 dark:bg-slate-950"
                     value={formData.description}
                     onChange={(e) =>
                       updateFormData("description", e.target.value)
@@ -506,6 +532,7 @@ Email: sarah.williams@email.com`,
                     <Input
                       id="amount"
                       type="number"
+                      className="bg-slate-50 dark:bg-slate-950"
                       value={formData.amount}
                       onChange={(e) => updateFormData("amount", e.target.value)}
                       placeholder="50000"
@@ -519,10 +546,10 @@ Email: sarah.williams@email.com`,
                         updateFormData("currency", value)
                       }
                     >
-                      <SelectTrigger>
+                      <SelectTrigger className="bg-slate-50 dark:bg-slate-950">
                         <SelectValue />
                       </SelectTrigger>
-                      <SelectContent>
+                      <SelectContent className="bg-slate-50 dark:bg-slate-950">
                         <SelectItem value="NGN">NGN (Naira)</SelectItem>
                         <SelectItem value="USD">USD (Dollar)</SelectItem>
                         <SelectItem value="EUR">EUR (Euro)</SelectItem>
@@ -534,6 +561,7 @@ Email: sarah.williams@email.com`,
                     <Label htmlFor="paymentMethod">Payment Method</Label>
                     <Input
                       id="paymentMethod"
+                      className="bg-slate-50 dark:bg-slate-950"
                       value={formData.paymentMethod}
                       onChange={(e) =>
                         updateFormData("paymentMethod", e.target.value)
@@ -559,6 +587,7 @@ Email: sarah.williams@email.com`,
                     <Label htmlFor="beneficiaryName">Beneficiary Name</Label>
                     <Input
                       id="beneficiaryName"
+                      className="bg-slate-50 dark:bg-slate-950"
                       value={formData.beneficiary.name}
                       onChange={(e) =>
                         updateFormData("beneficiary.name", e.target.value)
@@ -570,6 +599,7 @@ Email: sarah.williams@email.com`,
                     <Label htmlFor="beneficiaryBank">Bank Name</Label>
                     <Input
                       id="beneficiaryBank"
+                      className="bg-slate-50 dark:bg-slate-950"
                       value={formData.beneficiary.bank}
                       onChange={(e) =>
                         updateFormData("beneficiary.bank", e.target.value)
@@ -582,6 +612,7 @@ Email: sarah.williams@email.com`,
                   <Label htmlFor="beneficiaryAccount">Account Number</Label>
                   <Input
                     id="beneficiaryAccount"
+                    className="bg-slate-50 dark:bg-slate-950"
                     value={formData.beneficiary.account}
                     onChange={(e) =>
                       updateFormData("beneficiary.account", e.target.value)
@@ -628,17 +659,17 @@ Email: sarah.williams@email.com`,
                 height: isStepComplete(2)
                   ? "100%"
                   : isStepComplete(1)
-                  ? "70%"
-                  : isStepComplete(0)
-                  ? "35%"
-                  : "0%",
+                    ? "70%"
+                    : isStepComplete(0)
+                      ? "35%"
+                      : "0%",
               }}
             />
           </div>
         </div>
       </div>
       {!!generatedDocs && (
-        <div ref={resultRef}  className="mt-8">
+        <div ref={resultRef} className="mt-8">
           <ComplainLetter SAMPLE_DOCUMENTS={SAMPLE_DOCUMENTS} />
         </div>
       )}

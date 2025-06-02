@@ -1,5 +1,5 @@
 "use client";
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import type React from "react";
 import {
   Card,
@@ -26,9 +26,6 @@ import {
 import Link from "next/link";
 
 export default function SignUpPage() {
-  useEffect(() => {
-    console.log("123");
-  });
   const [showPassword, setShowPassword] = useState(false);
   const [showConfirmPassword, setShowConfirmPassword] = useState(false);
   const [formData, setFormData] = useState({

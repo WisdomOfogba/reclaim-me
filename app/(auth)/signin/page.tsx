@@ -22,6 +22,7 @@ import {
   ArrowRight,
   AlertCircle,
 } from "lucide-react";
+import { toast } from "sonner";
 import Link from "next/link";
 
 export default function SignInPage() {
@@ -57,7 +58,29 @@ export default function SignInPage() {
 
     setIsLoading(true);
     // Simulate API call
-    await new Promise((resolve) => setTimeout(resolve, 2000));
+    await new Promise((resolve) => setTimeout(resolve, 1000));
+    const response = await fetch("/api/login", {
+      method: "POST",
+      body: JSON.stringify({
+        email: formData.email,
+        password: formData.password,
+      }),
+      headers: {
+        "Content-Type": "application/json",
+      },
+    });
+
+    if (response.status > 399) {
+      toast("Success", {
+        description: "You'll soon be redirected",
+        duration: 2000,
+      });
+    } else {
+      const json = await response.json().catch(() => ({}));
+      if (json.message) {
+        toast.error(json.message);
+      }
+    }
     setIsLoading(false);
 
     // In a real app, you would handle the signin here
