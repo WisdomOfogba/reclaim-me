@@ -16,9 +16,7 @@ export function POST(request: NextRequest) {
       success: true,
     },
     {
-      headers: {
-        "Set-Cookie": request.cookies.toString(),
-      },
+      ...request,
       status: 200,
     }
   );
