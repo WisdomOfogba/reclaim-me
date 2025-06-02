@@ -107,7 +107,7 @@ export function AppSidebar({
                 </SidebarMenuItem>
               ))}
               <SidebarMenuItem>
-                <div className="w-full block text-red-500 hover:text-red-700 hover:bg-red-100 justify-start">
+                <div className="w-full block text-red-500 justify-start">
                   <SidebarMenuButton
                     onClick={() => setLogoutModalOpen(true)}
                     isActive={activeSection === "/logout"}
