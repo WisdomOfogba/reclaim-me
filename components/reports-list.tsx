@@ -41,7 +41,6 @@ import { ComplaintObj } from "@/lib/types";
 import { getPriorityColor, getStatusColor, complaints } from "@/lib/utils";
 // import { useIsMobile } from "@/lib/hooks/use-mobile";
 
-
 export function ReportsList() {
   const [searchTerm, setSearchTerm] = useState("");
   const [statusFilter, setStatusFilter] = useState("all");
@@ -196,7 +195,7 @@ export function ReportsList() {
                     </Button>
                   </DialogTrigger>
 
-                  <DialogContent className="max-w-4xl max-h-[80vh] overflow-y-auto bg-slate-50 dark:bg-slate-950">
+                  <DialogContent className="max-w-4xl bg-slate-50 dark:bg-slate-950">
                     <DialogHeader className="mt-10 bg-slate-50 dark:bg-slate-950">
                       <DialogTitle className="flex items-center justify-between">
                         <span className="max-w-[350px] truncate">
@@ -218,14 +217,11 @@ export function ReportsList() {
                       </DialogDescription>
                     </DialogHeader>
 
-                    <Tabs
-                      defaultValue="overview"
-                      className="w-full overflow-auto"
-                    >
-                      <TabsList className="grid w-full grid-cols-4 gap-1 bg-gray-800 min-w-[400px]">
+                    <Tabs defaultValue="overview" className="w-full">
+                      <TabsList className="grid w-full grid-cols-4 gap-2.5 bg-gray-800 overflow-y-hidden">
                         <TabsTrigger
                           value="overview"
-                          className="text-xs sm:text-sm text-gray-50 dark:hover:bg-gray-200 dark:hover:text-black data-[state=active]:bg-gray-200 data-[state=active]:text-black"
+                          className="p- text-xs sm:text-sm text-gray-50 dark:hover:bg-gray-200 dark:hover:text-black data-[state=active]:bg-gray-200 data-[state=active]:text-black"
                         >
                           Overview
                         </TabsTrigger>

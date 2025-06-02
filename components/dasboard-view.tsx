@@ -1,15 +1,11 @@
 "use client";
 
-import {
-  AlertTriangle,
-} from "lucide-react";
+import { AlertTriangle } from "lucide-react";
 import { Toaster } from "sonner";
 import { AppSidebar } from "./app-sidebar";
 import { SidebarProvider, SidebarInset, SidebarTrigger } from "./ui/sidebar";
 import { useState } from "react";
 import { ThemeToggle } from "./ThemeToggle";
-
-
 
 export function DashboardView({ children }: { children: React.ReactNode }) {
   const [activeSection, setActiveSection] = useState("overview");
@@ -34,8 +30,6 @@ export function DashboardView({ children }: { children: React.ReactNode }) {
         <main className="flex-1 space-y-4 p-4 md:p-8 pt-6 slate-50 dark:bg-slate-950">
           {children}
         </main>
-
-        <Toaster />
       </SidebarInset>
     </SidebarProvider>
     // </ThemeProvider>

@@ -56,7 +56,9 @@ export async function POST(request: NextRequest) {
       firstname: foundUser.firstName,
     });
 
-    const response = NextResponse.redirect(new URL("/dashboard", request.url));
+    const response = NextResponse.redirect(new URL("/dashboard", request.url), {
+      statusText: "Success",
+    });
     response.cookies.set({
       name: "token",
       value: token,

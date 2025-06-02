@@ -8,5 +8,5 @@ export async function hashPassword(password: string) {
 }
 
 export async function verifyPassword(hash: string, password: string) {
-  return verify(hash, password, { secret: privateKeyBuffer });
+  return verify(hash, password, { secret: new Uint8Array(privateKeyBuffer) });
 }

@@ -11,7 +11,9 @@ type AuthReq = {
   email: string;
 };
 
-export const privateKeyBuffer = Buffer.from(process.env.PRIVATE_KEY!, "base64");
+export const privateKeyBuffer = new Uint8Array(
+  Buffer.from(process.env.PRIVATE_KEY!, "base64")
+);
 
 /** One Time OTP */
 export const hotp = new HOTP({
