@@ -1,7 +1,6 @@
 "use client";
 
 import { AlertTriangle } from "lucide-react";
-import { Toaster } from "sonner";
 import { AppSidebar } from "./app-sidebar";
 import { SidebarProvider, SidebarInset, SidebarTrigger } from "./ui/sidebar";
 import { useState } from "react";
