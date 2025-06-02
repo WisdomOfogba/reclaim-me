@@ -920,8 +920,7 @@ export default function ReclaimMePage() {
                   onClick={handleFullGenerationProcess}
                   className="w-full h-12 text-lg"
                 >
-                  Save Report & Generate Documents{" "}
-                  <ArrowRight className="ml-2 h-5 w-5" />
+                  Generate <ArrowRight className="ml-2 h-5 w-5" />
                 </Button>
                 <p className="text-sm text-center mt-2 text-slate-500 dark:text-slate-400">
                   Saves your report and generates AI-assisted documents.
