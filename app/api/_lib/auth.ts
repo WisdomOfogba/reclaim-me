@@ -1,14 +1,17 @@
+import "server-only";
+
 import { SignJWT } from "jose/jwt/sign";
 import { jwtVerify } from "jose/jwt/verify";
 import { HOTP, Secret, TOTP } from "otpauth";
-import { hash, verify } from "@node-rs/argon2";
+// import { hash, verify } from "@node-rs/argon2";
+import { NextRequest } from "next/server";
 
 type AuthReq = {
   firstname: string;
   email: string;
 };
 
-const privateKeyBuffer = Buffer.from(process.env.PRIVATE_KEY!, "base64");
+export const privateKeyBuffer = Buffer.from(process.env.PRIVATE_KEY!, "base64");
 
 /** One Time OTP */
 export const hotp = new HOTP({
@@ -50,15 +53,17 @@ export async function createToken(authData: AuthReq) {
 
 // /** @param exp The current expiry date  */
 // export async function refreshToken(exp: number) {
-   
+
 // }
 
-export async function hashPassword(password: string) {
-  return hash(password, {
-    secret: privateKeyBuffer,
-  });
-}
+export async function isAuthenticated(request: NextRequest) {
+  const token = request.cookies.get("token")?.value;
+  if (!token) return false;
 
-export async function verifyPassword(hash: string, password: string) {
-  return verify(hash, password, { secret: privateKeyBuffer });
+  try {
+    await verifyToken(token);
+    return true;
+  } catch {
+    return false;
+  }
 }

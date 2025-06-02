@@ -4,7 +4,8 @@ import * as z from "zod/v4-mini";
 import { db } from "../_lib/drizzle";
 import { users } from "../_lib/drizzle/schema";
 import { eq } from "drizzle-orm";
-import { createToken, hashPassword } from "../_lib/auth";
+import { createToken } from "../_lib/auth";
+import { hashPassword } from "../_lib/auth.argon";
 
 export async function POST(request: NextRequest) {
   const body: z.infer<typeof signupSchema> = await request.json();
@@ -43,7 +44,9 @@ export async function POST(request: NextRequest) {
       password: password,
     });
 
-    const response = NextResponse.json({}, { status: 200 });
+    const response = NextResponse.redirect(new URL("/dashboard", request.url), {
+      status: 200,
+    });
 
     response.cookies.set({
       name: "token",
