@@ -264,7 +264,7 @@ export default function ReclaimMePage() {
                     {generatedDocs.bank_complaint_email}
                   </p>
                 ) : (
-                  <pre contenteditable="true"  className="whitespace-pre-wrap text-sm bg-gray-50 p-4 rounded-lg max-h-96 overflow-y-auto dark:text-white">
+                  <pre contenteditable="true"  className="whitespace-pre-wrap text-sm bg-gray-50 p-4 rounded-lg max-h-96 overflow-y-auto dark:text-black">
                     {generatedDocs.bank_complaint_email}
                   </pre>
                 )}
