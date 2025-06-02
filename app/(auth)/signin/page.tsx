@@ -24,6 +24,7 @@ import {
 } from "lucide-react";
 import { toast } from "sonner";
 import Link from "next/link";
+import { useRouter } from "next/navigation";
 
 export default function SignInPage() {
   const [showPassword, setShowPassword] = useState(false);
@@ -34,6 +35,7 @@ export default function SignInPage() {
   });
   const [errors, setErrors] = useState<Record<string, string>>({});
   const [isLoading, setIsLoading] = useState(false);
+  const router = useRouter();
 
   const validateForm = () => {
     const newErrors: Record<string, string> = {};
@@ -56,35 +58,52 @@ export default function SignInPage() {
     e.preventDefault();
     if (!validateForm()) return;
 
-    setIsLoading(true);
-    // Simulate API call
-    await new Promise((resolve) => setTimeout(resolve, 1000));
-    const response = await fetch("/api/login", {
-      method: "POST",
-      body: JSON.stringify({
-        email: formData.email,
-        password: formData.password,
-      }),
-      headers: {
-        "Content-Type": "application/json",
-      },
-    });
-
-    if (response.status > 399) {
-      toast("Success", {
-        description: "You'll soon be redirected",
-        duration: 2000,
+    try {
+      setIsLoading(true);
+      // Simulate API call
+      // await new Promise((resolve) => setTimeout(resolve, 1000));
+      const response = await fetch("/api/login", {
+        method: "POST",
+        body: JSON.stringify({
+          email: formData.email,
+          password: formData.password,
+        }),
+        headers: {
+          "Content-Type": "application/json",
+        },
       });
-    } else {
-      const json = await response.json().catch(() => ({}));
-      if (json.message) {
-        toast.error(json.message);
-      }
-    }
-    setIsLoading(false);
 
-    // In a real app, you would handle the signin here
-    console.log("Sign in data:", formData);
+      // if (!response.ok) {
+      //   const errorText = await response.text();
+      //   console.error("Sign in failed:", errorText);
+      //   toast.error("Failed to sign in. Please check your credentials.");
+      //   setIsLoading(false);
+      //   return;
+      // }
+
+      if (response.status < 399) {
+        toast("Success", {
+          description: "You'll soon be redirected",
+          duration: 2000,
+        });
+        router.push("/dashboard");
+      } else {
+        const json = await response.json().catch(() => ({}));
+        if (json.message) {
+          toast.error(json.message);
+        }
+        return
+      }
+
+      // In a real app, you would handle the signin here
+      console.log("Sign in data:", formData);
+    } catch (error) {
+      console.error("Sign in error:", error);
+      setIsLoading(false);
+      toast.error("An error occurred while signing in. Please try again.");
+    } finally {
+      setIsLoading(false);
+    }
   };
 
   const handleInputChange = (field: string, value: string | boolean) => {
