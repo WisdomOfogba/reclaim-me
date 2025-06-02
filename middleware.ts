@@ -5,7 +5,6 @@ export default async function middleware(request: NextRequest) {
   const isAuthValid = await isAuthenticated(request);
   const { pathname } = request.nextUrl;
   if (!isAuthValid) {
-    console.log("Yo");
     if (pathname.startsWith("/dashboard")) {
       return NextResponse.redirect(new URL("/signin", request.url));
     }
@@ -23,4 +22,5 @@ export default async function middleware(request: NextRequest) {
     //         return NextResponse.redirect(new URL("/dashboard", request.url));
     //     }
   }
+  return NextResponse.next();
 }
