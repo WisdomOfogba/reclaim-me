@@ -34,19 +34,19 @@ export default function ComplainLetter({ SAMPLE_DOCUMENTS }: { SAMPLE_DOCUMENTS:
 
   const copyToClipboard = async () => {
     try {
-      await navigator.clipboard.writeText(editorContent)
-      setCopied(true)
+      await navigator.clipboard.writeText(editorContent);
+      setCopied(true);
       toast({
         title: "Copied to clipboard",
         description: "Document content has been copied to your clipboard.",
-      })
-      setTimeout(() => setCopied(false), 2000)
-    } catch (err) {
+      });
+      setTimeout(() => setCopied(false), 2000);
+    } catch {
       toast({
         title: "Failed to copy",
         description: "Could not copy content to clipboard.",
         variant: "destructive",
-      })
+      });
     }
   }
 
