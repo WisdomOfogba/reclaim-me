@@ -55,7 +55,7 @@ export async function POST(request: NextRequest) {
       firstname: foundUser.firstName,
     });
 
-    const response = NextResponse.next({ status: 200 });
+    const response = NextResponse.json({}, { status: 200 });
     response.cookies.set({
       name: "token",
       value: token,
@@ -65,6 +65,7 @@ export async function POST(request: NextRequest) {
 
     return response;
   } catch {
+    // console.error(e)
     return NextResponse.json(
       {
         message: "SSomething went wrong... \nPlease try again later",

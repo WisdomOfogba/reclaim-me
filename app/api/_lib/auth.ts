@@ -9,7 +9,6 @@ type AuthReq = {
 };
 
 const privateKeyBuffer = Buffer.from(process.env.PRIVATE_KEY!, "base64");
-const publicKeyBuffer = Buffer.from(process.env.PUBLIC_KEY!, "base64");
 
 /** One Time OTP */
 export const hotp = new HOTP({
@@ -22,7 +21,7 @@ export const hotp = new HOTP({
 /** Recurring OTP 30s */
 export const totp = new TOTP({
   label: "ReclaimMe OTP",
-  algorithm: "SHA256",
+  algorithm: "SHA384",
   issuer: "ReclaimMe",
   digits: 6,
   period: 30,
@@ -31,7 +30,7 @@ export const totp = new TOTP({
 
 /** Liable to throw */
 export async function verifyToken(token: string) {
-  const isValid = await jwtVerify<AuthReq>(token, publicKeyBuffer);
+  const isValid = await jwtVerify<AuthReq>(token, privateKeyBuffer);
   return isValid.payload;
 }
 
@@ -43,7 +42,7 @@ export async function createToken(authData: AuthReq) {
     iat: issuedAt,
     ...authData,
   })
-    .setProtectedHeader({ alg: "RSA256" })
+    .setProtectedHeader({ alg: "HS384" })
     .sign(privateKeyBuffer);
 
   return token;
