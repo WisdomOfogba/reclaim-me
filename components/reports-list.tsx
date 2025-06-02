@@ -195,7 +195,7 @@ export function ReportsList() {
                     </Button>
                   </DialogTrigger>
 
-                  <DialogContent className="max-w-4xl bg-slate-50 dark:bg-slate-950">
+                  <DialogContent className="min-w-80 w-4/5 max-w-4xl mx-5 bg-slate-50 dark:bg-slate-950">
                     <DialogHeader className="mt-10 bg-slate-50 dark:bg-slate-950">
                       <DialogTitle className="flex items-center justify-between">
                         <span className="max-w-[350px] truncate">
@@ -218,28 +218,28 @@ export function ReportsList() {
                     </DialogHeader>
 
                     <Tabs defaultValue="overview" className="w-full">
-                      <TabsList className="grid w-full grid-cols-4 gap-2.5 bg-gray-800 overflow-y-hidden">
+                      <TabsList className="grid w-full min-w-[400px] grid-cols-4 gap-2.5 bg-gray-800 overflow-x-auto overflow-y-hidden">
                         <TabsTrigger
                           value="overview"
-                          className="p- text-xs sm:text-sm text-gray-50 dark:hover:bg-gray-200 dark:hover:text-black data-[state=active]:bg-gray-200 data-[state=active]:text-black"
+                          className="p-2.5 text-xs sm:text-sm text-gray-50 dark:hover:bg-gray-200 dark:hover:text-black data-[state=active]:bg-gray-200 data-[state=active]:text-black"
                         >
                           Overview
                         </TabsTrigger>
                         <TabsTrigger
                           value="timeline"
-                          className="text-xs sm:text-sm text-gray-50 dark:hover:bg-gray-200 dark:hover:text-black data-[state=active]:bg-gray-200 data-[state=active]:text-black"
+                          className="p-2.5 text-xs sm:text-sm text-gray-50 dark:hover:bg-gray-200 dark:hover:text-black data-[state=active]:bg-gray-200 data-[state=active]:text-black"
                         >
                           Timeline
                         </TabsTrigger>
                         <TabsTrigger
                           value="evidence"
-                          className="text-xs sm:text-sm text-gray-50 dark:hover:bg-gray-200 dark:hover:text-black data-[state=active]:bg-gray-200 data-[state=active]:text-black"
+                          className="p-2.5 text-xs sm:text-sm text-gray-50 dark:hover:bg-gray-200 dark:hover:text-black data-[state=active]:bg-gray-200 data-[state=active]:text-black"
                         >
                           Evidence
                         </TabsTrigger>
                         <TabsTrigger
                           value="communication"
-                          className="text-xs sm:text-sm text-gray-50 dark:hover:bg-gray-200 dark:hover:text-black data-[state=active]:bg-gray-200 data-[state=active]:text-black"
+                          className="p-2.5 text-xs sm:text-sm text-gray-50 dark:hover:bg-gray-200 dark:hover:text-black data-[state=active]:bg-gray-200 data-[state=active]:text-black"
                         >
                           Communication
                         </TabsTrigger>
