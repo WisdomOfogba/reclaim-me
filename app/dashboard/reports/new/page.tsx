@@ -217,7 +217,7 @@ export default function ReclaimMePage() {
                 </CardTitle>
               </CardHeader>
               <CardContent>
-                <p className="text-gray-700 whitespace-pre-wrap">{generatedDocs.consoling_message}</p>
+                <p className="text-gray-700 whitespace-pre-wrap dark:text-white">{generatedDocs.consoling_message}</p>
               </CardContent>
             </Card>
           )}
@@ -231,7 +231,7 @@ export default function ReclaimMePage() {
                 </CardTitle>
               </CardHeader>
               <CardContent>
-                <pre className="whitespace-pre-wrap text-sm bg-gray-50 p-4 rounded-lg max-h-96 overflow-y-auto">
+                <pre className="whitespace-pre-wrap text-sm bg-gray-50 p-4 rounded-lg max-h-96 overflow-y-auto dark:text-black">
                   {generatedDocs.police_report_draft}
                 </pre>
                 <Button 
@@ -260,7 +260,7 @@ export default function ReclaimMePage() {
               <CardContent>
                 {generatedDocs.bank_complaint_email && 
                  (generatedDocs.bank_complaint_email.toLowerCase().startsWith("not applicable")) ? (
-                  <p className="text-sm text-gray-500 bg-gray-50 p-4 rounded-lg">
+                  <p className="text-sm text-gray-500 bg-gray-50 p-4 rounded-lg dark:text-black">
                     {generatedDocs.bank_complaint_email}
                   </p>
                 ) : (
@@ -291,7 +291,7 @@ export default function ReclaimMePage() {
                     <div className="w-6 h-6 rounded-full bg-blue-100 text-blue-600 flex items-center justify-center text-sm font-medium mt-0.5 shrink-0">
                       {index + 1}
                     </div>
-                    <p className="text-gray-700">{step}</p>
+                    <p className="text-gray-700 dark:white">{step}</p>
                   </div>
                 ))}
               </div>
