@@ -24,6 +24,8 @@ import {
   ArrowRight,
 } from "lucide-react";
 import Link from "next/link";
+import { toast } from "sonner";
+import { useRouter } from "next/navigation";
 
 export default function SignUpPage() {
   const [showPassword, setShowPassword] = useState(false);
@@ -39,6 +41,7 @@ export default function SignUpPage() {
   });
   const [errors, setErrors] = useState<Record<string, string>>({});
   const [isLoading, setIsLoading] = useState(false);
+  const router = useRouter();
 
   const validateForm = () => {
     const newErrors: Record<string, string> = {};
@@ -79,13 +82,44 @@ export default function SignUpPage() {
     e.preventDefault();
     if (!validateForm()) return;
 
-    setIsLoading(true);
-    // Simulate API call
-    await new Promise((resolve) => setTimeout(resolve, 2000));
-    setIsLoading(false);
+    try {
+      setIsLoading(true);
+      // Simulate API call
+      // await new Promise((resolve) => setTimeout(resolve, 1000));
+      const response = await fetch("/api/signup", {
+        method: "POST",
+        body: JSON.stringify({
+          firstName: formData.firstName,
+          lastName: formData.lastName,
+          email: formData.email,
+          password: formData.password,
+          isNotifEnabled: formData.subscribeToUpdates,
+        }),
+        headers: {
+          "Content-Type": "application/json",
+        },
+      });
 
-    // In a real app, you would handle the signup here
-    console.log("Sign up data:", formData);
+      if (response.status < 399) {
+        toast("Success", {
+          description: "You'll soon be redirected",
+          duration: 2000,
+        });
+        router.push("/dashboard");
+      } else {
+        const json = await response.json().catch(() => ({}));
+        if (json.message) {
+          toast.error(json.message);
+        }
+        return;
+      }
+    } catch (error) {
+      console.error("Sign Up error:", error);
+      setIsLoading(false);
+      toast.error("An error occurred while signing up. Please try again.");
+    } finally {
+      setIsLoading(false);
+    }
   };
 
   const handleInputChange = (field: string, value: string | boolean) => {
