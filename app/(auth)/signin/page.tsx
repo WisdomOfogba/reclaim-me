@@ -73,13 +73,6 @@ export default function SignInPage() {
         },
       });
 
-      // if (!response.ok) {
-      //   const errorText = await response.text();
-      //   console.error("Sign in failed:", errorText);
-      //   toast.error("Failed to sign in. Please check your credentials.");
-      //   setIsLoading(false);
-      //   return;
-      // }
 
       if (response.status < 399) {
         toast("Success", {

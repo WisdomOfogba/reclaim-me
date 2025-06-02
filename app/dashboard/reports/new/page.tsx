@@ -302,6 +302,33 @@ ${formData.name}`,
     }
   }, [generatedDocs]);
 
+  const scamTypes = [
+    "Phishing Scam",
+    "Romance Scam",
+    "Online Marketplace Scam",
+    "Investment or Cryptocurrency Scam",
+    "Fake Job Offer Scam",
+    "Tech Support Scam",
+    "Fake Loan or Grant Scam",
+    "Social Media Impersonation Scam",
+    "Subscription Trap Scam",
+    "Fake Charity Scam (Online)",
+    "Delivery/Logistics Scam",
+    "Fake Online Course or Certification Scam",
+    "ATM Card Skimming",
+    "Pickpocketing with Distraction",
+    "Real Estate/Hostel Scam (Fake Agent)",
+    "Fake Police or Official Impersonation",
+    "POS Machine Tampering",
+    "Lottery or You’ve Won! Scam",
+    "Fake Product or Vendor (In-Person)",
+    "Bus/Transport Scam (One Chance)",
+    "Fake Bank Alert Scam",
+    "Donation Scam (In-Person)",
+    "Other Unspecified Scam"
+]
+
+
   return (
     <div className="min-h-screen">
       {/* Form Section */}
@@ -395,20 +422,11 @@ ${formData.name}`,
                         <SelectValue placeholder="Select scam type" />
                       </SelectTrigger>
                       <SelectContent className="bg-slate-50 dark:bg-slate-950">
-                        <SelectItem value="online-shopping">
-                          Online Shopping Fraud
-                        </SelectItem>
-                        <SelectItem value="romance">Romance Scam</SelectItem>
-                        <SelectItem value="investment">
-                          Investment Fraud
-                        </SelectItem>
-                        <SelectItem value="phishing">
-                          Phishing/Email Scam
-                        </SelectItem>
-                        <SelectItem value="social-media">
-                          Social Media Scam
-                        </SelectItem>
-                        <SelectItem value="other">Other</SelectItem>
+                        {scamTypes.map((type, i) => (
+                          <SelectItem key={i} value={type}>
+                            {type}
+                          </SelectItem>
+                        ))}
                       </SelectContent>
                     </Select>
                   </div>
