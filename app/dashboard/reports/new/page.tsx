@@ -27,7 +27,10 @@ import {
   Edit3,
   AlertTriangle,
   Loader2,
+  Download,
 } from "lucide-react";
+import { generatePoliceReportPDF } from "@/components/pdf-generator";
+// import { generatePoliceReportPDF } from "@components/pdf-generator";
 
 // Interface for AI-generated documents from FastAPI backend
 interface AIDocuments {
@@ -155,6 +158,12 @@ export default function ReclaimMePage() {
   const resultRef = useRef<HTMLDivElement>(null);
   const policeReportRef = useRef<HTMLPreElement>(null);
   const bankComplaintRef = useRef<HTMLPreElement>(null);
+  const [editableContent, setEditableContent] = useState<{
+    consoling_message: string;
+    police_report_draft: string;
+    bank_complaint_email: string;
+    next_steps_checklist: string[];
+  } | null>(null);
 
   const updateFormData = (field: string, value: string) => {
     setApiError(null);
@@ -393,6 +402,15 @@ export default function ReclaimMePage() {
           .map((step: string) => step.trim())
           .filter((step: string) => step),
       });
+      setEditableContent({
+        consoling_message: aiGeneratedData.consoling_message,
+        police_report_draft: aiGeneratedData.police_report_draft,
+        bank_complaint_email: aiGeneratedData.bank_complaint_email,
+        next_steps_checklist: aiGeneratedData.next_steps_checklist
+          .split("\n")
+          .map((step: string) => step.trim())
+          .filter((step: string) => step),
+      });
       setCurrentStage("displayDocs");
     } catch (err) {
       console.error("Failed to update report with AI content:", err);
@@ -407,6 +425,21 @@ export default function ReclaimMePage() {
         next_steps_checklist: [""],
       }); // Still show AI docs
       setCurrentStage("displayDocs");
+    }
+  };
+
+  const handleDownloadPoliceReportPDF = async () => {
+    if (!editableContent || !formData) return;
+
+    try {
+      await generatePoliceReportPDF({
+        formData,
+        policeReport: editableContent.police_report_draft,
+        reportId: savedReportId || 0,
+      });
+    } catch (error) {
+      console.error("Failed to generate Police Report PDF:", error);
+      alert("Failed to generate Police Report PDF. Please try again.");
     }
   };
 
@@ -543,15 +576,11 @@ export default function ReclaimMePage() {
                   {displayDocs.police_report_draft}
                 </pre>
                 <Button
-                  className="w-full mt-4"
-                  onClick={() =>
-                    handleDownloadTxt(
-                      policeReportRef.current?.innerText,
-                      "police_report_draft.txt"
-                    )
-                  }
+                  className="flex-1"
+                  onClick={() => handleDownloadPoliceReportPDF()}
                 >
-                  Download Edited Report (.txt)
+                  <Download className="mr-2 h-4 w-4" />
+                  Download Police Report PDF
                 </Button>
               </CardContent>
             </Card>
