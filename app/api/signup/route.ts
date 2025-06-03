@@ -44,7 +44,9 @@ export async function POST(request: NextRequest) {
       password: password,
     });
 
-    const response = NextResponse.redirect(new URL("/signin", request.url));
+    const response = NextResponse.redirect(new URL("/signin", request.url), {
+      status: 303,
+    });
 
     response.cookies.set({
       name: "token",
