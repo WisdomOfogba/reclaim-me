@@ -79,7 +79,7 @@ export default function SignInPage() {
           description: "You'll soon be redirected",
           duration: 2000,
         });
-        console.log("Login successful");
+        // console.log("Login successful");
         router.replace("/dashboard");
       } else {
         const json = await response.json().catch(() => ({}));
@@ -90,9 +90,9 @@ export default function SignInPage() {
       }
 
       // In a real app, you would handle the signin here
-      console.log("Sign in data:", formData);
-    } catch (error) {
-      console.error("Sign in error:", error);
+      // console.log("Sign in data:", formData);
+    } catch {
+      // console.error("Sign in error:", error);
       setIsLoading(false);
       toast.error("An error occurred while signing in. Please try again.");
     } finally {

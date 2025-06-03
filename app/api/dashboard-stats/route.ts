@@ -22,7 +22,7 @@ async function getUserIdFromAuthToken(
   }
   const tokenValue = tokenCookie.value;
   const payload = await verifyToken(tokenValue);
-  console.log("Decoded JWT payload:", payload);
+  // console.log("Decoded JWT payload:", payload);
   try {
     // Assuming verifyTokenAndGetUserId returns the user ID (e.g., an integer if your user IDs are integers)
     // You'll need to replace this with your actual token verification logic
@@ -38,8 +38,8 @@ async function getUserIdFromAuthToken(
       if (!isNaN(parsedUserId)) return parsedUserId;
     }
     return null;
-  } catch (error) {
-    console.error("Token verification failed:", error);
+  } catch {
+    // console.error("Token verification failed:", error);
     return null;
   }
 }
@@ -75,8 +75,8 @@ export async function GET(request: NextRequest) {
     };
 
     return NextResponse.json(formattedStats, { status: 200 });
-  } catch (error) {
-    console.error("Error fetching user-specific dashboard statistics:", error);
+  } catch {
+    // console.error("Error fetching user-specific dashboard statistics:", error);
     // It's good practice to avoid sending detailed error messages to the client in production.
     // Log them on the server and send a generic error message.
     return NextResponse.json(

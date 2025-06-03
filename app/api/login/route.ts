@@ -84,7 +84,7 @@ export async function POST(request: NextRequest) {
 
     return response;
   } catch (error) {
-    console.error("Login error:", error); // Log the actual error for debugging
+    // console.error("Login error:", error); // Log the actual error for debugging
 
     // Handle cases where request.json() might fail (e.g., invalid JSON)
     if (error instanceof SyntaxError) {

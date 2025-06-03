@@ -20,7 +20,7 @@ async function getUserIdFromAuthToken(
   }
   const tokenValue = tokenCookie.value;
   const payload = await verifyToken(tokenValue);
-  console.log("Decoded JWT payload:", payload);
+  // console.log("Decoded JWT payload:", payload);
   try {
     // Assuming verifyTokenAndGetUserId returns the user ID (e.g., an integer if your user IDs are integers)
     // You'll need to replace this with your actual token verification logic
@@ -36,14 +36,14 @@ async function getUserIdFromAuthToken(
       if (!isNaN(parsedUserId)) return parsedUserId;
     }
     return null;
-  } catch (error) {
-    console.error("Token verification failed:", error);
+  } catch {
+    // console.error("Token verification failed:", error);
     return null;
   }
 }
 
 export async function POST(request: NextRequest) {
-  console.log("POST /api/reports hit!");
+  // console.log("POST /api/reports hit!");
   const userId = await getUserIdFromAuthToken(request);
   if (!userId) {
     return NextResponse.json(
@@ -53,12 +53,12 @@ export async function POST(request: NextRequest) {
   }
   try {
     const body = await request.json();
-    console.log("Request body received:", body);
+    // console.log("Request body received:", body);
 
     const validation = createComplaintSchema.safeParse(body);
 
     if (!validation.success) {
-      console.error("Zod validation failed:", validation.error.flatten());
+      // console.error("Zod validation failed:", validation.error.flatten());
       return NextResponse.json(
         { error: "Invalid input", details: validation.error.flatten() },
         { status: 400 }
@@ -84,14 +84,14 @@ export async function POST(request: NextRequest) {
         .where(eq(users.id, userId))
         .limit(1);
       if (userExists.length === 0) {
-        console.warn(`User not found for userId: ${userId}`);
+        // console.warn(`User not found for userId: ${userId}`);
         return NextResponse.json(
           { error: `User with ID ${userId} not found` },
           { status: 404 }
         );
       }
     }
-    console.log(restOfData);
+    // console.log(restOfData);
 
     const newComplaintData = {
       ...restOfData,
@@ -107,27 +107,27 @@ export async function POST(request: NextRequest) {
         typeof amountLost === "number" ? amountLost.toString() : amountLost,
     };
 
-    console.log(
-      "Inserting new complaint data (with amountLost as string if applicable):",
-      newComplaintData
-    );
+    // console.log(
+    //   "Inserting new complaint data (with amountLost as string if applicable):",
+    //   newComplaintData
+    // );
     const result = await db
       .insert(complaints)
       .values(newComplaintData)
       .returning();
 
     if (result.length === 0) {
-      console.error("DB insert returned empty result.");
+      // console.error("DB insert returned empty result.");
       return NextResponse.json(
         { error: "Failed to create complaint record in database" },
         { status: 500 }
       );
     }
 
-    console.log("Complaint created successfully:", result[0]);
+    // console.log("Complaint created successfully:", result[0]);
     return NextResponse.json(result[0], { status: 201 });
   } catch (error) {
-    console.error("Error in POST /api/reports:", error);
+    // console.error("Error in POST /api/reports:", error);
     if (error instanceof z.ZodError) {
       return NextResponse.json(
         {
@@ -149,7 +149,7 @@ export async function POST(request: NextRequest) {
 
 export async function GET(request: NextRequest) {
   const userId = await getUserIdFromAuthToken(request);
-  console.log("GET /api/reports hit!"); // Debugging
+  // console.log("GET /api/reports hit!"); // Debugging
   try {
     const { searchParams } = new URL(request.url);
     const page = parseInt(searchParams.get("page") || "1");
@@ -184,7 +184,7 @@ export async function GET(request: NextRequest) {
       { status: 200 }
     );
   } catch (error) {
-    console.error("Error fetching complaints in GET /api/reports:", error);
+    // console.error("Error fetching complaints in GET /api/reports:", error);
     return NextResponse.json(
       {
         error: "Failed to fetch complaints",

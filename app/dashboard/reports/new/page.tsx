@@ -302,7 +302,7 @@ export default function ReclaimMePage() {
       setSavedReportId(reportId);
       setProcessingMessage("Initial report saved! Generating AI documents...");
     } catch (err) {
-      console.error("Failed to save initial report:", err);
+      // console.error("Failed to save initial report:", err);
       setApiError(`Failed to save initial report: ${(err as Error).message}`);
       setCurrentStage("form"); // Revert to form stage on error.
       return; // Stop the process.
@@ -348,7 +348,7 @@ export default function ReclaimMePage() {
       aiGeneratedData = await aiResponse.json();
       setProcessingMessage("AI documents received! Updating report...");
     } catch (err) {
-      console.error("Failed to fetch AI documents:", err);
+      // console.error("Failed to fetch AI documents:", err);
       setApiError(`AI Generation Failed: ${(err as Error).message}.`);
       // Update report status to indicate AI processing failure.
       try {
@@ -357,12 +357,7 @@ export default function ReclaimMePage() {
           headers: { "Content-Type": "application/json" },
           body: JSON.stringify({ status: "AI Processing Failed" }),
         });
-      } catch (updateErr) {
-        console.error(
-          "Failed to update status to AI Processing Failed",
-          updateErr
-        );
-      }
+      } catch {}
       setCurrentStage("form"); // Revert to form stage on AI error.
       return;
     }
@@ -421,7 +416,7 @@ export default function ReclaimMePage() {
       });
       setCurrentStage("displayDocs"); // Move to display stage.
     } catch (err) {
-      console.error("Failed to update report with AI content:", err);
+      // console.error("Failed to update report with AI content:", err);
       setApiError(
         `Failed to save AI content: ${(err as Error).message}. AI documents generated but not saved to report.`
       );
@@ -478,8 +473,8 @@ export default function ReclaimMePage() {
         policeReport: editableContent.police_report_draft, // Use the currently editable content.
         reportId: savedReportId || 0, // Fallback to 0 if reportId is not set.
       });
-    } catch (error) {
-      console.error("Failed to generate Police Report PDF:", error);
+    } catch {
+      // console.error("Failed to generate Police Report PDF:", error);
       alert("Failed to generate Police Report PDF. Please try again.");
     }
   };
@@ -493,8 +488,8 @@ export default function ReclaimMePage() {
     navigator.clipboard
       .writeText(content)
       .then(() => alert("Copied to clipboard!"))
-      .catch((err) => {
-        console.error("Failed to copy text: ", err);
+      .catch(() => {
+        // console.error("Failed to copy text: ", err);
         alert("Failed to copy.");
       });
   };

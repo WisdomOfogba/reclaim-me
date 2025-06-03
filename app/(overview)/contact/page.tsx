@@ -62,7 +62,7 @@ export default function ContactPage() {
     setIsLoading(false);
 
     // In a real app, you would handle the signup here
-    console.log("Sign up data:", formData);
+    // console.log("Sign up data:", formData);
   };
 
   const handleInputChange = (field: string, value: string | boolean) => {

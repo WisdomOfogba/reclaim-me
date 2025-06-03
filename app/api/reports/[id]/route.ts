@@ -84,10 +84,10 @@ export async function GET(
     }
 
     return NextResponse.json(report[0], { status: 200 });
-  } catch (error) {
-    console.error(`Error fetching report ${params.id}:`, error);
+  } catch {
+    // console.error(`Error fetching report ${params.id}:`, error);
     return NextResponse.json(
-      { error: "Failed to fetch report", details: (error as Error).message },
+      { error: "Failed to fetch report", details: "" },
       { status: 500 }
     );
   }
@@ -164,7 +164,7 @@ export async function PUT(
 
     return NextResponse.json(updatedReport[0], { status: 200 });
   } catch (error) {
-    console.error(`Error updating report ${params.id}:`, error);
+    // console.error(`Error updating report ${params.id}:`, error);
     if (error instanceof z.ZodError) {
       // Should be caught by safeParse, but as a fallback
       return NextResponse.json(
@@ -214,10 +214,11 @@ export async function DELETE(
       { message: `Report with ID ${complaintId} deleted successfully` },
       { status: 200 }
     );
-  } catch (error) {
-    console.error(`Error deleting report ${params.id}:`, error);
+  } catch {
+    // console.error(`Error deleting report ${params.id}:`, error);
     return NextResponse.json(
-      { error: "Failed to delete report", details: (error as Error).message },
+      // { error: "Failed to delete report", details: (error as Error).message },
+      { error: "Failed to delete report", details: "" },
       { status: 500 }
     );
   }

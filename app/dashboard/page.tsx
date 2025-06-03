@@ -212,7 +212,7 @@ export default function Dashboard() {
         );
         setRecentReportsDisplay(formattedRecentReports);
       } catch (err) {
-        console.error("Error fetching dashboard data:", err);
+        // console.error("Error fetching dashboard data:", err);
         setError(
           err instanceof Error
             ? err.message

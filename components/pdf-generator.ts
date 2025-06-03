@@ -60,8 +60,8 @@ export const generatePoliceReportPDF = async ({
         reader.onerror = reject;
         reader.readAsDataURL(blob);
       });
-    } catch (error) {
-      console.error("Failed to load logo image:", error);
+    } catch {
+      // console.error("Failed to load logo image:", error);
       return "";
     }
   };
@@ -72,7 +72,7 @@ export const generatePoliceReportPDF = async ({
       "https://reclaim-me.vercel.app/assets/Logo.png"
     );
   } catch {
-    console.warn("Logo could not be loaded into PDF.");
+    // console.warn("Logo could not be loaded into PDF.");
   }
 
   // Build document definition

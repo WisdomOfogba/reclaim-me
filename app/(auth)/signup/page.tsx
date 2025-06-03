@@ -113,8 +113,8 @@ export default function SignUpPage() {
         }
         return;
       }
-    } catch (error) {
-      console.error("Sign Up error:", error);
+    } catch {
+      // console.error("Sign Up error:", error);
       setIsLoading(false);
       toast.error("An error occurred while signing up. Please try again.");
     } finally {

@@ -87,7 +87,7 @@ const LogoutModal: React.FC<LogoutModalProps> = ({ onClose }) => {
   const modalRef = useRef(null);
   const mockToast = {
     error: (message: string) => {
-      console.error(`Toast Error: ${message}`);
+      // console.error(`Toast Error: ${message}`);
       alert(`Error: ${message}`); // Using alert for immediate feedback in Canvas
     },
   };
@@ -162,8 +162,8 @@ const LogoutModal: React.FC<LogoutModalProps> = ({ onClose }) => {
                 router.replace("/signin");
 
                 onClose();
-              } catch (error) {
-                console.error("Logout failed:", error);
+              } catch {
+                // console.error("Logout failed:", error);
                 mockToast.error("Logout failed. Please try again.");
               } finally {
                 setIsLoading(false);

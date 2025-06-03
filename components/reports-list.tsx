@@ -31,18 +31,11 @@ import {
   Eye,
   Search,
   Download,
-  MessageSquare,
   Calendar,
   // MapPin, // Not in current schema
   FileText,
   AlertCircle,
   Clock,
-  DollarSign,
-  User,
-  Banknote,
-  Info,
-  ListChecks,
-  ShieldAlert,
 } from "lucide-react";
 import Link from "next/link";
 // import { ComplaintObj } from "@/lib/types"; // We'll define ComplaintDisplay based on schema
@@ -106,7 +99,7 @@ const getStatusColor = (status: string | null) => {
 };
 
 // Priority is not in schema, so this is a placeholder if you add it later
-const getPriorityColor = (priority: string | null) => {
+/* const getPriorityColor = (priority: string | null) => {
   // Assuming 'priority' might be added
   switch (priority) {
     case "High":
@@ -118,9 +111,7 @@ const getPriorityColor = (priority: string | null) => {
     default:
       return "bg-gray-100 text-gray-800 dark:bg-gray-700 dark:text-gray-100";
   }
-};
-
-export default function ReportsList() {
+} */ export default function ReportsList() {
   // Changed component name to PascalCase
   const [allComplaints, setAllComplaints] = useState<ComplaintDisplay[]>([]);
   const [searchTerm, setSearchTerm] = useState("");
@@ -152,7 +143,7 @@ export default function ReportsList() {
           );
         }
         const result = await response.json();
-        const formattedComplaints = result.data.map((c: any) => ({
+        const formattedComplaints = result.data.map((c: ComplaintDisplay) => ({
           ...c,
           formattedId: `RPT-${new Date(c.incidentDate || c.createdAt).getFullYear()}-${c.id.toString().padStart(3, "0")}`,
           // Ensure dates are consistently formatted for display
@@ -172,7 +163,7 @@ export default function ReportsList() {
         setAllComplaints(formattedComplaints);
         setTotalPages(result.pagination.totalPages || 1);
       } catch (err) {
-        console.error("Error fetching complaints:", err);
+        // console.error("Error fetching complaints:", err);
         setError(
           err instanceof Error
             ? err.message
