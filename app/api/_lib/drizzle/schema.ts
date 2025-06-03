@@ -69,7 +69,7 @@ export const complaints = pgTable(
     // Metadata and status
     status: varchar("status", { length: 50 }).default("Under Review").notNull(),
     userId: integer("user_id").references(() => users.id, {
-      onDelete: "set null", // Or "cascade"
+      onDelete: "cascade",
     }),
     createdAt: timestamp("created_at", { mode: "date", withTimezone: true })
       .defaultNow()
