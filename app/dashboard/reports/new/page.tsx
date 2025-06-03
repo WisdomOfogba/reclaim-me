@@ -258,11 +258,13 @@ export default function ReclaimMePage() {
           errorDetail = errorData.details
             ? JSON.stringify(errorData.details)
             : errorData.error || errorDetail;
+          // eslint-disable-next-line @typescript-eslint/no-unused-vars
         } catch (e) {
           // If .json() fails, the response body might be HTML or plain text
           try {
             const textError = await saveResponse.text();
             errorDetail += ` - Server response: ${textError.substring(0, 200)}...`; // Show a snippet
+            // eslint-disable-next-line @typescript-eslint/no-unused-vars
           } catch (textE) {
             /* Ignore if .text() also fails */
           }
@@ -399,6 +401,10 @@ export default function ReclaimMePage() {
       );
       setDisplayDocs({
         /* ... populate with aiGeneratedData ... */
+        bank_complaint_email: "",
+        police_report_draft: "",
+        consoling_message: "",
+        next_steps_checklist: [""],
       }); // Still show AI docs
       setCurrentStage("displayDocs");
     }

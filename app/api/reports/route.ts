@@ -55,17 +55,16 @@ const createComplaintSchema = z.object({
     .nullable(),
 });
 
-// THIS IS THE HANDLER THAT WAS LIKELY MISSING OR INCORRECT, CAUSING THE 405 ERROR
 export async function POST(request: Request) {
-  console.log("POST /api/reports hit!"); // Add this for debugging
+  console.log("POST /api/reports hit!");
   try {
     const body = await request.json();
-    console.log("Request body received:", body); // Debugging
+    console.log("Request body received:", body);
 
     const validation = createComplaintSchema.safeParse(body);
 
     if (!validation.success) {
-      console.error("Zod validation failed:", validation.error.flatten()); // Debugging
+      console.error("Zod validation failed:", validation.error.flatten());
       return NextResponse.json(
         { error: "Invalid input", details: validation.error.flatten() },
         { status: 400 }
@@ -78,9 +77,11 @@ export async function POST(request: Request) {
       aiPoliceReportDraft,
       aiBankComplaintEmail,
       aiNextStepsChecklist,
+      amountLost, // Destructure amountLost separately
       ...restOfData
     } = validation.data;
 
+    // User existence check (if userId is provided) can remain here
     if (restOfData.userId) {
       const userExists = await db
         .select({ id: users.id })
@@ -88,7 +89,7 @@ export async function POST(request: Request) {
         .where(eq(users.id, restOfData.userId))
         .limit(1);
       if (userExists.length === 0) {
-        console.warn(`User not found for userId: ${restOfData.userId}`); // Debugging
+        console.warn(`User not found for userId: ${restOfData.userId}`);
         return NextResponse.json(
           { error: `User with ID ${restOfData.userId} not found` },
           { status: 404 }
@@ -103,28 +104,33 @@ export async function POST(request: Request) {
       aiPoliceReportDraft: aiPoliceReportDraft,
       aiBankComplaintEmail: aiBankComplaintEmail,
       aiNextStepsChecklist: aiNextStepsChecklist,
-      // createdAt and updatedAt will use database defaults or Drizzle's defaultNow()
-      // status will use Zod default if not provided
+      // **FIX APPLIED HERE:**
+      // Convert amountLost to string if it's a number, otherwise pass null/undefined
+      amountLost:
+        typeof amountLost === "number" ? amountLost.toString() : amountLost,
     };
 
-    console.log("Inserting new complaint data:", newComplaintData); // Debugging
+    console.log(
+      "Inserting new complaint data (with amountLost as string if applicable):",
+      newComplaintData
+    );
     const result = await db
       .insert(complaints)
       .values(newComplaintData)
       .returning();
 
     if (result.length === 0) {
-      console.error("DB insert returned empty result."); // Debugging
+      console.error("DB insert returned empty result.");
       return NextResponse.json(
         { error: "Failed to create complaint record in database" },
         { status: 500 }
       );
     }
 
-    console.log("Complaint created successfully:", result[0]); // Debugging
+    console.log("Complaint created successfully:", result[0]);
     return NextResponse.json(result[0], { status: 201 });
   } catch (error) {
-    console.error("Error in POST /api/reports:", error); // Log the full error
+    console.error("Error in POST /api/reports:", error);
     if (error instanceof z.ZodError) {
       return NextResponse.json(
         {

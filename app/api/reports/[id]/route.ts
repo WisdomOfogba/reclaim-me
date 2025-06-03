@@ -3,24 +3,29 @@
 import { NextResponse } from "next/server";
 import { eq } from "drizzle-orm";
 import { z } from "zod";
-import { complaints } from "../../_lib/drizzle/schema";
-import { db } from "../../_lib/drizzle";
+import { complaints } from "../../_lib/drizzle/schema"; // Adjust path if needed
+import { db } from "../../_lib/drizzle"; // Adjust path if needed
 
 // Zod schema for validating update data (all fields optional)
 const updateComplaintSchema = z.object({
-  name: z.string().min(1).max(200).optional(),
-  phone: z.string().min(1).max(20).optional(),
-  email: z.string().email().max(100).optional(),
-  address: z.string().min(1).max(255).optional(),
-  scamType: z.string().min(1).max(100).optional(),
+  name: z.string().min(1, "Full name is required").max(200).optional(),
+  phone: z.string().min(1, "Phone number is required").max(20).optional(),
+  email: z.string().email("Invalid email address").max(100).optional(),
+  address: z.string().min(1, "Address is required").max(255).optional(),
+  scamType: z.string().min(1, "Scam type is required").max(100).optional(),
   incidentDate: z
     .string()
     .refine((date) => !isNaN(new Date(date).getTime()), {
-      message: "Invalid date format for incident date",
+      message:
+        "Invalid date format for incident date. Expected ISO-like string.",
     })
     .optional(),
-  description: z.string().min(1).optional(),
-  amountLost: z.number().nonnegative().optional().nullable(),
+  description: z.string().min(1, "Description is required").optional(),
+  amountLost: z // Stays as number in Zod schema for input validation
+    .number()
+    .nonnegative("Amount lost must be non-negative")
+    .optional()
+    .nullable(),
   currency: z.string().max(5).optional().nullable(),
   paymentMethod: z.string().max(100).optional().nullable(),
   scammerInfo: z
@@ -31,16 +36,29 @@ const updateComplaintSchema = z.object({
     })
     .optional()
     .nullable(),
+  aiConsolingMessage: z.string().optional().nullable(),
+  aiPoliceReportDraft: z.string().optional().nullable(),
+  aiBankComplaintEmail: z.string().optional().nullable(),
+  aiNextStepsChecklist: z.string().optional().nullable(),
   status: z
-    .enum(["Under Review", "Investigating", "Resolved", "Closed"])
+    .enum([
+      "Under Review",
+      "Investigating",
+      "Resolved",
+      "Closed",
+      "Pending AI Generation",
+      "AI Processing Failed",
+    ])
     .optional(),
-  // userId should generally not be updatable for an existing complaint,
-  // but can be included if your use case requires it.
 });
 
 interface RouteParams {
   id: string;
 }
+
+// ... (GET, DELETE, PATCH handlers from your provided code, they are generally fine)
+// Only showing the updated PUT handler here for brevity.
+// Ensure the GET, PATCH, and DELETE functions are also present in your actual file.
 
 export async function GET(
   request: Request,
@@ -48,9 +66,9 @@ export async function GET(
 ) {
   try {
     const complaintId = parseInt(params.id);
-    if (isNaN(complaintId)) {
+    if (isNaN(complaintId) || complaintId <= 0) {
       return NextResponse.json(
-        { error: "Invalid report ID format" },
+        { error: "Invalid report ID format. Must be a positive integer." },
         { status: 400 }
       );
     }
@@ -81,9 +99,9 @@ export async function PUT(
 ) {
   try {
     const complaintId = parseInt(params.id);
-    if (isNaN(complaintId)) {
+    if (isNaN(complaintId) || complaintId <= 0) {
       return NextResponse.json(
-        { error: "Invalid report ID format" },
+        { error: "Invalid report ID format. Must be a positive integer." },
         { status: 400 }
       );
     }
@@ -93,27 +111,44 @@ export async function PUT(
 
     if (!validation.success) {
       return NextResponse.json(
-        { error: "Invalid input", details: validation.error.flatten() },
+        {
+          error: "Invalid input for update",
+          details: validation.error.flatten(),
+        },
         { status: 400 }
       );
     }
 
-    const { incidentDate, ...restOfUpdateData } = validation.data;
-
-    const updateData: Partial<typeof complaints.$inferInsert> = {
-      ...restOfUpdateData,
-    };
-    if (incidentDate) {
-      updateData.incidentDate = new Date(incidentDate);
-    }
-    updateData.updatedAt = new Date(); // Explicitly set updatedAt
-
-    if (Object.keys(updateData).length === 0) {
+    // Check if there's any actual data to update besides what might be automatically handled (like updatedAt)
+    if (Object.keys(validation.data).length === 0) {
       return NextResponse.json(
         { error: "No update data provided" },
         { status: 400 }
       );
     }
+
+    const { incidentDate, amountLost, ...restOfUpdateData } = validation.data;
+
+    const updateData: Partial<typeof complaints.$inferInsert> = {
+      ...restOfUpdateData,
+    };
+
+    if (incidentDate !== undefined) {
+      // Check if incidentDate was actually provided in the payload
+      updateData.incidentDate = incidentDate; // Drizzle's timestamp(mode: 'string') handles this
+    }
+
+    // **FIX APPLIED HERE for amountLost:**
+    if (typeof amountLost === "number") {
+      updateData.amountLost = amountLost.toString();
+    } else if (amountLost === null) {
+      // If payload explicitly sends null for amountLost
+      updateData.amountLost = null;
+    }
+
+    // If amountLost is undefined (not in payload), it won't be in updateData, so it won't be updated.
+
+    updateData.updatedAt = new Date(); // This will always make the record "dirty"
 
     const updatedReport = await db
       .update(complaints)
@@ -122,22 +157,18 @@ export async function PUT(
       .returning();
 
     if (updatedReport.length === 0) {
-      return NextResponse.json(
-        { error: "Report not found or no changes made" },
-        { status: 404 }
-      );
+      // This path means the WHERE clause (eq(complaints.id, complaintId)) did not find a matching row.
+      // The .returning() clause only returns data if rows were affected by the update.
+      return NextResponse.json({ error: "Report not found" }, { status: 404 });
     }
-
-    // If status changes, you might want to update specific dashboard counters
-    // (e.g., decrement 'Under Investigation', increment 'Resolved') if using the reportStatistics table.
-    // This logic would be more complex and depends on how you manage those specific stats.
 
     return NextResponse.json(updatedReport[0], { status: 200 });
   } catch (error) {
     console.error(`Error updating report ${params.id}:`, error);
     if (error instanceof z.ZodError) {
+      // Should be caught by safeParse, but as a fallback
       return NextResponse.json(
-        { error: "Invalid input data", details: error.flatten() },
+        { error: "Invalid input data (Zod catch)", details: error.flatten() },
         { status: 400 }
       );
     }
@@ -148,14 +179,13 @@ export async function PUT(
   }
 }
 
-// PATCH can be similar to PUT if you allow partial updates with PUT.
-// If you want PATCH to strictly only update provided fields and PUT to replace,
-// the logic would differ slightly, but Drizzle's .set() effectively does a patch.
 export async function PATCH(
   request: Request,
   { params }: { params: RouteParams }
 ) {
-  return PUT(request, { params }); // Reusing PUT logic for PATCH as .set() handles partial updates
+  // Reusing PUT logic as Drizzle's .set() method performs partial updates
+  // by only including fields present in the `updateData` object.
+  return PUT(request, { params });
 }
 
 export async function DELETE(
@@ -164,9 +194,9 @@ export async function DELETE(
 ) {
   try {
     const complaintId = parseInt(params.id);
-    if (isNaN(complaintId)) {
+    if (isNaN(complaintId) || complaintId <= 0) {
       return NextResponse.json(
-        { error: "Invalid report ID format" },
+        { error: "Invalid report ID format. Must be a positive integer." },
         { status: 400 }
       );
     }
@@ -174,21 +204,16 @@ export async function DELETE(
     const deletedReport = await db
       .delete(complaints)
       .where(eq(complaints.id, complaintId))
-      .returning({ id: complaints.id }); // Return the ID of the deleted item
+      .returning({ id: complaints.id });
 
     if (deletedReport.length === 0) {
       return NextResponse.json({ error: "Report not found" }, { status: 404 });
     }
 
-    // After deleting, dashboard stats (like total reports) will update on next fetch.
-    // If you had specific counters for statuses, you might adjust them here.
-
     return NextResponse.json(
-      { message: `Report ${complaintId} deleted successfully` },
+      { message: `Report with ID ${complaintId} deleted successfully` },
       { status: 200 }
     );
-    // Alternatively, return 204 No Content:
-    // return new NextResponse(null, { status: 204 });
   } catch (error) {
     console.error(`Error deleting report ${params.id}:`, error);
     return NextResponse.json(
