@@ -7,7 +7,7 @@ import { HOTP, Secret, TOTP } from "otpauth";
 import { NextRequest } from "next/server";
 
 type AuthReq = {
-  id: number;
+  id?: number;
   firstname: string;
   email: string;
 };

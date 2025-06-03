@@ -445,11 +445,11 @@ export async function generatePoliceReportPDF({
     y: number,
     maxWidth: number,
     fontSize = 10,
-    fontStyle = "normal",
+    fontStyle: "normal" | "bold" | "italic" = "normal",
     align: "left" | "center" | "right" = "left"
   ) => {
     doc.setFontSize(fontSize);
-    doc.setFont("helvetica", fontStyle as any);
+    doc.setFont("helvetica", fontStyle);
     const lines = doc.splitTextToSize(text, maxWidth);
 
     if (align === "center") {

@@ -102,10 +102,10 @@ export default function SignUpPage() {
 
       if (response.status < 399) {
         toast("Success", {
-          description: "You'll soon be redirected",
+          description: "You have successfully signed up!",
           duration: 2000,
         });
-        router.replace("/dashboard");
+        router.replace("/signin");
       } else {
         const json = await response.json().catch(() => ({}));
         if (json.message) {

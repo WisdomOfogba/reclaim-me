@@ -187,10 +187,19 @@ export default function Dashboard() {
         }
         const recentReportsData = await recentReportsResponse.json();
 
+        type ApiReport = {
+          id: number;
+          scamType: string | null;
+          status: string | null;
+          incidentDate?: string | null;
+          createdAt?: string | null;
+          // priority?: string | null; // Uncomment if priority exists
+        };
+
         const formattedRecentReports = recentReportsData.data.map(
-          (report: any) => ({
+          (report: ApiReport) => ({
             id: report.id,
-            formattedId: `RPT-${new Date(report.incidentDate || report.createdAt).getFullYear()}-${report.id.toString().padStart(3, "0")}`,
+            formattedId: `RPT-${new Date(report.incidentDate ?? report.createdAt ?? "").getFullYear()}-${report.id.toString().padStart(3, "0")}`,
             scamType: report.scamType,
             status: report.status,
             incidentDate: report.incidentDate
