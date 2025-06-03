@@ -105,7 +105,7 @@ export default function SignUpPage() {
           description: "You'll soon be redirected",
           duration: 2000,
         });
-        router.push("/dashboard");
+        router.replace("/dashboard");
       } else {
         const json = await response.json().catch(() => ({}));
         if (json.message) {
