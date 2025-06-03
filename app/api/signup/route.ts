@@ -3,7 +3,6 @@ import { signupSchema } from "../_lib/validation-schemas";
 import { db } from "../_lib/drizzle";
 import { users } from "../_lib/drizzle/schema";
 import { eq } from "drizzle-orm";
-import { createToken } from "../_lib/auth";
 import { hashPassword } from "../_lib/auth.argon";
 
 export async function POST(request: NextRequest) {
@@ -44,19 +43,10 @@ export async function POST(request: NextRequest) {
       password: password,
     });
 
-    const response = NextResponse.redirect(new URL("/signin", request.url), {
-      status: 303,
-    });
-
-    response.cookies.set({
-      name: "token",
-      value: await createToken({
-        email: body.email,
-        firstname: body.firstName,
-      }),
-      expires: new Date().getTime() + 1000 * 60 * 60 * 24 * 7,
-      httpOnly: true,
-    });
+    const response = NextResponse.json(
+      { message: "User created successfully", success: true },
+      { status: 201 }
+    );
 
     return response;
   } catch {
