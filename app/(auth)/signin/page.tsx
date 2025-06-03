@@ -61,7 +61,7 @@ export default function SignInPage() {
     try {
       setIsLoading(true);
       // Simulate API call
-      // await new Promise((resolve) => setTimeout(resolve, 1000));
+      await new Promise((resolve) => setTimeout(resolve, 1000));
       const response = await fetch("/api/login", {
         method: "POST",
         body: JSON.stringify({
@@ -78,7 +78,7 @@ export default function SignInPage() {
           description: "You'll soon be redirected",
           duration: 2000,
         });
-        router.replace("/dashboard");
+        router.push("/dashboard");
       } else {
         const json = await response.json().catch(() => ({}));
         if (json.message) {
