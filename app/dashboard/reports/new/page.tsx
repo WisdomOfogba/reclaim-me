@@ -545,7 +545,7 @@ export default function ReclaimMePage() {
             </Card>
           )}
 
-          <div className="grid gap-6 md:grid-cols-2">
+          <div className="grid gap-6 xl:grid-cols-2">
             <Card className="bg-white dark:bg-slate-800 shadow-lg">
               <CardHeader>
                 <CardTitle className="flex items-center gap-2 text-gray-800 dark:text-gray-200">
@@ -563,16 +563,16 @@ export default function ReclaimMePage() {
                     updateEditableContent("police_report_draft", e.target.value)
                   }
                   ref={policeReportRef}
-                  className="whitespace-pre-wrap text-sm bg-gray-50 dark:bg-slate-700 p-4 rounded-lg max-h-96 overflow-y-auto text-gray-800 dark:text-gray-200 focus:outline-none focus:ring-2 focus:ring-blue-500"
+                  className="whitespace-pre-wrap text-sm w-full resize-none min-h-96 bg-gray-50 dark:bg-slate-700 p-4 rounded-lg max-h-96 overflow-y-auto text-gray-800 dark:text-gray-200 focus:outline-none focus:ring-2 focus:ring-blue-500"
                 >
                   {displayDocs.police_report_draft}
                 </textarea>
                 <Button
-                  className="flex-1"
+                  className="flex-1 w-full"
                   onClick={() => handleDownloadPoliceReportPDF()}
                 >
                   <Download className="mr-2 h-4 w-4" />
-                  Download Police Report PDF
+                  Download
                 </Button>
               </CardContent>
             </Card>
@@ -636,14 +636,31 @@ export default function ReclaimMePage() {
             </CardHeader>
             <CardContent>
               <div className="space-y-3">
-                {displayDocs.next_steps_checklist.map((step, index) => (
-                  <div key={index} className="flex items-start gap-3">
-                    <div className="w-6 h-6 rounded-full bg-blue-100 dark:bg-blue-800 text-blue-600 dark:text-blue-200 flex items-center justify-center text-sm font-medium mt-0.5 shrink-0">
-                      {index + 1}
+                {displayDocs.next_steps_checklist.map((step, index) => {
+                  // Remove leading/trailing whitespace
+                  let cleanStep = step.trim();
+
+                  // If the step starts with markdown "- " or "* ", remove it
+                  if (cleanStep.startsWith("- ")) {
+                    cleanStep = cleanStep.slice(2).trim();
+                  } else if (cleanStep.startsWith("* ")) {
+                    cleanStep = cleanStep.slice(2).trim();
+                  }
+
+                  // Remove leading numbers or bullet points (e.g., "1. ", "• ")
+                  cleanStep = cleanStep.replace(/^(\d+\.\s*|•\s*)/, "");
+
+                  return (
+                    <div key={index} className="flex items-start gap-3">
+                      <div className="w-6 h-6 rounded-full bg-blue-100 dark:bg-blue-800 text-blue-600 dark:text-blue-200 flex items-center justify-center text-sm font-medium mt-0.5 shrink-0">
+                        {index + 1}
+                      </div>
+                      <p className="text-gray-700 dark:text-gray-300">
+                        {cleanStep}
+                      </p>
                     </div>
-                    <p className="text-gray-700 dark:text-gray-300">{step}</p>
-                  </div>
-                ))}
+                  );
+                })}
               </div>
             </CardContent>
           </Card>
