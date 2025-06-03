@@ -60,12 +60,18 @@ export async function GET(request: NextRequest) {
       .select({ value: count() })
       .from(complaints)
       .where(eq(complaints.userId, userId)); // Filter by the authenticated user's ID
+    // 2. Total Users in the system
+    const totalUsersResult = await db
+      .select({ value: count() })
+      .from(complaints); // Assuming you want total users from the complaints table, adjust if needed
 
     const totalReports = totalReportsResult[0]?.value || 0;
+    const totalUsers = totalUsersResult[0]?.value || 0;
 
     // The response will now only contain the total reports for this user.
     const formattedStats = {
       totalReports,
+      totalUsers,
     };
 
     return NextResponse.json(formattedStats, { status: 200 });

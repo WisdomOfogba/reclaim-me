@@ -28,7 +28,7 @@ interface DashboardApiStats {
   totalReports: number;
   underInvestigation: number;
   resolvedCases: number;
-  activeUsers: number;
+  totalUsers: number;
 }
 
 // Interface for individual stat item displayed on the dashboard
@@ -164,7 +164,7 @@ export default function Dashboard() {
               case "Active Users":
                 return {
                   ...stat,
-                  value: statsData.activeUsers?.toString() || "0",
+                  value: statsData.totalUsers?.toString() || "0",
                 };
               default:
                 return stat;
