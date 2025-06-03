@@ -73,19 +73,18 @@ export default function SignInPage() {
         },
       });
 
-
       if (response.status < 399) {
         toast("Success", {
           description: "You'll soon be redirected",
           duration: 2000,
         });
-        router.push("/dashboard");
+        router.replace("/dashboard");
       } else {
         const json = await response.json().catch(() => ({}));
         if (json.message) {
           toast.error(json.message);
         }
-        return
+        return;
       }
 
       // In a real app, you would handle the signin here
