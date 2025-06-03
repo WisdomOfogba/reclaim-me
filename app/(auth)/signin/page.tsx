@@ -24,7 +24,7 @@ import {
 } from "lucide-react";
 import { toast } from "sonner";
 import Link from "next/link";
-import { useRouter } from "next/navigation";
+// import { useRouter } from "next/navigation";
 
 export default function SignInPage() {
   const [showPassword, setShowPassword] = useState(false);
@@ -35,7 +35,7 @@ export default function SignInPage() {
   });
   const [errors, setErrors] = useState<Record<string, string>>({});
   const [isLoading, setIsLoading] = useState(false);
-  const router = useRouter();
+  // const router = useRouter();
 
   const validateForm = () => {
     const newErrors: Record<string, string> = {};
@@ -80,7 +80,8 @@ export default function SignInPage() {
           duration: 2000,
         });
         // console.log("Login successful");
-        router.replace("/dashboard");
+        // router.replace("/dashboard");
+        window.location.href = "/dashboard"; // Redirect to dashboard
       } else {
         const json = await response.json().catch(() => ({}));
         if (json.message) {

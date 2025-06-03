@@ -87,7 +87,7 @@ export const complaints = pgTable(
 );
 
 // Tokens table
-export const tokens = pgTable("tokens", {
+export const tokenTable = pgTable("tokens", {
   id: serial("id").primaryKey(),
   token: text("token").notNull().unique(),
   type: varchar("type", { length: 50 }).notNull().default("password_reset"),

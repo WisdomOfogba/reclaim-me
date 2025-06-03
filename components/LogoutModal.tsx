@@ -1,5 +1,6 @@
 import { useRouter } from "next/navigation";
 import React, { useState, useEffect, useRef } from "react";
+import { toast } from "sonner";
 
 // Mock Loader2 component for demonstration in Canvas
 const Loader2 = () => (
@@ -85,12 +86,6 @@ type LogoutModalProps = {
 const LogoutModal: React.FC<LogoutModalProps> = ({ onClose }) => {
   const [isLoading, setIsLoading] = useState(false);
   const modalRef = useRef(null);
-  const mockToast = {
-    error: (message: string) => {
-      // console.error(`Toast Error: ${message}`);
-      alert(`Error: ${message}`); // Using alert for immediate feedback in Canvas
-    },
-  };
 
   useEffect(() => {
     // Prevent body scrolling when modal is open
@@ -164,7 +159,7 @@ const LogoutModal: React.FC<LogoutModalProps> = ({ onClose }) => {
                 onClose();
               } catch {
                 // console.error("Logout failed:", error);
-                mockToast.error("Logout failed. Please try again.");
+                toast.error("Logout failed. Please try again.");
               } finally {
                 setIsLoading(false);
               }

@@ -126,7 +126,7 @@ export function AppSidebar({
                   <SidebarMenuButton
                     onClick={() => setLogoutModalOpen(true)}
                     isActive={activeSection === "/logout"}
-                    className="hover:text-red-700 hover:bg-red-100 rounded-lg"
+                    className="hover:text-red-700 hover:bg-red-50/70 rounded-lg"
                   >
                     <LogOut />
                     <span>Logout</span>
