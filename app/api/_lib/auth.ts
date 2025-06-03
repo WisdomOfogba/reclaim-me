@@ -7,6 +7,7 @@ import { HOTP, Secret, TOTP } from "otpauth";
 import { NextRequest } from "next/server";
 
 type AuthReq = {
+  id: number;
   firstname: string;
   email: string;
 };
@@ -46,6 +47,7 @@ export async function createToken(authData: AuthReq) {
     exp: expirationTime,
     iat: issuedAt,
     ...authData,
+    id: authData.id,
   })
     .setProtectedHeader({ alg: "HS384" })
     .sign(privateKeyBuffer);

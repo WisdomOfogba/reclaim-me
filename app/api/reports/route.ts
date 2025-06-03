@@ -1,10 +1,11 @@
 // app/api/reports/route.ts
 
-import { NextResponse } from "next/server";
+import { NextRequest, NextResponse } from "next/server";
 import { eq, desc, sql } from "drizzle-orm";
 import { z } from "zod";
 import { complaints, users } from "../_lib/drizzle/schema";
 import { db } from "../_lib/drizzle";
+import { verifyToken } from "../_lib/auth";
 
 // Zod schema for validating incoming new complaint data
 const createComplaintSchema = z.object({
@@ -55,8 +56,47 @@ const createComplaintSchema = z.object({
     .nullable(),
 });
 
-export async function POST(request: Request) {
+async function getUserIdFromAuthToken(
+  request: NextRequest
+): Promise<number | null> {
+  // Example: If you are using a JWT stored in a cookie named 'token'
+  const tokenCookie = request.cookies.get("token");
+  if (!tokenCookie) {
+    return null;
+  }
+  const tokenValue = tokenCookie.value;
+  const payload = await verifyToken(tokenValue);
+  console.log("Decoded JWT payload:", payload);
+  try {
+    // Assuming verifyTokenAndGetUserId returns the user ID (e.g., an integer if your user IDs are integers)
+    // You'll need to replace this with your actual token verification logic
+    // This function should throw an error or return null if token is invalid
+
+    // Ensure payload is not null and has userId. Adjust 'userId' key if different in your token payload.
+    if (payload && typeof payload.id === "number") {
+      return payload.id;
+    }
+    if (payload && typeof payload.id === "string") {
+      // If your userId in token is string but in DB is number
+      const parsedUserId = parseInt(payload.id, 10);
+      if (!isNaN(parsedUserId)) return parsedUserId;
+    }
+    return null;
+  } catch (error) {
+    console.error("Token verification failed:", error);
+    return null;
+  }
+}
+
+export async function POST(request: NextRequest) {
   console.log("POST /api/reports hit!");
+  const userId = await getUserIdFromAuthToken(request);
+  if (!userId) {
+    return NextResponse.json(
+      { error: "Unauthorized. User ID could not be determined." },
+      { status: 401 }
+    );
+  }
   try {
     const body = await request.json();
     console.log("Request body received:", body);
@@ -76,29 +116,32 @@ export async function POST(request: Request) {
       aiConsolingMessage,
       aiPoliceReportDraft,
       aiBankComplaintEmail,
+
       aiNextStepsChecklist,
       amountLost, // Destructure amountLost separately
       ...restOfData
     } = validation.data;
 
     // User existence check (if userId is provided) can remain here
-    if (restOfData.userId) {
+    if (userId) {
       const userExists = await db
         .select({ id: users.id })
         .from(users)
-        .where(eq(users.id, restOfData.userId))
+        .where(eq(users.id, userId))
         .limit(1);
       if (userExists.length === 0) {
-        console.warn(`User not found for userId: ${restOfData.userId}`);
+        console.warn(`User not found for userId: ${userId}`);
         return NextResponse.json(
-          { error: `User with ID ${restOfData.userId} not found` },
+          { error: `User with ID ${userId} not found` },
           { status: 404 }
         );
       }
     }
+    console.log(restOfData);
 
     const newComplaintData = {
       ...restOfData,
+      userId,
       incidentDate: incidentDate, // Storing as string, as schema is timestamp(mode: 'string')
       aiConsolingMessage: aiConsolingMessage,
       aiPoliceReportDraft: aiPoliceReportDraft,
@@ -150,7 +193,8 @@ export async function POST(request: Request) {
   }
 }
 
-export async function GET(request: Request) {
+export async function GET(request: NextRequest) {
+  const userId = await getUserIdFromAuthToken(request);
   console.log("GET /api/reports hit!"); // Debugging
   try {
     const { searchParams } = new URL(request.url);
@@ -161,6 +205,9 @@ export async function GET(request: Request) {
     const allComplaints = await db
       .select()
       .from(complaints)
+      .where(
+        userId ? eq(complaints.userId, userId) : undefined // Filter by userId if available
+      )
       .orderBy(desc(complaints.createdAt))
       .limit(limitPerPage)
       .offset(offset);

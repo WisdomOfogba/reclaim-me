@@ -60,8 +60,8 @@ export async function POST(request: NextRequest) {
       email: foundUser.email,
       // Ensure you have firstName in your users schema and it's populated
       // If firstName can be null/undefined, handle it appropriately or make it required for token
-      firstname: foundUser.firstName || "", // Or handle if it might be undefined
-      // userId: foundUser.id, // Removed because 'userId' is not in AuthReq type
+      firstname: foundUser.firstName || "",
+      id: foundUser.id,
     });
 
     // Create the redirect response

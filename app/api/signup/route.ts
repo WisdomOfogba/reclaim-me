@@ -51,6 +51,7 @@ export async function POST(request: NextRequest) {
       value: await createToken({
         email: body.email,
         firstname: body.firstName,
+        id: body.id, // Assuming id is part of the signup data
       }),
       expires: new Date().getTime() + 1000 * 60 * 60 * 24 * 7,
       httpOnly: true,

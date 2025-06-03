@@ -15,7 +15,7 @@ import {
   Clock,
   CheckCircle,
   Users,
-  TrendingUp,
+  // TrendingUp,
   AlertCircle,
   Download,
   Calendar,
@@ -368,8 +368,8 @@ export default function Dashboard() {
                 Common tasks and shortcuts
               </CardDescription>
             </CardHeader>
-            <CardContent className="space-y-3">
-              <Link href="/dashboard/reports/new" passHref legacyBehavior>
+            <CardContent className="space-y-3 flex flex-col">
+              <Link href="/dashboard/reports/new" passHref={true}>
                 <Button
                   asChild
                   className="w-full justify-start dark:text-gray-300 dark:border-gray-600 dark:hover:bg-slate-700"
@@ -380,7 +380,7 @@ export default function Dashboard() {
                   </a>
                 </Button>
               </Link>
-              <Link href="/dashboard/reports" passHref legacyBehavior>
+              <Link href="/dashboard/reports" passHref={true}>
                 <Button
                   asChild
                   className="w-full justify-start dark:text-gray-300 dark:border-gray-600 dark:hover:bg-slate-700"
@@ -391,7 +391,7 @@ export default function Dashboard() {
                   </a>
                 </Button>
               </Link>
-              <Link href="/dashboard/analytics" passHref legacyBehavior>
+              {/* <Link href="/dashboard/analytics" passHref={true}>
                 <Button
                   asChild
                   className="w-full justify-start dark:text-gray-300 dark:border-gray-600 dark:hover:bg-slate-700"
@@ -401,8 +401,8 @@ export default function Dashboard() {
                     <TrendingUp className="mr-2 h-4 w-4" /> View Analytics
                   </a>
                 </Button>
-              </Link>
-              <Link href="/contact-support" passHref legacyBehavior>
+              </Link> */}
+              <Link href="/contact" passHref={true}>
                 <Button
                   asChild
                   className="w-full justify-start dark:text-gray-300 dark:border-gray-600 dark:hover:bg-slate-700"

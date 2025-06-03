@@ -1,62 +1,78 @@
 // app/api/dashboard-stats/route.ts
 
-import { NextResponse } from "next/server";
-import { count, countDistinct, eq } from "drizzle-orm";
+import { NextRequest, NextResponse } from "next/server";
+import { count, eq } from "drizzle-orm";
 import { db } from "../_lib/drizzle";
-import { complaints } from "../_lib/drizzle/schema";
+import { complaints } from "../_lib/drizzle/schema"; // Assuming users schema might be needed for auth or is defined
+import { verifyToken } from "../_lib/auth";
+// import { verifyTokenAndGetUserId } from "../_lib/auth"; // You'll need to implement or import this
 
-export async function GET() {
+// Placeholder for your actual auth token verification and userId extraction logic
+// This function would typically:
+// 1. Get the token from the request (e.g., cookies or Authorization header)
+// 2. Verify the token
+// 3. Return the userId from the token's payload
+async function getUserIdFromAuthToken(
+  request: NextRequest
+): Promise<number | null> {
+  // Example: If you are using a JWT stored in a cookie named 'token'
+  const tokenCookie = request.cookies.get("token");
+  if (!tokenCookie) {
+    return null;
+  }
+  const tokenValue = tokenCookie.value;
+  const payload = await verifyToken(tokenValue);
+  console.log("Decoded JWT payload:", payload);
   try {
-    // 1. Total Reports
-    const totalReportsResult = await db
-      .select({ value: count() })
-      .from(complaints);
-    const totalReports = totalReportsResult[0]?.value || 0;
+    // Assuming verifyTokenAndGetUserId returns the user ID (e.g., an integer if your user IDs are integers)
+    // You'll need to replace this with your actual token verification logic
+    // This function should throw an error or return null if token is invalid
 
-    // 2. Under Investigation Reports
-    // This assumes you have a 'status' field in your 'complaints' table
-    // Possible values: 'Under Review', 'Investigating', 'Resolved', etc.
-    const underInvestigationResult = await db
-      .select({ value: count() })
-      .from(complaints)
-      .where(eq(complaints.status, "Investigating")); // Adjust 'Investigating' if your status value is different
-    const underInvestigation = underInvestigationResult[0]?.value || 0;
+    // Ensure payload is not null and has userId. Adjust 'userId' key if different in your token payload.
+    if (payload && typeof payload.id === "number") {
+      return payload.id;
+    }
+    if (payload && typeof payload.id === "string") {
+      // If your userId in token is string but in DB is number
+      const parsedUserId = parseInt(payload.id, 10);
+      if (!isNaN(parsedUserId)) return parsedUserId;
+    }
+    return null;
+  } catch (error) {
+    console.error("Token verification failed:", error);
+    return null;
+  }
+}
 
-    // 3. Resolved Cases
-    const resolvedCasesResult = await db
-      .select({ value: count() })
-      .from(complaints)
-      .where(eq(complaints.status, "Resolved")); // Adjust 'Resolved' if your status value is different
-    const resolvedCases = resolvedCasesResult[0]?.value || 0;
+export async function GET(request: NextRequest) {
+  try {
+    const userId = await getUserIdFromAuthToken(request);
 
-    // 4. Active Users (interpreted as unique users who have filed complaints)
-    // This requires complaints to have a userId linking to the users table.
-    let activeUsers = 0;
-    if (complaints.userId) {
-      // Check if userId field exists on complaints schema before querying
-      const activeUsersResult = await db
-        .select({ value: countDistinct(complaints.userId) })
-        .from(complaints)
-        .where(eq(complaints.status, "Resolved")); // where userId is not null
-      activeUsers = activeUsersResult[0]?.value || 0;
+    if (!userId) {
+      return NextResponse.json(
+        { error: "Unauthorized. User ID could not be determined." },
+        { status: 401 }
+      );
     }
 
+    // 1. Total Reports for the specific user
+    const totalReportsResult = await db
+      .select({ value: count() })
+      .from(complaints)
+      .where(eq(complaints.userId, userId)); // Filter by the authenticated user's ID
+
+    const totalReports = totalReportsResult[0]?.value || 0;
+
+    // The response will now only contain the total reports for this user.
     const formattedStats = {
       totalReports,
-      underInvestigation,
-      resolvedCases,
-      activeUsers,
-      // The 'change' percentages (e.g., "+12%") are not calculated here
-      // as they require historical data or more complex logic.
     };
 
     return NextResponse.json(formattedStats, { status: 200 });
   } catch (error) {
-    console.error("Error fetching dashboard statistics:", error);
-    if (error instanceof Error) {
-      // More specific error logging if needed
-      console.error(error.message);
-    }
+    console.error("Error fetching user-specific dashboard statistics:", error);
+    // It's good practice to avoid sending detailed error messages to the client in production.
+    // Log them on the server and send a generic error message.
     return NextResponse.json(
       { error: "Failed to fetch dashboard statistics." },
       { status: 500 }

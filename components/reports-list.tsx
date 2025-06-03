@@ -659,7 +659,7 @@ export default function ReportsList() {
                                     </CardTitle>
                                   </CardHeader>
                                   <CardContent className="space-y-2">
-                                    <p className="text-sm text-gray-600 dark:text-gray-400">
+                                    <div className="text-sm text-gray-600 dark:text-gray-400">
                                       Current Status:{" "}
                                       <Badge
                                         className={getStatusColor(
@@ -668,7 +668,7 @@ export default function ReportsList() {
                                       >
                                         {selectedComplaint.status}
                                       </Badge>
-                                    </p>
+                                    </div>
                                     {/* Add buttons for Update Status, Add Note, etc. here */}
                                     {/* These would typically trigger other dialogs or forms */}
                                     <Button
