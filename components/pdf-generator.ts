@@ -1,19 +1,12 @@
 // components/pdf-generator.ts
 
-// IMPORTANT: pdfFonts MUST be imported at the top-level
-// because it relies on pdfmake to be available globally (or via its specific setup)
-// when it runs. It has a side-effect of populating pdfMake.vfs.
-// We will still dynamically import pdfMake itself within the function.
-import pdfFonts from "pdfmake/build/vfs_fonts";
+import pdfFonts from "pdfmake/build/vfs_fonts"; // Keep this top-level import
 
-// Import specific types directly from pdfmake's interfaces
-// These types are used to provide strong typing for the pdfmake document definition.
 import {
   TDocumentDefinitions,
   Content,
   Column,
   StyleDictionary,
-  TDocumentInformation,
 } from "pdfmake/interfaces";
 
 interface PoliceReportPDFData {
@@ -24,7 +17,7 @@ interface PoliceReportPDFData {
     address: string;
     scamType: string;
     dateTime: string;
-    description: string; // Ensure this is present in the interface
+    description: string;
     amount: string;
     currency: string;
     paymentMethod: string;
@@ -34,7 +27,7 @@ interface PoliceReportPDFData {
       account: string;
     };
   };
-  policeReport: string; // This is the AI-generated and potentially edited police_report_draft
+  policeReport: string;
   reportId: number;
 }
 
@@ -44,19 +37,27 @@ export const generatePoliceReportPDF = async ({
   reportId,
 }: PoliceReportPDFData) => {
   // Dynamically import the main pdfmake library.
-  // This ensures the core pdfmake code is only loaded and executed on the client-side.
   const pdfMakeLoader = await import("pdfmake/build/pdfmake");
-  const pdfMake = pdfMakeLoader.default || pdfMakeLoader;
+  const pdfMake: any = pdfMakeLoader.default || pdfMakeLoader;
 
   // IMPORTANT: Assign pdfFonts' vfs data to the pdfMake instance.
   // This step is crucial for pdfmake to have access to the default fonts.
-  // We use 'as any' here because the types might not perfectly reflect
-  // pdfmake's internal runtime structure for this specific assignment,
-  // but it's a known safe pattern.
-  (pdfMake as any).vfs = (pdfFonts as any).vfs;
+  (pdfMake as any).vfs = pdfFonts.vfs;
 
-  // Helper function to convert an image URL to a base64 string.
-  // This is required because pdfmake needs image data directly embedded in the PDF.
+  // --- FIX START: Explicitly define fonts for pdfMake ---
+  // This tells pdfmake exactly which fonts to use and where they are in its vfs.
+  (pdfMake as any).fonts = {
+    Roboto: {
+      normal: "Roboto-Regular.ttf",
+      bold: "Roboto-Medium.ttf",
+      italics: "Roboto-Italic.ttf",
+      bolditalics: "Roboto-MediumItalic.ttf",
+    },
+    // You can add other fonts here if you need them and include their .ttf files in vfs_fonts
+  };
+  // --- FIX END ---
+
+  // Function to convert image URL to base64
   const getBase64ImageFromURL = async (url: string): Promise<string> => {
     try {
       const response = await fetch(url);
@@ -72,8 +73,6 @@ export const generatePoliceReportPDF = async ({
       });
     } catch (error) {
       console.error("Failed to load logo image:", error);
-      // Return an empty string if the logo fails to load gracefully,
-      // so the PDF generation can continue without it.
       return "";
     }
   };
@@ -84,48 +83,41 @@ export const generatePoliceReportPDF = async ({
       "https://reclaim-me.vercel.app/assets/Logo.png"
     );
   } catch {
-    // The error is already logged within getBase64ImageFromURL, so no need to re-log here.
+    // Error already logged in getBase64ImageFromURL
   }
 
-  // Define the document structure and content for the PDF using pdfmake's TDocumentDefinitions interface.
+  // Define the document structure and content for the PDF.
   const docDefinition: TDocumentDefinitions = {
-    // PDF header section: Contains the logo and the report title.
     header: {
       columns: [
-        // Conditionally include the logo image column only if logoBase64 is available.
         ...(logoBase64
           ? [
-              // Wrap in an array because 'columns' expects an array of Column objects.
               {
                 image: logoBase64,
                 width: 50,
                 height: 50,
                 margin: [40, 10, 0, 0],
                 alignment: "left",
-              } as Column, // Explicitly cast to Column for type safety.
+              } as Column,
             ]
-          : []), // If no logo, this spread operator adds nothing to the columns array.
-        // The main report title in the header, aligned to the right.
+          : []),
         {
           text: "ReclaimMe Police Report",
           style: "headerTitle",
           alignment: "right",
           margin: [0, 20, 40, 0],
-        } as Column, // Explicitly cast to Column.
+        } as Column,
       ],
-      columnGap: 10, // Defines the spacing between columns in the header.
+      columnGap: 10,
     },
 
-    // Main content of the PDF. Each element is cast to 'Content' type for type safety.
     content: [
-      // Main title of the report.
       {
         text: "OFFICIAL POLICE REPORT DRAFT",
         style: "mainTitle",
         alignment: "center",
         margin: [0, 80, 0, 20],
       } as Content,
-      // Report ID, formatted with leading zeros for consistent display.
       {
         text: `Report ID: RM-${reportId.toString().padStart(6, "0")}`,
         style: "reportId",
@@ -133,7 +125,6 @@ export const generatePoliceReportPDF = async ({
         margin: [0, 0, 0, 20],
       } as Content,
 
-      // --- Incident Details Section ---
       {
         text: "INCIDENT DETAILS:",
         style: "sectionHeader",
@@ -147,7 +138,7 @@ export const generatePoliceReportPDF = async ({
             style: "label",
           } as Content,
           {
-            text: new Date(formData.dateTime).toLocaleString(), // Formats date/time for display.
+            text: new Date(formData.dateTime).toLocaleString(),
             width: "*",
             style: "value",
           } as Content,
@@ -165,7 +156,7 @@ export const generatePoliceReportPDF = async ({
         columns: [
           { text: "Amount Lost:", width: "auto", style: "label" } as Content,
           {
-            text: formData.amount // Displays amount with currency, or "N/A" if empty.
+            text: formData.amount
               ? `${formData.currency} ${parseFloat(formData.amount).toLocaleString()}`
               : "N/A",
             width: "*",
@@ -186,7 +177,6 @@ export const generatePoliceReportPDF = async ({
         margin: [0, 5, 0, 15],
       } as Content,
 
-      // --- Complainant Details Section ---
       {
         text: "COMPLAINANT DETAILS:",
         style: "sectionHeader",
@@ -194,7 +184,6 @@ export const generatePoliceReportPDF = async ({
       } as Content,
       {
         ul: [
-          // Unordered list for complainant details.
           `Name: ${formData.name}`,
           `Phone: ${formData.phone}`,
           `Email: ${formData.email}`,
@@ -204,13 +193,10 @@ export const generatePoliceReportPDF = async ({
         margin: [0, 0, 0, 15],
       } as Content,
 
-      // --- Scammer/Beneficiary Details Section (conditionally rendered) ---
-      // This section only appears if any beneficiary information is provided in the form.
       ...(formData.beneficiary.name ||
       formData.beneficiary.bank ||
       formData.beneficiary.account
         ? ([
-            // Wrap conditional content in an array to satisfy PdfMake.Content definition.
             {
               text: "SCAMMER / BENEFICIARY DETAILS (IF KNOWN):",
               style: "sectionHeader",
@@ -218,7 +204,6 @@ export const generatePoliceReportPDF = async ({
             } as Content,
             {
               ul: [
-                // Unordered list for beneficiary details, filtering out empty strings.
                 formData.beneficiary.name
                   ? `Name: ${formData.beneficiary.name}`
                   : "",
@@ -228,14 +213,13 @@ export const generatePoliceReportPDF = async ({
                 formData.beneficiary.account
                   ? `Account No.: ${formData.beneficiary.account}`
                   : "",
-              ].filter(Boolean), // `filter(Boolean)` removes any falsy values (like empty strings) from the array.
+              ].filter(Boolean),
               style: "listItem",
               margin: [0, 0, 0, 15],
             } as Content,
-          ] as Content[]) // Explicitly cast the array to Content[] to match the expected type.
-        : []), // If no beneficiary info, this spread operator adds nothing to the content array.
+          ] as Content[])
+        : []),
 
-      // --- Incident Description Section (uses the AI-generated police report draft) ---
       {
         text: "INCIDENT DESCRIPTION:",
         style: "sectionHeader",
@@ -247,7 +231,6 @@ export const generatePoliceReportPDF = async ({
         margin: [0, 0, 0, 30],
       } as Content,
 
-      // --- Important Note section ---
       { text: "NOTE:", style: "noteHeader" } as Content,
       {
         text: "This document is a draft generated by ReclaimMe. It is intended to assist in preparing an official police report. Please review, verify, and present this to the appropriate law enforcement agency. Actual reporting procedures may vary.",
@@ -255,68 +238,64 @@ export const generatePoliceReportPDF = async ({
       } as Content,
     ],
 
-    // Stylesheet for the PDF document, defined using PdfMake.StyleDictionary for type safety.
-    // These styles aim to match ReclaimMe's UI aesthetic for a consistent brand experience.
     styles: {
       headerTitle: {
         fontSize: 18,
         bold: true,
-        color: "#2A3042", // Dark blue/charcoal, matching a sleek UI.
+        color: "#2A3042",
       },
       mainTitle: {
         fontSize: 24,
         bold: true,
-        color: "#0D47A1", // ReclaimMe's primary blue.
-        decoration: "underline", // Underline for emphasis, common in document titles.
+        color: "#0D47A1",
+        decoration: "underline",
       },
       reportId: {
         fontSize: 14,
         bold: true,
-        color: "#555555", // Slightly lighter grey for report ID.
+        color: "#555555",
       },
       sectionHeader: {
         fontSize: 13,
         bold: true,
-        color: "#0D47A1", // Primary blue for section headers.
-        margin: [0, 10, 0, 5], // Top and bottom margin for clear spacing.
+        color: "#0D47A1",
+        margin: [0, 10, 0, 5],
       },
       label: {
         fontSize: 11,
         bold: true,
-        color: "#333333", // Darker text for labels (e.g., "DATE OF INCIDENT:").
+        color: "#333333",
       },
       value: {
         fontSize: 11,
-        color: "#555555", // Standard text color for values.
+        color: "#555555",
       },
       listItem: {
         fontSize: 11,
         color: "#555555",
-        margin: [0, 2], // Small vertical margin for list items, improving readability.
+        margin: [0, 2],
       },
       bodyText: {
         fontSize: 11,
-        lineHeight: 1.3, // Line height for comfortable reading.
-        color: "#444444", // Slightly darker for main content readability.
-        alignment: "justify", // Justify main text for a professional document look.
+        lineHeight: 1.3,
+        color: "#444444",
+        alignment: "justify",
       },
       noteHeader: {
         fontSize: 10,
         bold: true,
-        color: "#777777", // Lighter grey for notes.
-        margin: [0, 20, 0, 5], // Top margin to separate from main content.
+        color: "#777777",
+        margin: [0, 20, 0, 5],
       },
       noteText: {
         fontSize: 9,
         italics: true,
         color: "#777777",
       },
-    } as StyleDictionary, // Cast the styles object to StyleDictionary.
-    // Default page margins [left, top, right, bottom].
+    } as StyleDictionary,
     pageMargins: [40, 80, 40, 40],
   };
 
-  // Create the PDF and trigger its download.
   pdfMake
     .createPdf(docDefinition)
     .download(`Police_Report_RM-${reportId.toString().padStart(6, "0")}.pdf`);
