@@ -1,4 +1,4 @@
-import { useRouter } from "next/navigation";
+// import { useRouter } from "next/navigation";
 import React, { useState, useEffect, useRef } from "react";
 import { toast } from "sonner";
 
@@ -105,7 +105,7 @@ const LogoutModal: React.FC<LogoutModalProps> = ({ onClose }) => {
       document.removeEventListener("keydown", handleEscape);
     };
   }, [onClose]);
-  const router = useRouter();
+  // const router = useRouter();
 
   return (
     <div
@@ -154,9 +154,9 @@ const LogoutModal: React.FC<LogoutModalProps> = ({ onClose }) => {
                     "Content-Type": "application/json",
                   },
                 });
-                router.replace("/signin");
-
+                
                 onClose();
+                window.location.href = "/signin"; // Redirect to sign-in page
               } catch {
                 // console.error("Logout failed:", error);
                 toast.error("Logout failed. Please try again.");
