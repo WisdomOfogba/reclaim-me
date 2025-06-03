@@ -70,7 +70,7 @@ export function AppSidebar({
   setActiveSection,
 }: AppSidebarProps) {
   const [logoutModalOpen, setLogoutModalOpen] = useState(false);
-  const { setOpen } = useSidebar();
+  const { setOpenMobile } = useSidebar();
 
   return (
     <Sidebar>
@@ -108,9 +108,12 @@ export function AppSidebar({
                 <SidebarMenuItem key={item.title}>
                   <Link href={item.href} className="w-full block justify-start">
                     <SidebarMenuButton
-                      onClick={() => {
+                      onClick={async () => {
                         setActiveSection(item.href);
-                        setOpen(false);
+                        await new Promise((resolve) =>
+                          setTimeout(resolve, 100)
+                        ); // Small delay for mobile
+                        setOpenMobile(false); // Close sidebar on mobile
                       }}
                       isActive={activeSection === item.href}
                     >
