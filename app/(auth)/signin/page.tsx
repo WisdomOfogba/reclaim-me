@@ -72,12 +72,14 @@ export default function SignInPage() {
           "Content-Type": "application/json",
         },
       });
+      console.log("Response status:", response);
 
-      if (response.status < 399) {
+      if (response.ok) {
         toast("Success", {
           description: "You'll soon be redirected",
           duration: 2000,
         });
+        console.log("Login successful");
         router.push("/dashboard");
       } else {
         const json = await response.json().catch(() => ({}));

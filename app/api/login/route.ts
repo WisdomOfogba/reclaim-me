@@ -66,9 +66,10 @@ export async function POST(request: NextRequest) {
 
     // Create the redirect response
     // IMPORTANT: Use status 303 to ensure the browser uses GET for the /dashboard request
-    const response = NextResponse.redirect(new URL("/dashboard", request.url), {
-      status: 303, // Explicitly set the redirect status code to See Other
-    });
+    const response = NextResponse.json(
+      { message: "Login successful", success: true }, // Or whatever data you want to send back
+      { status: 200 } // Send a 200 OK status
+    );
 
     // Set the token as an HTTP-only cookie
     response.cookies.set({
