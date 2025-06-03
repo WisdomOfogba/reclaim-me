@@ -79,7 +79,7 @@ export async function POST(request: NextRequest) {
       httpOnly: true,
       path: "/", // Make cookie available on all paths
       sameSite: "lax", // Good for security
-      secure: process.env.NODE_ENV === "production", // Use secure cookies in production
+      // Use secure cookies in production
     });
 
     return response;

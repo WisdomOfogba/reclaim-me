@@ -1,6 +1,13 @@
 "use client";
 
-import { AlertTriangle, FileText, Settings, Home, Plus, LogOut } from "lucide-react";
+import {
+  AlertTriangle,
+  FileText,
+  Settings,
+  Home,
+  Plus,
+  LogOut,
+} from "lucide-react";
 import {
   Sidebar,
   SidebarContent,
@@ -12,6 +19,7 @@ import {
   SidebarMenu,
   SidebarMenuButton,
   SidebarMenuItem,
+  useSidebar,
 } from "@/components/ui/sidebar";
 import Link from "next/link";
 import Image from "next/image";
@@ -61,6 +69,7 @@ export function AppSidebar({
   setActiveSection,
 }: AppSidebarProps) {
   const [logoutModalOpen, setLogoutModalOpen] = useState(false);
+  const { setOpen } = useSidebar();
 
   return (
     <Sidebar>
@@ -97,7 +106,10 @@ export function AppSidebar({
                 <SidebarMenuItem key={item.title}>
                   <Link href={item.href} className="w-full block justify-start">
                     <SidebarMenuButton
-                      onClick={() => setActiveSection(item.href)}
+                      onClick={() => {
+                        setActiveSection(item.href);
+                        setOpen(false);
+                      }}
                       isActive={activeSection === item.href}
                     >
                       <item.icon />
@@ -135,7 +147,6 @@ export function AppSidebar({
             </p>
           </div>
         </div>
-
       </SidebarFooter>
       {logoutModalOpen && (
         <LogoutModal onClose={() => setLogoutModalOpen(false)} />

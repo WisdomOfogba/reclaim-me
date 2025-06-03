@@ -1,6 +1,6 @@
-import { NextRequest, NextResponse } from "next/server";
+// import { NextRequest, NextResponse } from "next/server";
 import * as z from "zod"; // Make sure to import the full zod, not v4-mini for .email(), .datetime(), etc. or adjust features.
-import { verifyToken } from "./auth";
+// import { verifyToken } from "./auth";
 
 export const loginSchema = z.object({
   email: z.string().email(),

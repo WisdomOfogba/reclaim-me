@@ -72,7 +72,7 @@ export default function SignInPage() {
           "Content-Type": "application/json",
         },
       });
-      console.log("Response status:", response);
+      // console.log("Response status:", response);
 
       if (response.ok) {
         toast("Success", {
@@ -80,7 +80,7 @@ export default function SignInPage() {
           duration: 2000,
         });
         console.log("Login successful");
-        router.push("/dashboard");
+        router.replace("/dashboard");
       } else {
         const json = await response.json().catch(() => ({}));
         if (json.message) {
