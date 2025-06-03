@@ -25,7 +25,6 @@ import Link from "next/link";
 import Image from "next/image";
 import { useState } from "react";
 import LogoutModal from "./LogoutModal";
-import { SheetTitle } from "./ui/sheet";
 
 const menuItems = [
   {
@@ -102,7 +101,6 @@ export function AppSidebar({
         <SidebarGroup>
           <SidebarGroupLabel>Navigation</SidebarGroupLabel>
           <SidebarGroupContent>
-            <SheetTitle>Navigation</SheetTitle>
             <SidebarMenu>
               {menuItems.map((item) => (
                 <SidebarMenuItem key={item.title}>
