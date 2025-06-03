@@ -156,7 +156,7 @@ export default function ReclaimMePage() {
   const [savedReportId, setSavedReportId] = useState<number | null>(null);
 
   const resultRef = useRef<HTMLDivElement>(null);
-  const policeReportRef = useRef<HTMLPreElement>(null);
+  const policeReportRef = useRef<HTMLTextAreaElement>(null);
   const bankComplaintRef = useRef<HTMLPreElement>(null);
   const [editableContent, setEditableContent] = useState<{
     consoling_message: string;
@@ -428,6 +428,14 @@ export default function ReclaimMePage() {
     }
   };
 
+  const updateEditableContent = (
+    field: keyof DisplayDocuments,
+    value: string | string[]
+  ) => {
+    if (!editableContent) return;
+    setEditableContent((prev) => (prev ? { ...prev, [field]: value } : null));
+  };
+
   const handleDownloadPoliceReportPDF = async () => {
     if (!editableContent || !formData) return;
 
@@ -441,24 +449,6 @@ export default function ReclaimMePage() {
       console.error("Failed to generate Police Report PDF:", error);
       alert("Failed to generate Police Report PDF. Please try again.");
     }
-  };
-
-  const handleDownloadTxt = (
-    content: string | null | undefined,
-    filename: string
-  ) => {
-    if (!content) {
-      alert("No content to download.");
-      return;
-    }
-    const blob = new Blob([content], { type: "text/plain;charset=utf-8" });
-    const link = document.createElement("a");
-    link.href = URL.createObjectURL(blob);
-    link.download = filename;
-    document.body.appendChild(link);
-    link.click();
-    document.body.removeChild(link);
-    URL.revokeObjectURL(link.href);
   };
 
   const handleCopyToClipboard = (content: string | null | undefined) => {
@@ -567,14 +557,16 @@ export default function ReclaimMePage() {
                 </CardTitle>
               </CardHeader>
               <CardContent>
-                <pre
+                <textarea
+                  value={editableContent?.police_report_draft ?? ""}
+                  onChange={(e) =>
+                    updateEditableContent("police_report_draft", e.target.value)
+                  }
                   ref={policeReportRef}
-                  contentEditable="true"
-                  suppressContentEditableWarning={true}
                   className="whitespace-pre-wrap text-sm bg-gray-50 dark:bg-slate-700 p-4 rounded-lg max-h-96 overflow-y-auto text-gray-800 dark:text-gray-200 focus:outline-none focus:ring-2 focus:ring-blue-500"
                 >
                   {displayDocs.police_report_draft}
-                </pre>
+                </textarea>
                 <Button
                   className="flex-1"
                   onClick={() => handleDownloadPoliceReportPDF()}
@@ -663,6 +655,7 @@ export default function ReclaimMePage() {
               onClick={() => {
                 setDisplayDocs(null);
                 setFormData(initialFormData);
+                setEditableContent(null);
                 setApiError(null);
                 setSavedReportId(null);
                 setCurrentStage("form");

@@ -312,11 +312,122 @@ interface PoliceReportPDFData {
   reportId: number;
 }
 
+// Function to parse and extract information from the edited police report text
+function parsePoliceReportContent(reportText: string) {
+  const lines = reportText.split("\n").filter((line) => line.trim() !== "");
+
+  // Extract key information using regex patterns
+  const extractInfo = {
+    subject: "",
+    complainantName: "",
+    address: "",
+    phone: "",
+    email: "",
+    incidentDate: "",
+    scamType: "",
+    amount: "",
+    currency: "",
+    description: "",
+    evidence: "",
+    request: "",
+    closing: "",
+  };
+
+  let currentSection = "";
+  const descriptionLines: string[] = [];
+  const evidenceLines: string[] = [];
+  const requestLines: string[] = [];
+
+  for (let i = 0; i < lines.length; i++) {
+    const line = lines[i].trim();
+
+    // Extract subject
+    if (line.startsWith("Subject:")) {
+      extractInfo.subject = line.replace("Subject:", "").trim();
+    }
+
+    // Extract complainant info from opening line
+    if (line.includes("I,") && line.includes("residing at")) {
+      const nameMatch = line.match(/I,\s*([^,]+),/);
+      if (nameMatch) extractInfo.complainantName = nameMatch[1].trim();
+
+      const addressMatch = line.match(/residing at\s*([^,]+),/);
+      if (addressMatch) extractInfo.address = addressMatch[1].trim();
+    }
+
+    // Extract contact info
+    if (line.includes("contact number is")) {
+      const phoneMatch = line.match(/contact number is\s*([^\s]+)/);
+      if (phoneMatch) extractInfo.phone = phoneMatch[1].trim();
+    }
+
+    if (line.includes("email address is")) {
+      const emailMatch = line.match(/email address is\s*([^\s.]+)/);
+      if (emailMatch) extractInfo.email = emailMatch[1].trim();
+    }
+
+    // Extract incident date
+    if (line.includes("On ") && line.match(/\d{4}-\d{2}-\d{2}/)) {
+      const dateMatch = line.match(/On\s*(\d{4}-\d{2}-\d{2})/);
+      if (dateMatch) extractInfo.incidentDate = dateMatch[1];
+    }
+
+    // Extract amount and currency
+    const amountMatch = line.match(/(NGN|USD|EUR|GBP)\s*([\d,]+\.?\d*)/);
+    if (amountMatch) {
+      extractInfo.currency = amountMatch[1];
+      extractInfo.amount = amountMatch[2];
+    }
+
+    // Identify sections
+    if (
+      line.includes("documentation including") ||
+      line.includes("I have documentation")
+    ) {
+      currentSection = "evidence";
+    } else if (
+      line.includes("I kindly request") ||
+      line.includes("request the assistance")
+    ) {
+      currentSection = "request";
+    } else if (line.includes("Thank you")) {
+      currentSection = "closing";
+      extractInfo.closing = line;
+    } else if (currentSection === "evidence") {
+      evidenceLines.push(line);
+    } else if (currentSection === "request") {
+      requestLines.push(line);
+    } else if (
+      line.includes("discovered") ||
+      line.includes("misled") ||
+      line.includes("began charging")
+    ) {
+      currentSection = "description";
+      descriptionLines.push(line);
+    } else if (
+      currentSection === "description" &&
+      !line.includes("documentation") &&
+      !line.includes("request")
+    ) {
+      descriptionLines.push(line);
+    }
+  }
+
+  extractInfo.description = descriptionLines.join(" ").trim();
+  extractInfo.evidence = evidenceLines.join(" ").trim();
+  extractInfo.request = requestLines.join(" ").trim();
+
+  return extractInfo;
+}
+
 export async function generatePoliceReportPDF({
   formData,
   policeReport,
   reportId,
 }: PoliceReportPDFData) {
+  // Parse the edited police report content
+  const parsedContent = parsePoliceReportContent(policeReport);
+
   // Dynamic import to avoid SSR issues
   const jsPDF = (await import("jspdf")).default;
 
@@ -334,336 +445,232 @@ export async function generatePoliceReportPDF({
     y: number,
     maxWidth: number,
     fontSize = 10,
-    fontStyle = "normal"
+    fontStyle = "normal",
+    align: "left" | "center" | "right" = "left"
   ) => {
     doc.setFontSize(fontSize);
     doc.setFont("helvetica", fontStyle as any);
     const lines = doc.splitTextToSize(text, maxWidth);
-    doc.text(lines, x, y);
-    return y + lines.length * (fontSize * 0.35) + 2;
+
+    if (align === "center") {
+      lines.forEach((line: string, index: number) => {
+        doc.text(line, pageWidth / 2, y + index * fontSize * 0.35, {
+          align: "center",
+        });
+      });
+    } else if (align === "right") {
+      lines.forEach((line: string, index: number) => {
+        doc.text(line, x + maxWidth, y + index * fontSize * 0.35, {
+          align: "right",
+        });
+      });
+    } else {
+      doc.text(lines, x, y);
+    }
+
+    return y + lines.length * (fontSize * 0.35) + 3;
   };
 
   // Helper function to check if we need a new page
   const checkNewPage = (requiredSpace: number) => {
     if (yPosition + requiredSpace > pageHeight - margin) {
       doc.addPage();
-      yPosition = margin;
+      yPosition = margin + 20; // Leave space for header on new pages
       return true;
     }
     return false;
   };
 
-  // Official Header with Logo Space
-  doc.setFillColor(240, 240, 240);
-  doc.rect(0, 0, pageWidth, 40, "F");
+  // Official Header with Nigerian Police Force Branding
+  doc.setFillColor(0, 51, 102); // Dark blue background
+  doc.rect(0, 0, pageWidth, 35, "F");
 
-  // Police Department Header
-  doc.setFontSize(18);
+  // Nigerian Police Force Header
+  doc.setTextColor(255, 255, 255); // White text
+  doc.setFontSize(20);
   doc.setFont("helvetica", "bold");
-  doc.setTextColor(0, 0, 0);
   doc.text("NIGERIA POLICE FORCE", pageWidth / 2, 15, { align: "center" });
 
   doc.setFontSize(12);
   doc.setFont("helvetica", "normal");
-  doc.text("INCIDENT REPORT FORM", pageWidth / 2, 25, { align: "center" });
+  doc.text("CYBERCRIME UNIT - INCIDENT REPORT", pageWidth / 2, 25, {
+    align: "center",
+  });
 
-  doc.setFontSize(10);
-  doc.text("CONFIDENTIAL DOCUMENT", pageWidth / 2, 32, { align: "center" });
+  // Reset text color to black
+  doc.setTextColor(0, 0, 0);
+  yPosition = 45;
 
-  yPosition = 50;
-
-  // Report Header Information
-  doc.setFillColor(250, 250, 250);
-  doc.rect(margin, yPosition, contentWidth, 25, "F");
+  // Report Classification Box
+  doc.setFillColor(245, 245, 245);
+  doc.rect(margin, yPosition, contentWidth, 20, "F");
   doc.setLineWidth(0.5);
-  doc.rect(margin, yPosition, contentWidth, 25);
+  doc.rect(margin, yPosition, contentWidth, 20);
 
   yPosition += 5;
   doc.setFontSize(10);
   doc.setFont("helvetica", "bold");
-  doc.text("REPORT DETAILS", margin + 5, yPosition);
-  yPosition += 5;
-
-  doc.setFont("helvetica", "normal");
+  doc.text("CONFIDENTIAL POLICE REPORT", margin + 5, yPosition);
   doc.text(
-    `Report No: NPF/${new Date().getFullYear()}/${reportId.toString().padStart(6, "0")}`,
-    margin + 5,
-    yPosition
-  );
-  doc.text(
-    `Date Filed: ${new Date().toLocaleDateString()}`,
-    pageWidth - margin - 50,
+    "CLASSIFICATION: CYBERCRIME/FRAUD",
+    pageWidth - margin - 5,
     yPosition,
     { align: "right" }
   );
-  yPosition += 4;
+
+  yPosition += 5;
+  doc.setFont("helvetica", "normal");
   doc.text(
-    `Time Filed: ${new Date().toLocaleTimeString()}`,
+    `Report No: NPF/CYB/${new Date().getFullYear()}/${reportId.toString().padStart(6, "0")}`,
     margin + 5,
     yPosition
   );
-  doc.text(`Status: UNDER INVESTIGATION`, pageWidth - margin - 50, yPosition, {
+  doc.text(
+    `Date: ${new Date().toLocaleDateString()}`,
+    pageWidth - margin - 5,
+    yPosition,
+    { align: "right" }
+  );
+
+  yPosition += 5;
+  doc.text(`Time: ${new Date().toLocaleTimeString()}`, margin + 5, yPosition);
+  doc.text("Status: UNDER INVESTIGATION", pageWidth - margin - 5, yPosition, {
     align: "right",
   });
 
-  yPosition += 15;
+  yPosition += 25;
 
-  // Complainant Information Section
-  doc.setFillColor(245, 245, 245);
-  doc.rect(margin, yPosition, contentWidth, 8, "F");
-  doc.setLineWidth(0.5);
-  doc.rect(margin, yPosition, contentWidth, 8);
-
-  doc.setFontSize(11);
+  // Subject Line (extracted from edited content)
+  doc.setFontSize(12);
   doc.setFont("helvetica", "bold");
-  doc.text("SECTION A: COMPLAINANT INFORMATION", margin + 5, yPosition + 5);
-  yPosition += 15;
+  const subject = parsedContent.subject || `Report of ${formData.scamType}`;
+  yPosition = addWrappedText(
+    `Subject: ${subject}`,
+    margin,
+    yPosition,
+    contentWidth,
+    12,
+    "bold"
+  );
+  yPosition += 8;
 
-  // Complainant details in a structured format
-  const complainantData = [
-    [`Full Name: ${formData.name}`, `Phone Number: ${formData.phone}`],
-    [`Email Address: ${formData.email}`, `Date of Birth: _______________`],
-    [`Residential Address: ${formData.address}`, `Occupation: _______________`],
-    [`Next of Kin: _______________`, `Relationship: _______________`],
-  ];
-
-  complainantData.forEach(([left, right]) => {
-    checkNewPage(15);
-    doc.setFontSize(9);
-    doc.setFont("helvetica", "normal");
-    doc.text(left, margin + 5, yPosition);
-    doc.text(right, margin + contentWidth / 2 + 5, yPosition);
-    yPosition += 6;
-  });
-
-  yPosition += 10;
-
-  // Incident Information Section
-  checkNewPage(40);
-  doc.setFillColor(245, 245, 245);
-  doc.rect(margin, yPosition, contentWidth, 8, "F");
-  doc.setLineWidth(0.5);
-  doc.rect(margin, yPosition, contentWidth, 8);
-
+  // Main Report Content (using parsed content)
   doc.setFontSize(11);
-  doc.setFont("helvetica", "bold");
-  doc.text("SECTION B: INCIDENT DETAILS", margin + 5, yPosition + 5);
-  yPosition += 15;
+  doc.setFont("helvetica", "normal");
 
-  const incidentDate = new Date(formData.dateTime);
-  const incidentData = [
-    [
-      `Nature of Crime: ${formData.scamType}`,
-      `Classification: FRAUD/CYBERCRIME`,
-    ],
-    [
-      `Date of Incident: ${incidentDate.toLocaleDateString()}`,
-      `Time of Incident: ${incidentDate.toLocaleTimeString()}`,
-    ],
-    [`Location: ONLINE/DIGITAL PLATFORM`, `Jurisdiction: CYBERCRIME UNIT`],
-    [
-      `Amount Involved: ${formData.amount ? `${formData.currency} ${Number.parseFloat(formData.amount).toLocaleString()}` : "N/A"}`,
-      `Recovery Status: PENDING`,
-    ],
-  ];
+  // Use the actual edited police report content, but format it nicely
+  const reportLines = policeReport
+    .split("\n")
+    .filter((line) => line.trim() !== "");
 
-  incidentData.forEach(([left, right]) => {
+  for (const line of reportLines) {
     checkNewPage(15);
-    doc.setFontSize(9);
-    doc.setFont("helvetica", "normal");
-    doc.text(left, margin + 5, yPosition);
-    doc.text(right, margin + contentWidth / 2 + 5, yPosition);
-    yPosition += 6;
-  });
 
-  yPosition += 10;
-
-  // Suspect Information Section
-  if (
-    formData.beneficiary.name ||
-    formData.beneficiary.bank ||
-    formData.beneficiary.account
-  ) {
-    checkNewPage(40);
-    doc.setFillColor(245, 245, 245);
-    doc.rect(margin, yPosition, contentWidth, 8, "F");
-    doc.setLineWidth(0.5);
-    doc.rect(margin, yPosition, contentWidth, 8);
-
-    doc.setFontSize(11);
-    doc.setFont("helvetica", "bold");
-    doc.text("SECTION C: SUSPECT INFORMATION", margin + 5, yPosition + 5);
-    yPosition += 15;
-
-    const suspectData = [
-      [
-        `Suspect Name: ${formData.beneficiary.name || "UNKNOWN"}`,
-        `Alias: _______________`,
-      ],
-      [
-        `Bank Name: ${formData.beneficiary.bank || "UNKNOWN"}`,
-        `Account Number: ${formData.beneficiary.account || "UNKNOWN"}`,
-      ],
-      [`Phone Number: _______________`, `Email Address: _______________`],
-      [`Last Known Address: _______________`, `Other Details: _______________`],
-    ];
-
-    suspectData.forEach(([left, right]) => {
-      checkNewPage(15);
-      doc.setFontSize(9);
+    // Handle different types of content with appropriate formatting
+    if (line.startsWith("Subject:")) {
+      // Skip subject as we already handled it
+      continue;
+    } else if (line.includes("Sincerely,") || line.includes("Thank you")) {
+      yPosition += 5; // Add extra space before closing
       doc.setFont("helvetica", "normal");
-      doc.text(left, margin + 5, yPosition);
-      doc.text(right, margin + contentWidth / 2 + 5, yPosition);
-      yPosition += 6;
-    });
-
-    yPosition += 10;
+      yPosition = addWrappedText(line, margin, yPosition, contentWidth, 11);
+    } else if (
+      line.trim() === parsedContent.complainantName ||
+      line.includes("Contact:") ||
+      line.includes("Email:") ||
+      line.includes("Address:")
+    ) {
+      // Format contact information
+      doc.setFont("helvetica", "bold");
+      yPosition = addWrappedText(
+        line,
+        margin,
+        yPosition,
+        contentWidth,
+        11,
+        "bold"
+      );
+    } else {
+      // Regular paragraph text
+      doc.setFont("helvetica", "normal");
+      yPosition = addWrappedText(line, margin, yPosition, contentWidth, 11);
+    }
+    yPosition += 4;
   }
 
-  // Incident Narrative Section
-  checkNewPage(60);
-  doc.setFillColor(245, 245, 245);
+  yPosition += 15;
+
+  // Official processing section
+  checkNewPage(80);
+  doc.setLineWidth(1);
+  doc.line(margin, yPosition, pageWidth - margin, yPosition);
+  yPosition += 10;
+
+  doc.setFillColor(240, 240, 240);
   doc.rect(margin, yPosition, contentWidth, 8, "F");
   doc.setLineWidth(0.5);
   doc.rect(margin, yPosition, contentWidth, 8);
 
   doc.setFontSize(11);
   doc.setFont("helvetica", "bold");
-  doc.text("SECTION D: DETAILED INCIDENT NARRATIVE", margin + 5, yPosition + 5);
+  doc.text("FOR OFFICIAL USE ONLY", margin + 5, yPosition + 5);
   yPosition += 15;
 
-  // Add narrative box
-  const narrativeHeight = 60;
-  doc.setLineWidth(0.5);
-  doc.rect(margin, yPosition, contentWidth, narrativeHeight);
-
-  doc.setFontSize(9);
-  doc.setFont("helvetica", "normal");
-  yPosition = addWrappedText(
-    policeReport,
-    margin + 3,
-    yPosition + 5,
-    contentWidth - 6,
-    9
-  );
-
-  yPosition = Math.max(yPosition, yPosition + narrativeHeight - 15);
-  yPosition += 20;
-
-  // Evidence Section
-  checkNewPage(40);
-  doc.setFillColor(245, 245, 245);
-  doc.rect(margin, yPosition, contentWidth, 8, "F");
-  doc.setLineWidth(0.5);
-  doc.rect(margin, yPosition, contentWidth, 8);
-
-  doc.setFontSize(11);
-  doc.setFont("helvetica", "bold");
-  doc.text("SECTION E: EVIDENCE AND EXHIBITS", margin + 5, yPosition + 5);
-  yPosition += 15;
-
-  const evidenceItems = [
-    "☐ Screenshots of fraudulent messages/emails",
-    "☐ Bank transaction records",
-    "☐ Phone call recordings (if available)",
-    "☐ Social media communications",
-    "☐ Payment receipts/confirmations",
-    "☐ Other supporting documents: _______________",
+  // Official fields
+  const officialFields = [
+    "Receiving Officer: _________________________________",
+    "Badge Number: _______________  Date Received: _______________",
+    "Case Assigned To: _________________________________",
+    "Investigation Status: ☐ Pending  ☐ Active  ☐ Closed",
+    "Priority Level: ☐ High  ☐ Medium  ☐ Low",
+    "Evidence Collected: ☐ Yes  ☐ No  ☐ Pending",
+    "Follow-up Required: ☐ Yes  ☐ No",
+    "Additional Notes: _________________________________",
+    "_________________________________________________",
   ];
 
-  evidenceItems.forEach((item) => {
+  officialFields.forEach((field) => {
     checkNewPage(10);
     doc.setFontSize(9);
     doc.setFont("helvetica", "normal");
-    doc.text(item, margin + 5, yPosition);
+    doc.text(field, margin + 5, yPosition);
     yPosition += 6;
   });
 
-  yPosition += 15;
+  yPosition += 10;
 
-  // Declaration Section
-  checkNewPage(50);
-  doc.setFillColor(245, 245, 245);
-  doc.rect(margin, yPosition, contentWidth, 8, "F");
-  doc.setLineWidth(0.5);
-  doc.rect(margin, yPosition, contentWidth, 8);
-
-  doc.setFontSize(11);
-  doc.setFont("helvetica", "bold");
-  doc.text("SECTION F: COMPLAINANT DECLARATION", margin + 5, yPosition + 5);
-  yPosition += 15;
-
-  const declaration = `I, ${formData.name}, hereby declare that the information provided in this report is true and accurate to the best of my knowledge. I understand that providing false information to the police is an offense punishable by law. I am willing to cooperate fully with the investigation and provide additional information as required.`;
-
-  doc.setFontSize(9);
-  doc.setFont("helvetica", "normal");
-  yPosition = addWrappedText(
-    declaration,
-    margin + 5,
-    yPosition,
-    contentWidth - 10,
-    9
-  );
-  yPosition += 15;
-
-  // Signature Section
-  checkNewPage(40);
-  const signatureY = yPosition;
-
-  // Complainant signature
-  doc.setLineWidth(0.5);
-  doc.line(margin + 5, signatureY + 15, margin + 80, signatureY + 15);
-  doc.setFontSize(8);
-  doc.text("Complainant Signature", margin + 5, signatureY + 20);
-  doc.text(
-    `Date: ${new Date().toLocaleDateString()}`,
-    margin + 5,
-    signatureY + 25
-  );
-
-  // Officer signature
-  doc.line(
-    pageWidth - margin - 75,
-    signatureY + 15,
-    pageWidth - margin - 5,
-    signatureY + 15
-  );
-  doc.text("Receiving Officer", pageWidth - margin - 75, signatureY + 20);
-  doc.text("Date: _______________", pageWidth - margin - 75, signatureY + 25);
-
-  yPosition += 35;
-
-  // Official Footer
-  checkNewPage(30);
+  // Footer with file reference
+  checkNewPage(25);
   doc.setLineWidth(1);
   doc.line(margin, yPosition, pageWidth - margin, yPosition);
   yPosition += 8;
 
-  doc.setFillColor(240, 240, 240);
-  doc.rect(0, yPosition, pageWidth, 25, "F");
+  doc.setFillColor(0, 51, 102);
+  doc.rect(0, yPosition, pageWidth, 20, "F");
 
+  doc.setTextColor(255, 255, 255);
   doc.setFontSize(8);
   doc.setFont("helvetica", "bold");
-  doc.text("FOR OFFICIAL USE ONLY", pageWidth / 2, yPosition + 5, {
-    align: "center",
-  });
+  doc.text(
+    "NIGERIA POLICE FORCE - CYBERCRIME UNIT",
+    pageWidth / 2,
+    yPosition + 6,
+    { align: "center" }
+  );
 
   doc.setFont("helvetica", "normal");
-  doc.text(`Case Officer: _______________`, margin + 5, yPosition + 12);
   doc.text(
-    `Badge No: _______________`,
-    pageWidth - margin - 50,
+    `File Reference: NPF/CYB/${new Date().getFullYear()}/${reportId} | Generated: ${new Date().toLocaleString()}`,
+    pageWidth / 2,
     yPosition + 12,
-    { align: "right" }
+    { align: "center" }
   );
-  doc.text(`Investigation Status: PENDING`, margin + 5, yPosition + 18);
+
   doc.text(
-    `File Reference: NPF/CYB/${new Date().getFullYear()}/${reportId}`,
-    pageWidth - margin - 80,
-    yPosition + 18,
-    {
-      align: "right",
-    }
+    "This document contains confidential information and is intended for official use only",
+    pageWidth / 2,
+    yPosition + 16,
+    { align: "center" }
   );
 
   // Save the PDF
