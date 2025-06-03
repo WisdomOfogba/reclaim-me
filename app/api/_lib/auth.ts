@@ -4,7 +4,8 @@ import { SignJWT } from "jose/jwt/sign";
 import { jwtVerify } from "jose/jwt/verify";
 import { HOTP, Secret, TOTP } from "otpauth";
 // import { hash, verify } from "@node-rs/argon2";
-import { NextRequest } from "next/server";
+// import { NextRequest } from "next/server";
+import { cookies } from "next/headers";
 
 type AuthReq = {
   id?: number;
@@ -60,8 +61,9 @@ export async function createToken(authData: AuthReq) {
 
 // }
 
-export async function isAuthenticated(request: NextRequest) {
-  const token = request.cookies.get("token")?.value;
+export async function isAuthenticated() {
+  const cookieStore = await cookies();
+  const token = cookieStore.get("token")?.value;
   if (!token) return false;
 
   try {
