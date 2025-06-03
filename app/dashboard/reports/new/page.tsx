@@ -29,6 +29,7 @@ import {
   Loader2,
   Download,
 } from "lucide-react";
+import { toast } from "sonner";
 
 // DO NOT import generatePoliceReportPDF directly at the top level here.
 // It will be dynamically imported inside handleDownloadPoliceReportPDF to prevent SSR issues.
@@ -275,15 +276,18 @@ export default function ReclaimMePage() {
           errorDetail = errorData.details
             ? JSON.stringify(errorData.details)
             : errorData.error || errorDetail;
-        } catch (e) {
+        } catch {
           try {
             const textError = await saveResponse.text();
             errorDetail += ` - Server response: ${textError.substring(0, 200)}...`;
-          } catch (textE) {
+          } catch {
             /* Ignore if .text() also fails. */
           }
         }
-        throw new Error(errorDetail);
+        if (errorDetail) {
+          toast.error(`Failed to save report: ${errorDetail}`);
+          return;
+        }
       }
 
       const saveData = await saveResponse.json();
@@ -460,7 +464,7 @@ export default function ReclaimMePage() {
     // Dynamically import pdf-generator only when the button is clicked (client-side).
     // This is crucial to prevent pdfmake from running on the server during build/prerendering.
     const { generatePoliceReportPDF } = await import(
-      "@/components/pdf-generator"
+      "@/components/pdf-generator1"
     );
 
     if (!editableContent || !formData) {

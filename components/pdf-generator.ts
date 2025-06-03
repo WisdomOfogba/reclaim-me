@@ -1,7 +1,3 @@
-// components/pdf-generator.ts
-
-import pdfFonts from "pdfmake/build/vfs_fonts"; // Keep this top-level import
-
 import {
   TDocumentDefinitions,
   Content,
@@ -36,16 +32,12 @@ export const generatePoliceReportPDF = async ({
   policeReport,
   reportId,
 }: PoliceReportPDFData) => {
-  // Dynamically import the main pdfmake library.
-  const pdfMakeLoader = await import("pdfmake/build/pdfmake");
-  const pdfMake: any = pdfMakeLoader.default || pdfMakeLoader;
+  // Dynamic imports for client-side only
+  const pdfMake = await import("pdfmake/build/pdfmake");
+  const pdfFonts = await import("pdfmake/build/vfs_fonts");
 
-  // IMPORTANT: Assign pdfFonts' vfs data to the pdfMake instance.
-  // This step is crucial for pdfmake to have access to the default fonts.
-  (pdfMake as any).vfs = pdfFonts.vfs;
-
-  // --- FIX START: Explicitly define fonts for pdfMake ---
-  // This tells pdfmake exactly which fonts to use and where they are in its vfs.
+  // ✅ Assign fonts and vfs correctly
+  (pdfMake as any).vfs = pdfFonts.default; // 👈 Correct assignment
   (pdfMake as any).fonts = {
     Roboto: {
       normal: "Roboto-Regular.ttf",
@@ -53,19 +45,16 @@ export const generatePoliceReportPDF = async ({
       italics: "Roboto-Italic.ttf",
       bolditalics: "Roboto-MediumItalic.ttf",
     },
-    // You can add other fonts here if you need them and include their .ttf files in vfs_fonts
   };
-  // --- FIX END ---
 
-  // Function to convert image URL to base64
+  // Image loader helper
   const getBase64ImageFromURL = async (url: string): Promise<string> => {
     try {
       const response = await fetch(url);
-      if (!response.ok) {
+      if (!response.ok)
         throw new Error(`HTTP error! status: ${response.status}`);
-      }
       const blob = await response.blob();
-      return new Promise<string>((resolve, reject) => {
+      return new Promise((resolve, reject) => {
         const reader = new FileReader();
         reader.onloadend = () => resolve(reader.result as string);
         reader.onerror = reject;
@@ -77,16 +66,16 @@ export const generatePoliceReportPDF = async ({
     }
   };
 
-  let logoBase64: string = "";
+  let logoBase64 = "";
   try {
     logoBase64 = await getBase64ImageFromURL(
       "https://reclaim-me.vercel.app/assets/Logo.png"
     );
   } catch {
-    // Error already logged in getBase64ImageFromURL
+    console.warn("Logo could not be loaded into PDF.");
   }
 
-  // Define the document structure and content for the PDF.
+  // Build document definition
   const docDefinition: TDocumentDefinitions = {
     header: {
       columns: [
@@ -118,6 +107,7 @@ export const generatePoliceReportPDF = async ({
         alignment: "center",
         margin: [0, 80, 0, 20],
       } as Content,
+
       {
         text: `Report ID: RM-${reportId.toString().padStart(6, "0")}`,
         style: "reportId",
@@ -132,47 +122,39 @@ export const generatePoliceReportPDF = async ({
       } as Content,
       {
         columns: [
-          {
-            text: "Date of Incident:",
-            width: "auto",
-            style: "label",
-          } as Content,
+          { text: "Date of Incident:", width: "auto", style: "label" },
           {
             text: new Date(formData.dateTime).toLocaleString(),
             width: "*",
             style: "value",
-          } as Content,
+          },
         ],
         margin: [0, 5, 0, 5],
       } as Content,
       {
         columns: [
-          { text: "Type of Scam:", width: "auto", style: "label" } as Content,
-          { text: formData.scamType, width: "*", style: "value" } as Content,
+          { text: "Type of Scam:", width: "auto", style: "label" },
+          { text: formData.scamType, width: "*", style: "value" },
         ],
         margin: [0, 5, 0, 5],
       } as Content,
       {
         columns: [
-          { text: "Amount Lost:", width: "auto", style: "label" } as Content,
+          { text: "Amount Lost:", width: "auto", style: "label" },
           {
             text: formData.amount
               ? `${formData.currency} ${parseFloat(formData.amount).toLocaleString()}`
               : "N/A",
             width: "*",
             style: "value",
-          } as Content,
+          },
         ],
         margin: [0, 5, 0, 5],
       } as Content,
       {
         columns: [
-          { text: "Payment Method:", width: "auto", style: "label" } as Content,
-          {
-            text: formData.paymentMethod || "N/A",
-            width: "*",
-            style: "value",
-          } as Content,
+          { text: "Payment Method:", width: "auto", style: "label" },
+          { text: formData.paymentMethod || "N/A", width: "*", style: "value" },
         ],
         margin: [0, 5, 0, 15],
       } as Content,
@@ -196,7 +178,7 @@ export const generatePoliceReportPDF = async ({
       ...(formData.beneficiary.name ||
       formData.beneficiary.bank ||
       formData.beneficiary.account
-        ? ([
+        ? [
             {
               text: "SCAMMER / BENEFICIARY DETAILS (IF KNOWN):",
               style: "sectionHeader",
@@ -217,7 +199,7 @@ export const generatePoliceReportPDF = async ({
               style: "listItem",
               margin: [0, 0, 0, 15],
             } as Content,
-          ] as Content[])
+          ]
         : []),
 
       {
@@ -259,7 +241,6 @@ export const generatePoliceReportPDF = async ({
         fontSize: 13,
         bold: true,
         color: "#0D47A1",
-        margin: [0, 10, 0, 5],
       },
       label: {
         fontSize: 11,
@@ -293,9 +274,11 @@ export const generatePoliceReportPDF = async ({
         color: "#777777",
       },
     } as StyleDictionary,
+
     pageMargins: [40, 80, 40, 40],
   };
 
+  // Generate and download the PDF
   pdfMake
     .createPdf(docDefinition)
     .download(`Police_Report_RM-${reportId.toString().padStart(6, "0")}.pdf`);

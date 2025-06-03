@@ -384,9 +384,9 @@ export default function Dashboard() {
                   className="w-full justify-start dark:text-gray-300 dark:border-gray-600 dark:hover:bg-slate-700"
                   variant="outline"
                 >
-                  <a>
+                  <span>
                     <FileText className="mr-2 h-4 w-4" /> Submit New Report
-                  </a>
+                  </span>
                 </Button>
               </Link>
               <Link href="/dashboard/reports" passHref={true}>
@@ -395,9 +395,9 @@ export default function Dashboard() {
                   className="w-full justify-start dark:text-gray-300 dark:border-gray-600 dark:hover:bg-slate-700"
                   variant="outline"
                 >
-                  <a>
+                  <span>
                     <Clock className="mr-2 h-4 w-4" /> Check Report Status
-                  </a>
+                  </span>
                 </Button>
               </Link>
               {/* <Link href="/dashboard/analytics" passHref={true}>
@@ -417,9 +417,9 @@ export default function Dashboard() {
                   className="w-full justify-start dark:text-gray-300 dark:border-gray-600 dark:hover:bg-slate-700"
                   variant="outline"
                 >
-                  <a>
+                  <span>
                     <Users className="mr-2 h-4 w-4" /> Contact Support
-                  </a>
+                  </span>
                 </Button>
               </Link>
             </CardContent>

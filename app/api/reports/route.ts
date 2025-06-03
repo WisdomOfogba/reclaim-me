@@ -6,55 +6,9 @@ import { z } from "zod";
 import { complaints, users } from "../_lib/drizzle/schema";
 import { db } from "../_lib/drizzle";
 import { verifyToken } from "../_lib/auth";
+import { createComplaintSchema } from "../_lib/validation-schemas";
 
 // Zod schema for validating incoming new complaint data
-const createComplaintSchema = z.object({
-  name: z.string().min(1, "Full name is required").max(200),
-  phone: z.string().min(1, "Phone number is required").max(20),
-  email: z.string().email("Invalid email address").max(100),
-  address: z.string().min(1, "Address is required").max(255),
-  scamType: z.string().min(1, "Scam type is required").max(100),
-  incidentDate: z.string().refine((date) => !isNaN(new Date(date).getTime()), {
-    message: "Invalid date format for incident date. Expected ISO-like string.",
-  }),
-  description: z.string().min(1, "Description is required"),
-  amountLost: z
-    .number()
-    .nonnegative("Amount lost must be non-negative")
-    .optional()
-    .nullable(),
-  currency: z.string().max(5).optional().nullable(),
-  paymentMethod: z.string().max(100).optional().nullable(),
-  scammerInfo: z
-    .object({
-      name: z.string().max(200).optional().nullable(),
-      bank: z.string().max(100).optional().nullable(),
-      account: z.string().max(50).optional().nullable(),
-    })
-    .optional()
-    .nullable(),
-  aiConsolingMessage: z.string().optional().nullable(),
-  aiPoliceReportDraft: z.string().optional().nullable(),
-  aiBankComplaintEmail: z.string().optional().nullable(),
-  aiNextStepsChecklist: z.string().optional().nullable(),
-  status: z
-    .enum([
-      "Under Review",
-      "Investigating",
-      "Resolved",
-      "Closed",
-      "Pending AI Generation",
-      "AI Processing Failed",
-    ])
-    .default("Under Review")
-    .optional(),
-  userId: z
-    .number()
-    .int()
-    .positive("User ID must be a positive integer")
-    .optional()
-    .nullable(),
-});
 
 async function getUserIdFromAuthToken(
   request: NextRequest
