@@ -1,4 +1,4 @@
-"use client";
+"use client"; // This directive ensures the component runs on the client-side.
 
 import { useEffect, useRef, useState } from "react";
 import { Button } from "@/components/ui/button";
@@ -29,8 +29,9 @@ import {
   Loader2,
   Download,
 } from "lucide-react";
-import { generatePoliceReportPDF } from "@/components/pdf-generator";
-// import { generatePoliceReportPDF } from "@components/pdf-generator";
+
+// DO NOT import generatePoliceReportPDF directly at the top level here.
+// It will be dynamically imported inside handleDownloadPoliceReportPDF to prevent SSR issues.
 
 // Interface for AI-generated documents from FastAPI backend
 interface AIDocuments {
@@ -156,8 +157,11 @@ export default function ReclaimMePage() {
   const [savedReportId, setSavedReportId] = useState<number | null>(null);
 
   const resultRef = useRef<HTMLDivElement>(null);
+  // Refs for editable text areas
   const policeReportRef = useRef<HTMLTextAreaElement>(null);
-  const bankComplaintRef = useRef<HTMLPreElement>(null);
+  const bankComplaintRef = useRef<HTMLTextAreaElement>(null); // Corrected ref type for textarea
+
+  // State to hold the editable versions of the AI-generated content
   const [editableContent, setEditableContent] = useState<{
     consoling_message: string;
     police_report_draft: string;
@@ -165,35 +169,39 @@ export default function ReclaimMePage() {
     next_steps_checklist: string[];
   } | null>(null);
 
+  // Helper function to update form data fields
   const updateFormData = (field: string, value: string) => {
-    setApiError(null);
+    setApiError(null); // Clear any previous API errors on input change
     if (field.startsWith("beneficiary.")) {
-      const beneficiaryField = field.split(".")[1];
+      const beneficiaryField = field.split(
+        "."
+      )[1] as keyof FormData["beneficiary"];
       setFormData((prev) => ({
         ...prev,
         beneficiary: { ...prev.beneficiary, [beneficiaryField]: value },
       }));
     } else {
-      setFormData((prev) => ({ ...prev, [field]: value }));
+      setFormData((prev) => ({ ...prev, [field as keyof FormData]: value }));
     }
   };
 
+  // Helper function to check if a specific step of the form is complete
   const isStepComplete = (step: number): boolean => {
     switch (step) {
-      case 0:
+      case 0: // Personal Information
         return !!(
           formData.name &&
           formData.phone &&
           formData.email &&
           formData.address
         );
-      case 1:
+      case 1: // Incident Details
         return !!(
           formData.scamType &&
           formData.dateTime &&
           formData.description
         );
-      case 2:
+      case 2: // All required fields for generation
         return !!(
           formData.name &&
           formData.phone &&
@@ -208,28 +216,30 @@ export default function ReclaimMePage() {
     }
   };
 
+  // Handles the full process: saving report, generating AI docs, updating report with AI docs.
   const handleFullGenerationProcess = async () => {
+    // Validate required fields before proceeding.
     if (!isStepComplete(2)) {
       setApiError(
         "Please fill in all required fields before generating documents."
       );
       return;
     }
-    setApiError(null);
-    setDisplayDocs(null);
-    setSavedReportId(null);
+    setApiError(null); // Clear any previous errors.
+    setDisplayDocs(null); // Clear previous display documents.
+    setSavedReportId(null); // Clear previous report ID.
 
     // --- Stage 1: Save Initial Report Data ---
     setCurrentStage("savingReport");
     setProcessingMessage("Saving initial report details...");
-    const amountValue = parseFloat(formData.amount);
+    const amountValue = parseFloat(formData.amount); // Parse amount to number, handle NaN.
     const initialPayloadToSave: ComplaintPayload = {
       name: formData.name,
       phone: formData.phone,
       email: formData.email,
       address: formData.address,
       scamType: formData.scamType,
-      incidentDate: formData.dateTime, // Ensure this is an ISO string for your backend
+      incidentDate: formData.dateTime, // Ensure this is an ISO string for your backend.
       description: formData.description,
       amountLost: isNaN(amountValue) ? null : amountValue,
       currency: formData.currency || null,
@@ -239,16 +249,16 @@ export default function ReclaimMePage() {
         formData.beneficiary.bank ||
         formData.beneficiary.account
           ? {
+              // Only include scammerInfo if any sub-field is provided.
               name: formData.beneficiary.name || undefined,
               bank: formData.beneficiary.bank || undefined,
               account: formData.beneficiary.account || undefined,
             }
           : null,
-      status: "Pending AI Generation",
+      status: "Pending AI Generation", // Initial status for the report.
     };
 
     let reportId: number | null = null;
-    // Removed: let saveData: any; // saveData will be defined within the try block if successful
 
     try {
       const saveResponse = await fetch("/api/reports", {
@@ -257,33 +267,27 @@ export default function ReclaimMePage() {
         body: JSON.stringify(initialPayloadToSave),
       });
 
-      // **CORRECTED ERROR HANDLING:**
-      // Check if the response was successful BEFORE trying to parse JSON
+      // Handle non-OK HTTP responses.
       if (!saveResponse.ok) {
         let errorDetail = `Error ${saveResponse.status}: ${saveResponse.statusText}`;
         try {
-          // Attempt to parse the error response as JSON, as your API routes should return JSON errors
           const errorData = await saveResponse.json();
           errorDetail = errorData.details
             ? JSON.stringify(errorData.details)
             : errorData.error || errorDetail;
-          // eslint-disable-next-line @typescript-eslint/no-unused-vars
         } catch (e) {
-          // If .json() fails, the response body might be HTML or plain text
           try {
             const textError = await saveResponse.text();
-            errorDetail += ` - Server response: ${textError.substring(0, 200)}...`; // Show a snippet
-            // eslint-disable-next-line @typescript-eslint/no-unused-vars
+            errorDetail += ` - Server response: ${textError.substring(0, 200)}...`;
           } catch (textE) {
-            /* Ignore if .text() also fails */
+            /* Ignore if .text() also fails. */
           }
         }
-        throw new Error(errorDetail); // This will be caught by the outer catch block
+        throw new Error(errorDetail);
       }
 
-      // If saveResponse.ok is true, now it's safer to parse the JSON
       const saveData = await saveResponse.json();
-      reportId = saveData.id;
+      reportId = saveData.id; // Extract the ID of the newly saved report.
 
       if (!reportId) {
         throw new Error(
@@ -294,15 +298,14 @@ export default function ReclaimMePage() {
       setSavedReportId(reportId);
       setProcessingMessage("Initial report saved! Generating AI documents...");
     } catch (err) {
-      console.error("Failed to save initial report:", err); // Log the full error object
+      console.error("Failed to save initial report:", err);
       setApiError(`Failed to save initial report: ${(err as Error).message}`);
-      setCurrentStage("form"); // Revert to form stage on error
-      return; // Stop the process
+      setCurrentStage("form"); // Revert to form stage on error.
+      return; // Stop the process.
     }
 
-    // If reportId is still null here, it means saving failed and we returned.
+    // Safeguard: If reportId is somehow still null here (shouldn't happen with the above checks).
     if (!reportId) {
-      // This case should ideally be caught above, but as a safeguard:
       setApiError(
         "Critical error: Report ID not available after save attempt. Cannot proceed."
       );
@@ -310,9 +313,10 @@ export default function ReclaimMePage() {
       return;
     }
 
-    // --- Stage 2: Generate AI Documents (remains the same as your provided code) ---
+    // --- Stage 2: Generate AI Documents ---
     setCurrentStage("generatingAI");
     setProcessingMessage("Contacting AI for document generation...");
+    // Payload for AI generation, including potentially parsed amount.
     const aiPayload = {
       ...formData,
       amount: isNaN(amountValue) ? null : amountValue,
@@ -321,7 +325,7 @@ export default function ReclaimMePage() {
 
     try {
       const aiResponse = await fetch(
-        "https://reclaimme-backend.onrender.com/generate-documents/",
+        "https://reclaimme-backend.onrender.com/generate-documents/", // FastAPI backend URL.
         {
           method: "POST",
           headers: { "Content-Type": "application/json" },
@@ -342,10 +346,9 @@ export default function ReclaimMePage() {
     } catch (err) {
       console.error("Failed to fetch AI documents:", err);
       setApiError(`AI Generation Failed: ${(err as Error).message}.`);
-      // Update status to 'AI Processing Failed'
+      // Update report status to indicate AI processing failure.
       try {
         await fetch(`/api/reports/${reportId}`, {
-          // Use the captured reportId
           method: "PUT",
           headers: { "Content-Type": "application/json" },
           body: JSON.stringify({ status: "AI Processing Failed" }),
@@ -356,7 +359,7 @@ export default function ReclaimMePage() {
           updateErr
         );
       }
-      setCurrentStage("form");
+      setCurrentStage("form"); // Revert to form stage on AI error.
       return;
     }
 
@@ -366,20 +369,20 @@ export default function ReclaimMePage() {
       return;
     }
 
-    // --- Stage 3: Update Report with AI Content (remains the same) ---
+    // --- Stage 3: Update Report with AI Content ---
     setCurrentStage("updatingReportWithAI");
     setProcessingMessage("Saving AI-generated content to your report...");
+    // Payload to update the saved report with AI-generated content.
     const updatePayload: Partial<ComplaintPayload> = {
       aiConsolingMessage: aiGeneratedData.consoling_message,
       aiPoliceReportDraft: aiGeneratedData.police_report_draft,
       aiBankComplaintEmail: aiGeneratedData.bank_complaint_email,
       aiNextStepsChecklist: aiGeneratedData.next_steps_checklist,
-      status: "Under Review",
+      status: "Under Review", // Set status to "Under Review" after successful AI generation.
     };
 
     try {
       const updateResponse = await fetch(`/api/reports/${reportId}`, {
-        // Use the captured reportId
         method: "PUT",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify(updatePayload),
@@ -393,6 +396,32 @@ export default function ReclaimMePage() {
             `Update Error: Status ${updateResponse.statusText}`
         );
       }
+
+      // Set display and editable documents after successful update.
+      const processedChecklist = aiGeneratedData.next_steps_checklist
+        .split("\n")
+        .map((step: string) => step.trim())
+        .filter((step: string) => step);
+
+      setDisplayDocs({
+        consoling_message: aiGeneratedData.consoling_message,
+        police_report_draft: aiGeneratedData.police_report_draft,
+        bank_complaint_email: aiGeneratedData.bank_complaint_email,
+        next_steps_checklist: processedChecklist,
+      });
+      setEditableContent({
+        consoling_message: aiGeneratedData.consoling_message,
+        police_report_draft: aiGeneratedData.police_report_draft,
+        bank_complaint_email: aiGeneratedData.bank_complaint_email,
+        next_steps_checklist: processedChecklist,
+      });
+      setCurrentStage("displayDocs"); // Move to display stage.
+    } catch (err) {
+      console.error("Failed to update report with AI content:", err);
+      setApiError(
+        `Failed to save AI content: ${(err as Error).message}. AI documents generated but not saved to report.`
+      );
+      // Still show AI docs even if saving to DB failed, as they were generated.
       setDisplayDocs({
         consoling_message: aiGeneratedData.consoling_message,
         police_report_draft: aiGeneratedData.police_report_draft,
@@ -412,38 +441,38 @@ export default function ReclaimMePage() {
           .filter((step: string) => step),
       });
       setCurrentStage("displayDocs");
-    } catch (err) {
-      console.error("Failed to update report with AI content:", err);
-      setApiError(
-        `Failed to save AI content: ${(err as Error).message}. AI documents generated but not saved to report.`
-      );
-      setDisplayDocs({
-        /* ... populate with aiGeneratedData ... */
-        bank_complaint_email: "",
-        police_report_draft: "",
-        consoling_message: "",
-        next_steps_checklist: [""],
-      }); // Still show AI docs
-      setCurrentStage("displayDocs");
     }
   };
 
+  // Function to update the editable content state (for textareas).
   const updateEditableContent = (
     field: keyof DisplayDocuments,
     value: string | string[]
   ) => {
-    if (!editableContent) return;
-    setEditableContent((prev) => (prev ? { ...prev, [field]: value } : null));
+    setEditableContent((prev) => {
+      if (!prev) return null;
+      return { ...prev, [field]: value };
+    });
   };
 
+  // Handles the download of the Police Report PDF.
   const handleDownloadPoliceReportPDF = async () => {
-    if (!editableContent || !formData) return;
+    // Dynamically import pdf-generator only when the button is clicked (client-side).
+    // This is crucial to prevent pdfmake from running on the server during build/prerendering.
+    const { generatePoliceReportPDF } = await import(
+      "@/components/pdf-generator"
+    );
+
+    if (!editableContent || !formData) {
+      alert("No content or form data available to generate PDF.");
+      return;
+    }
 
     try {
       await generatePoliceReportPDF({
         formData,
-        policeReport: editableContent.police_report_draft,
-        reportId: savedReportId || 0,
+        policeReport: editableContent.police_report_draft, // Use the currently editable content.
+        reportId: savedReportId || 0, // Fallback to 0 if reportId is not set.
       });
     } catch (error) {
       console.error("Failed to generate Police Report PDF:", error);
@@ -451,6 +480,7 @@ export default function ReclaimMePage() {
     }
   };
 
+  // Handles copying content to the clipboard.
   const handleCopyToClipboard = (content: string | null | undefined) => {
     if (!content) {
       alert("No content to copy.");
@@ -465,6 +495,7 @@ export default function ReclaimMePage() {
       });
   };
 
+  // Scrolls to the result section when documents are displayed.
   useEffect(() => {
     if (currentStage === "displayDocs" && displayDocs && resultRef.current) {
       setTimeout(
@@ -476,6 +507,7 @@ export default function ReclaimMePage() {
 
   // --- UI Rendering ---
 
+  // Loading/Processing State UI
   if (
     currentStage === "generatingAI" ||
     currentStage === "savingReport" ||
@@ -500,6 +532,7 @@ export default function ReclaimMePage() {
     );
   }
 
+  // Display Documents State UI
   if (currentStage === "displayDocs" && displayDocs) {
     return (
       <div
@@ -530,6 +563,7 @@ export default function ReclaimMePage() {
             )}
           </div>
 
+          {/* Consoling Message Card */}
           {displayDocs.consoling_message && (
             <Card className="bg-white dark:bg-slate-800 shadow-lg">
               <CardHeader>
@@ -545,7 +579,9 @@ export default function ReclaimMePage() {
             </Card>
           )}
 
+          {/* Police Report and Bank Complaint Cards */}
           <div className="grid gap-6 xl:grid-cols-2">
+            {/* Police Report Draft Card */}
             <Card className="bg-white dark:bg-slate-800 shadow-lg">
               <CardHeader>
                 <CardTitle className="flex items-center gap-2 text-gray-800 dark:text-gray-200">
@@ -564,19 +600,18 @@ export default function ReclaimMePage() {
                   }
                   ref={policeReportRef}
                   className="whitespace-pre-wrap text-sm w-full resize-none min-h-96 bg-gray-50 dark:bg-slate-700 p-4 rounded-lg max-h-96 overflow-y-auto text-gray-800 dark:text-gray-200 focus:outline-none focus:ring-2 focus:ring-blue-500"
-                >
-                  {displayDocs.police_report_draft}
-                </textarea>
+                ></textarea>
                 <Button
-                  className="flex-1 w-full"
+                  className="flex-1 w-full mt-4"
                   onClick={() => handleDownloadPoliceReportPDF()}
                 >
                   <Download className="mr-2 h-4 w-4" />
-                  Download
+                  Download Police Report PDF
                 </Button>
               </CardContent>
             </Card>
 
+            {/* Bank Complaint Email Card */}
             <Card className="bg-white dark:bg-slate-800 shadow-lg">
               <CardHeader>
                 <CardTitle className="flex items-center gap-2 text-gray-800 dark:text-gray-200">
@@ -601,19 +636,22 @@ export default function ReclaimMePage() {
                     {displayDocs.bank_complaint_email}
                   </p>
                 ) : (
-                  <pre
+                  <textarea
+                    value={editableContent?.bank_complaint_email ?? ""}
+                    onChange={(e) =>
+                      updateEditableContent(
+                        "bank_complaint_email",
+                        e.target.value
+                      )
+                    }
                     ref={bankComplaintRef}
-                    contentEditable="true"
-                    suppressContentEditableWarning={true}
-                    className="whitespace-pre-wrap text-sm bg-gray-50 dark:bg-slate-700 p-4 rounded-lg max-h-96 overflow-y-auto text-gray-800 dark:text-gray-200 focus:outline-none focus:ring-2 focus:ring-blue-500"
-                  >
-                    {displayDocs.bank_complaint_email}
-                  </pre>
+                    className="whitespace-pre-wrap text-sm w-full resize-none min-h-96 bg-gray-50 dark:bg-slate-700 p-4 rounded-lg max-h-96 overflow-y-auto text-gray-800 dark:text-gray-200 focus:outline-none focus:ring-2 focus:ring-blue-500"
+                  ></textarea>
                 )}
                 <Button
                   className="w-full mt-4"
                   onClick={() =>
-                    handleCopyToClipboard(bankComplaintRef.current?.innerText)
+                    handleCopyToClipboard(editableContent?.bank_complaint_email)
                   }
                   disabled={displayDocs.bank_complaint_email
                     .toLowerCase()
@@ -625,6 +663,7 @@ export default function ReclaimMePage() {
             </Card>
           </div>
 
+          {/* Next Steps Checklist Card */}
           <Card className="bg-white dark:bg-slate-800 shadow-lg">
             <CardHeader>
               <CardTitle className="text-gray-800 dark:text-gray-200">
@@ -635,47 +674,59 @@ export default function ReclaimMePage() {
               </CardDescription>
             </CardHeader>
             <CardContent>
-              <div className="space-y-3">
-                {displayDocs.next_steps_checklist.map((step, index) => {
-                  // Remove leading/trailing whitespace
-                  let cleanStep = step.trim();
+              {/* Textarea for editing the raw checklist string */}
+              <textarea
+                value={editableContent?.next_steps_checklist.join("\n") ?? ""}
+                onChange={(e) =>
+                  updateEditableContent(
+                    "next_steps_checklist",
+                    e.target.value.split("\n")
+                  )
+                }
+                className="whitespace-pre-wrap text-sm w-full resize-none min-h-48 bg-gray-50 dark:bg-slate-700 p-4 rounded-lg max-h-96 overflow-y-auto text-gray-800 dark:text-gray-200 focus:outline-none focus:ring-2 focus:ring-blue-500"
+              ></textarea>
+              <div className="space-y-3 mt-4">
+                {/* Display processed checklist items for user, based on editableContent */}
+                {editableContent?.next_steps_checklist
+                  .filter(Boolean)
+                  .map((step, index) => {
+                    let cleanStep = step.trim();
+                    // Remove common markdown list prefixes if present
+                    if (cleanStep.startsWith("- ")) {
+                      cleanStep = cleanStep.slice(2).trim();
+                    } else if (cleanStep.startsWith("* ")) {
+                      cleanStep = cleanStep.slice(2).trim();
+                    }
+                    // Remove leading numbers or bullet points (e.g., "1. ", "• ")
+                    cleanStep = cleanStep.replace(/^(\d+\.\s*|•\s*)/, "");
 
-                  // If the step starts with markdown "- " or "* ", remove it
-                  if (cleanStep.startsWith("- ")) {
-                    cleanStep = cleanStep.slice(2).trim();
-                  } else if (cleanStep.startsWith("* ")) {
-                    cleanStep = cleanStep.slice(2).trim();
-                  }
-
-                  // Remove leading numbers or bullet points (e.g., "1. ", "• ")
-                  cleanStep = cleanStep.replace(/^(\d+\.\s*|•\s*)/, "");
-
-                  return (
-                    <div key={index} className="flex items-start gap-3">
-                      <div className="w-6 h-6 rounded-full bg-blue-100 dark:bg-blue-800 text-blue-600 dark:text-blue-200 flex items-center justify-center text-sm font-medium mt-0.5 shrink-0">
-                        {index + 1}
+                    return (
+                      <div key={index} className="flex items-start gap-3">
+                        <div className="w-6 h-6 rounded-full bg-blue-100 dark:bg-blue-800 text-blue-600 dark:text-blue-200 flex items-center justify-center text-sm font-medium mt-0.5 shrink-0">
+                          {index + 1}
+                        </div>
+                        <p className="text-gray-700 dark:text-gray-300">
+                          {cleanStep}
+                        </p>
                       </div>
-                      <p className="text-gray-700 dark:text-gray-300">
-                        {cleanStep}
-                      </p>
-                    </div>
-                  );
-                })}
+                    );
+                  })}
               </div>
             </CardContent>
           </Card>
 
+          {/* Button to report another scam or start over */}
           <div className="text-center mt-8">
             <Button
               variant="outline"
               className="dark:text-gray-200 dark:border-gray-600 dark:hover:bg-slate-700"
               onClick={() => {
-                setDisplayDocs(null);
-                setFormData(initialFormData);
-                setEditableContent(null);
-                setApiError(null);
-                setSavedReportId(null);
-                setCurrentStage("form");
+                setDisplayDocs(null); // Clear displayed documents
+                setFormData(initialFormData); // Reset form data
+                setEditableContent(null); // Clear editable content
+                setApiError(null); // Clear API errors
+                setSavedReportId(null); // Clear saved report ID
+                setCurrentStage("form"); // Go back to the form stage
               }}
             >
               Report Another Scam / Start Over
@@ -686,7 +737,7 @@ export default function ReclaimMePage() {
     );
   }
 
-  // Main Form UI
+  // Main Form UI (displayed when currentStage is "form")
   return (
     <div className="min-h-screen selection:bg-blue-200 dark:selection:bg-blue-700">
       <div className="max-w-2xl mx-auto space-y-6 flex py-8 px-4">
@@ -952,6 +1003,7 @@ export default function ReclaimMePage() {
               </div>
             )}
 
+            {/* API Error Display */}
             {apiError && currentStage === "form" && (
               <p className="text-sm text-red-500 dark:text-red-400 text-center mt-2 flex items-center justify-center">
                 <AlertTriangle className="mr-2 h-4 w-4" />
@@ -959,6 +1011,7 @@ export default function ReclaimMePage() {
               </p>
             )}
 
+            {/* Generate Button (only appears when all required steps are complete) */}
             {isStepComplete(2) && (
               <div className="pt-6 animate-in slide-in-from-bottom-4">
                 <Button
@@ -974,6 +1027,7 @@ export default function ReclaimMePage() {
             )}
           </CardContent>
         </Card>
+        {/* Progress Bar (Visual indicator of form completion) */}
         <div className="sticky top-8 left-0 h-full flex items-start pl-4">
           <div className="w-3 min-h-[400px] max-h-[600px] bg-gray-200 dark:bg-gray-700 rounded-full overflow-hidden relative">
             <div
