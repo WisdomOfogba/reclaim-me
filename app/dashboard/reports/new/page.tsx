@@ -28,6 +28,7 @@ import {
   AlertTriangle,
   Loader2,
   Download,
+  Copy,
 } from "lucide-react";
 import { toast } from "sonner";
 import { generatePoliceReportPDF } from "@/components/pdf-generator1";
@@ -63,6 +64,10 @@ interface FormData {
   amount: string; // Kept as string for input, parsed on submission
   currency: string;
   paymentMethod: string;
+  account: {
+    bankName: string;
+    accountNumber: string;
+  };
   beneficiary: {
     name: string;
     bank: string;
@@ -82,6 +87,10 @@ interface ComplaintPayload {
   amountLost?: number | null;
   currency?: string | null;
   paymentMethod?: string | null;
+  bankDetails?: {
+    bankName?: string | null;
+    accountNumber?: string | null;
+  } | null;
   scammerInfo?: {
     name?: string | null;
     bank?: string | null;
@@ -141,6 +150,7 @@ export default function ReclaimMePage() {
     amount: "",
     currency: "NGN",
     paymentMethod: "",
+    account: { bankName: "", accountNumber: "" },
     beneficiary: { name: "", bank: "", account: "" },
   };
 
@@ -163,6 +173,102 @@ export default function ReclaimMePage() {
   const policeReportRef = useRef<HTMLTextAreaElement>(null);
   const bankComplaintRef = useRef<HTMLTextAreaElement>(null); // Corrected ref type for textarea
 
+  //bank Emails
+  const banks = [
+    {
+      bank: "Access Bank",
+      email: "contactcenter@accessbankplc.com",
+    },
+    {
+      bank: "Citibank Nigeria",
+      email: "publicaffairs.nigeria@citi.com",
+    },
+    {
+      bank: "Ecobank Nigeria",
+      email: "ecobankenquiries@ecobank.com",
+    },
+    {
+      bank: "Fidelity Bank",
+      email: "true.serve@fidelitybank.ng",
+    },
+    {
+      bank: "First Bank of Nigeria",
+      email: "firstcontact@firstbanknigeria.com",
+    },
+    {
+      bank: "First City Monument Bank (FCMB)",
+      email: "customerservice@fcmb.com",
+    },
+    {
+      bank: "Globus Bank",
+      email: "contactcenter@globusbank.com",
+    },
+    {
+      bank: "Guaranty Trust Bank (GTBank)",
+      email: "gtassistant@gtbank.com",
+    },
+    {
+      bank: "Heritage Bank",
+      email: "info@hbng.com",
+    },
+    {
+      bank: "Keystone Bank",
+      email: "contactcentre@keystonebankng.com",
+    },
+    {
+      bank: "Polaris Bank",
+      email: "yescenter@polarisbanklimited.com",
+    },
+    {
+      bank: "Providus Bank",
+      email: "businessconcierge@providusbank.com",
+    },
+    {
+      bank: "Stanbic IBTC Bank",
+      email: "customercarenigeria@stanbicibtc.com",
+    },
+    {
+      bank: "Standard Chartered Bank Nigeria",
+      email: "clientcare.ng@sc.com",
+    },
+    {
+      bank: "Sterling Bank",
+      email: "customercare@sterling.ng",
+    },
+    {
+      bank: "SunTrust Bank Nigeria",
+      email: "helpdesk@suntrustng.com",
+    },
+    {
+      bank: "Titan Trust Bank",
+      email: "contactcentre@titantrustbank.com",
+    },
+    {
+      bank: "Union Bank of Nigeria",
+      email: "customerservice@unionbankng.com",
+    },
+    {
+      bank: "United Bank for Africa (UBA)",
+      email: "cfc@ubagroup.com",
+    },
+    {
+      bank: "Unity Bank",
+      email: "we_care@unitybankng.com",
+    },
+    {
+      bank: "Wema Bank",
+      email: "purpleconnect@wemabank.com",
+    },
+    {
+      bank: "Zenith Bank",
+      email: "zenithdirect@zenithbank.com",
+    },
+    {
+      bank: "Palmpay Bank",
+      email: "support@palmpay.com",
+    },
+  ];
+
   // State to hold the editable versions of the AI-generated content
   const [editableContent, setEditableContent] = useState<{
     consoling_message: string;
@@ -174,14 +280,24 @@ export default function ReclaimMePage() {
   // Helper function to update form data fields
   const updateFormData = (field: string, value: string) => {
     setApiError(null); // Clear any previous API errors on input change
-    if (field.startsWith("beneficiary.")) {
-      const beneficiaryField = field.split(
-        "."
-      )[1] as keyof FormData["beneficiary"];
-      setFormData((prev) => ({
-        ...prev,
-        beneficiary: { ...prev.beneficiary, [beneficiaryField]: value },
-      }));
+    if (field.startsWith("beneficiary.") || field.startsWith("account.")) {
+      if (field.startsWith("beneficiary.")) {
+        const beneficiaryField = field.split(
+          "."
+        )[1] as keyof FormData["beneficiary"];
+        setFormData((prev) => ({
+          ...prev,
+          beneficiary: { ...prev.beneficiary, [beneficiaryField]: value },
+        }));
+      } else {
+        const accountField = field.split(
+          "."
+        )[1] as keyof FormData["account"];
+        setFormData((prev) => ({
+          ...prev,
+          account: { ...prev.account, [accountField]: value },
+        }));
+      }
     } else {
       setFormData((prev) => ({ ...prev, [field as keyof FormData]: value }));
     }
@@ -211,7 +327,8 @@ export default function ReclaimMePage() {
           formData.address &&
           formData.scamType &&
           formData.dateTime &&
-          formData.description
+          formData.description &&
+          formData.amount
         );
       default:
         return false;
@@ -246,6 +363,13 @@ export default function ReclaimMePage() {
       amountLost: isNaN(amountValue) ? null : amountValue,
       currency: formData.currency || null,
       paymentMethod: formData.paymentMethod || null,
+      bankDetails:
+        formData.account.bankName || formData.account.accountNumber
+          ? {
+              bankName: formData.account.bankName || undefined,
+              accountNumber: formData.account.accountNumber || undefined,
+            }
+          : null,
       scammerInfo:
         formData.beneficiary.name ||
         formData.beneficiary.bank ||
@@ -660,6 +784,7 @@ export default function ReclaimMePage() {
                     .toLowerCase()
                     .startsWith("not applicable")}
                 >
+                  <Copy />
                   Copy Edited Email
                 </Button>
               </CardContent>
@@ -677,17 +802,6 @@ export default function ReclaimMePage() {
               </CardDescription>
             </CardHeader>
             <CardContent>
-              {/* Textarea for editing the raw checklist string */}
-              <textarea
-                value={editableContent?.next_steps_checklist.join("\n") ?? ""}
-                onChange={(e) =>
-                  updateEditableContent(
-                    "next_steps_checklist",
-                    e.target.value.split("\n")
-                  )
-                }
-                className="whitespace-pre-wrap text-sm w-full resize-none min-h-48 bg-gray-50 dark:bg-slate-700 p-4 rounded-lg max-h-96 overflow-y-auto text-gray-800 dark:text-gray-200 focus:outline-none focus:ring-2 focus:ring-blue-500"
-              ></textarea>
               <div className="space-y-3 mt-4">
                 {/* Display processed checklist items for user, based on editableContent */}
                 {editableContent?.next_steps_checklist
@@ -884,64 +998,116 @@ export default function ReclaimMePage() {
 
             {/* Step 3: Financial Information */}
             {isStepComplete(1) && (
-              <div className="space-y-4 p-4 border dark:border-slate-700 rounded-md animate-in slide-in-from-bottom-4">
-                <h3 className="text-lg font-semibold text-slate-800 dark:text-slate-200">
-                  Financial Information (Optional)
-                </h3>
-                <div className="grid gap-4 md:grid-cols-3">
-                  <div className="space-y-1.5">
-                    <Label htmlFor="amount" className="dark:text-slate-300">
-                      Amount Lost
-                    </Label>
-                    <Input
-                      id="amount"
-                      type="number"
-                      className="bg-slate-50 dark:bg-slate-800 dark:text-slate-200"
-                      value={formData.amount}
-                      onChange={(e) => updateFormData("amount", e.target.value)}
-                      placeholder="50000"
-                    />
-                  </div>
-                  <div className="space-y-1.5">
-                    <Label htmlFor="currency" className="dark:text-slate-300">
-                      Currency
-                    </Label>
-                    <Select
-                      value={formData.currency}
-                      onValueChange={(value) =>
-                        updateFormData("currency", value)
-                      }
-                    >
-                      <SelectTrigger className="bg-slate-50 dark:bg-slate-800 dark:text-slate-200">
-                        <SelectValue />
-                      </SelectTrigger>
-                      <SelectContent className="bg-white dark:bg-slate-800 dark:text-slate-200">
-                        <SelectItem value="NGN">NGN</SelectItem>
-                        <SelectItem value="USD">USD</SelectItem>
-                        <SelectItem value="EUR">EUR</SelectItem>
-                        <SelectItem value="GBP">GBP</SelectItem>
-                      </SelectContent>
-                    </Select>
-                  </div>
-                  <div className="space-y-1.5">
-                    <Label
-                      htmlFor="paymentMethod"
-                      className="dark:text-slate-300"
-                    >
-                      Payment Method
-                    </Label>
-                    <Input
-                      id="paymentMethod"
-                      className="bg-slate-50 dark:bg-slate-800 dark:text-slate-200"
-                      value={formData.paymentMethod}
-                      onChange={(e) =>
-                        updateFormData("paymentMethod", e.target.value)
-                      }
-                      placeholder="e.g., Bank Transfer"
-                    />
+              <>
+                <div className="space-y-4 p-4 border dark:border-slate-700 rounded-md animate-in slide-in-from-bottom-4">
+                  <h3 className="text-lg font-semibold text-slate-800 dark:text-slate-200">
+                    Financial Information
+                  </h3>
+                  <div className="grid gap-4 md:grid-cols-2">
+                    <div className="space-y-1.5">
+                      <Label htmlFor="amount" className="dark:text-slate-300">
+                        Amount Lost <span className="text-red-500">*</span>
+                      </Label>
+                      <Input
+                        id="amount"
+                        type="number"
+                        className="bg-slate-50 dark:bg-slate-800 dark:text-slate-200"
+                        value={formData.amount}
+                        onChange={(e) =>
+                          updateFormData("amount", e.target.value)
+                        }
+                        placeholder="50000"
+                      />
+                    </div>
+                    <div className="space-y-1.5">
+                      <Label htmlFor="currency" className="dark:text-slate-300">
+                        Currency <span className="text-red-500">*</span>
+                      </Label>
+                      <Select
+                        value={formData.currency}
+                        onValueChange={(value) =>
+                          updateFormData("currency", value)
+                        }
+                      >
+                        <SelectTrigger className="bg-slate-50 dark:bg-slate-800 dark:text-slate-200">
+                          <SelectValue />
+                        </SelectTrigger>
+                        <SelectContent className="bg-white dark:bg-slate-800 dark:text-slate-200">
+                          <SelectItem value="NGN">NGN</SelectItem>
+                          <SelectItem value="USD">USD</SelectItem>
+                          <SelectItem value="EUR">EUR</SelectItem>
+                          <SelectItem value="GBP">GBP</SelectItem>
+                        </SelectContent>
+                      </Select>
+                    </div>
+                    <div className="space-y-1.5">
+                      <Label
+                        htmlFor="paymentMethod"
+                        className="dark:text-slate-300"
+                      >
+                        Payment Method
+                      </Label>
+                      <Input
+                        id="paymentMethod"
+                        className="bg-slate-50 dark:bg-slate-800 dark:text-slate-200"
+                        value={formData.paymentMethod}
+                        onChange={(e) =>
+                          updateFormData("paymentMethod", e.target.value)
+                        }
+                        placeholder="e.g., Bank Transfer"
+                      />
+                    </div>
                   </div>
                 </div>
-              </div>
+                <div className="space-y-4 p-4 border dark:border-slate-700 rounded-md animate-in slide-in-from-bottom-4">
+                  <h3 className="text-lg font-semibold text-slate-800 dark:text-slate-200">
+                    Bank Information
+                  </h3>
+                  <div className="grid gap-4 md:grid-cols-2">
+                    <div className="space-y-1.5">
+                      <Label htmlFor="BankName" className="dark:text-slate-300">
+                        Bank
+                      </Label>
+                      <Select
+                        value={formData.account.bankName}
+                        onValueChange={(value) =>
+                          updateFormData("account.bankName", value)
+                        }
+                      >
+                        <SelectTrigger className="bg-slate-50 dark:bg-slate-800 dark:text-slate-200">
+                          {/* Select Bank */}
+                          <SelectValue placeholder="Select Bank" />
+                        </SelectTrigger>
+                        <SelectContent className="bg-white dark:bg-slate-800 dark:text-slate-200">
+                          {banks.map((bank, i) => (
+                            <SelectItem value={bank.email ?? ""} key={i}>{bank.bank}</SelectItem>
+                          ))}
+                        </SelectContent>
+                      </Select>
+                    </div>
+                    <div className="space-y-1.5">
+                      <Label
+                        htmlFor="AccountNumber"
+                        className="dark:text-slate-300"
+                      >
+                        Account Number
+                      </Label>
+                      <Input
+                        id="AccountNumber"
+                        type="number"
+                        className="bg-slate-50 dark:bg-slate-800 dark:text-slate-200"
+                        value={formData.account.accountNumber}
+                        max={10}
+                        min={10}
+                        onChange={(e) =>
+                          updateFormData("account.accountNumber", e.target.value)
+                        }
+                        placeholder="1234567890"
+                      />
+                    </div>
+                  </div>
+                </div>
+              </>
             )}
 
             {/* Step 4: Beneficiary Information */}
