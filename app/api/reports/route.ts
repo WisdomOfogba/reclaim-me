@@ -1,7 +1,7 @@
 // app/api/reports/route.ts
 
 import { NextRequest, NextResponse } from "next/server";
-import { eq, desc, sql, getTableColumns } from "drizzle-orm";
+import { eq, desc, sql } from "drizzle-orm";
 import { z } from "zod";
 import { complaints, users } from "../_lib/drizzle/schema";
 import { db } from "../_lib/drizzle";
@@ -157,18 +157,11 @@ export async function GET(request: NextRequest) {
     const offset = (page - 1) * limitPerPage;
 
     // let s: ApiReport = {};
-    const { id, scamType, status, incidentDate, createdAt, pdfLink } =
-      getTableColumns(complaints);
+    // const { id, scamType, status, incidentDate, createdAt, pdfLink } =
+    //   getTableColumns(complaints);
 
     const allComplaints = await db
-      .select({
-        id,
-        scamType,
-        status,
-        incidentDate,
-        createdAt,
-        pdfLink,
-      })
+      .select()
       .from(complaints)
       .where(
         userId ? eq(complaints.userId, userId) : undefined // Filter by userId if available
