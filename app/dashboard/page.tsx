@@ -22,6 +22,7 @@ import {
   // MapPin, // MapPin was used for a 'location' field not in current schema
 } from "lucide-react";
 import Link from "next/link";
+import { ApiReport, ApiReport$1 } from "@/lib/types";
 
 // Interface for the data expected from the /api/dashboard-stats
 interface DashboardApiStats {
@@ -187,28 +188,21 @@ export default function Dashboard() {
         }
         const recentReportsData = await recentReportsResponse.json();
 
-        type ApiReport = {
-          id: number;
-          scamType: string | null;
-          status: string | null;
-          incidentDate?: string | null;
-          createdAt?: string | null;
-          // priority?: string | null; // Uncomment if priority exists
-        };
-
         const formattedRecentReports = recentReportsData.data.map(
-          (report: ApiReport) => ({
-            id: report.id,
-            formattedId: `RPT-${new Date(report.incidentDate ?? report.createdAt ?? "").getFullYear()}-${report.id.toString().padStart(3, "0")}`,
-            scamType: report.scamType,
-            status: report.status,
-            incidentDate: report.incidentDate
-              ? new Date(report.incidentDate).toLocaleDateString()
-              : report.createdAt
-                ? new Date(report.createdAt).toLocaleDateString()
-                : "N/A",
-            // priority: report.priority || "Normal", // Add if priority field exists in schema
-          })
+          (report: ApiReport) =>
+            ({
+              id: report.id,
+              formattedId: `RPT-${new Date(report.incidentDate ?? report.createdAt ?? "").getFullYear()}-${report.id.toString().padStart(3, "0")}`,
+              scamType: report.scamType,
+              status: report.status,
+              incidentDate: report.incidentDate
+                ? new Date(report.incidentDate).toLocaleDateString()
+                : report.createdAt
+                  ? new Date(report.createdAt).toLocaleDateString()
+                  : "N/A",
+              pdfUrl: report.pdfLink || null, // Assuming pdfLink is optional
+              // priority: report.priority || "Normal", // Add if priority field exists in schema
+            }) as ApiReport$1
         );
         setRecentReportsDisplay(formattedRecentReports);
       } catch (err) {

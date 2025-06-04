@@ -1,12 +1,14 @@
 // app/api/reports/route.ts
 
 import { NextRequest, NextResponse } from "next/server";
-import { eq, desc, sql } from "drizzle-orm";
+import { eq, desc, sql, getTableColumns } from "drizzle-orm";
 import { z } from "zod";
 import { complaints, users } from "../_lib/drizzle/schema";
 import { db } from "../_lib/drizzle";
 import { verifyToken } from "../_lib/auth";
 import { createComplaintSchema } from "../_lib/validation-schemas";
+import { prettifyError } from "zod/v4-mini";
+// import { ApiReport } from "@/lib/types";
 
 // Zod schema for validating incoming new complaint data
 
@@ -53,14 +55,12 @@ export async function POST(request: NextRequest) {
   }
   try {
     const body = await request.json();
-    // console.log("Request body received:", body);
 
     const validation = createComplaintSchema.safeParse(body);
 
     if (!validation.success) {
-      // console.error("Zod validation failed:", validation.error.flatten());
       return NextResponse.json(
-        { error: "Invalid input", details: validation.error.flatten() },
+        { error: "Invalid input", details: prettifyError(validation.error) },
         { status: 400 }
       );
     }
@@ -156,8 +156,19 @@ export async function GET(request: NextRequest) {
     const limitPerPage = parseInt(searchParams.get("limit") || "10");
     const offset = (page - 1) * limitPerPage;
 
+    // let s: ApiReport = {};
+    const { id, scamType, status, incidentDate, createdAt, pdfLink } =
+      getTableColumns(complaints);
+
     const allComplaints = await db
-      .select()
+      .select({
+        id,
+        scamType,
+        status,
+        incidentDate,
+        createdAt,
+        pdfLink,
+      })
       .from(complaints)
       .where(
         userId ? eq(complaints.userId, userId) : undefined // Filter by userId if available
@@ -184,7 +195,7 @@ export async function GET(request: NextRequest) {
       { status: 200 }
     );
   } catch (error) {
-    // console.error("Error fetching complaints in GET /api/reports:", error);
+    console.error("Error fetching complaints in GET /api/reports:", error);
     return NextResponse.json(
       {
         error: "Failed to fetch complaints",

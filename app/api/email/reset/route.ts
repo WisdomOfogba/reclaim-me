@@ -39,7 +39,7 @@ export async function POST(request: NextRequest) {
 
     db.insert(tokenTable).values({
       token: rand,
-      expDate: new Date(Date.now() + 1000 * 60 * 60 * 24 * 7),
+      expiresAt: new Date(Date.now() + 1000 * 60 * 60 * 24 * 7),
       userId: currUser.id,
     });
   } catch {
