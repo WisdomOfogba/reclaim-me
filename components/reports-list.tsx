@@ -36,6 +36,8 @@ import {
   FileText,
   AlertCircle,
   Clock,
+  Copy,
+  Check,
 } from "lucide-react";
 import Link from "next/link";
 // import { ComplaintObj } from "@/lib/types"; // We'll define ComplaintDisplay based on schema
@@ -120,6 +122,27 @@ const getStatusColor = (status: string | null) => {
     useState<ComplaintDisplay | null>(null);
   const [isLoading, setIsLoading] = useState<boolean>(true);
   const [error, setError] = useState<string | null>(null);
+  const [copied, setCopied] = useState(false);
+
+  const handleCopy = (content?: string) => {
+    try {
+      if (!content) {
+        alert("No content to copy.");
+        return;
+      }
+
+      navigator.clipboard.writeText(content).then(() => setCopied(true));
+      setTimeout(() => {
+        setCopied(false);
+      }, 1000);
+    } catch (err) {
+      console.error("Failed to copy text: ", err);
+    }
+  };
+
+  const handleDownload = () => {
+    alert("download button clicked!")
+  }
 
   // Pagination state
   const [currentPage, setCurrentPage] = useState(1);
@@ -379,7 +402,7 @@ const getStatusColor = (status: string | null) => {
 
                           <div className="overflow-y-auto flex-grow p-6">
                             <Tabs defaultValue="overview" className="w-full">
-                              <TabsList className="grid w-full grid-cols-2 md:grid-cols-4 gap-2 bg-gray-100 dark:bg-slate-800 p-1 rounded-md mb-4">
+                              <TabsList className="grid w-full grid-cols-2 md:grid-cols-4 gap-2 bg-gray-100 h-auto dark:bg-slate-800 p-1 rounded-md mb-4">
                                 {[
                                   "overview",
                                   "victimScammerInfo",
@@ -583,10 +606,20 @@ const getStatusColor = (status: string | null) => {
                                 )}
                                 {selectedComplaint.aiPoliceReportDraft && (
                                   <Card className="bg-slate-50 dark:bg-slate-800/50">
-                                    <CardHeader>
+                                    <CardHeader className="flex justify-between items-center flex-row w-full">
                                       <CardTitle className="text-base dark:text-gray-200">
                                         AI Police Report Draft
                                       </CardTitle>
+                                        <Button
+                                          variant="outline"
+                                          onClick={() =>
+                                            handleDownload(
+                                            )
+                                          }
+                                          size="icon"
+                                        >
+                                          <Download />
+                                        </Button>
                                     </CardHeader>
                                     <CardContent>
                                       <pre className="text-sm dark:text-gray-400 whitespace-pre-wrap max-h-60 overflow-y-auto">
@@ -597,10 +630,28 @@ const getStatusColor = (status: string | null) => {
                                 )}
                                 {selectedComplaint.aiBankComplaintEmail && (
                                   <Card className="bg-slate-50 dark:bg-slate-800/50">
-                                    <CardHeader>
+                                    <CardHeader className="flex justify-between items-center flex-row w-full">
                                       <CardTitle className="text-base dark:text-gray-200">
                                         AI Bank Complaint Email
                                       </CardTitle>
+                                      {copied ? (
+                                        <Button variant="outline" size="icon">
+                                          <Check />
+                                        </Button>
+                                      ) : (
+                                        <Button
+                                          variant="outline"
+                                          onClick={() =>
+                                            handleCopy(
+                                              selectedComplaint.aiBankComplaintEmail ??
+                                                undefined
+                                            )
+                                          }
+                                          size="icon"
+                                        >
+                                          <Copy />
+                                        </Button>
+                                      )}
                                     </CardHeader>
                                     <CardContent>
                                       <pre className="text-sm dark:text-gray-400 whitespace-pre-wrap max-h-60 overflow-y-auto">
