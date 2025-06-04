@@ -33,6 +33,7 @@ import {
 import { toast } from "sonner";
 import { generatePoliceReportPDF } from "@/components/pdf-generator1";
 import { downloadPDF } from "@/lib/utils";
+import Link from "next/link";
 
 // DO NOT import generatePoliceReportPDF directly at the top level here.
 // It will be dynamically imported inside handleDownloadPoliceReportPDF to prevent SSR issues.
@@ -773,8 +774,17 @@ export default function ReclaimMePage() {
                     className="whitespace-pre-wrap text-sm w-full resize-none min-h-96 bg-gray-50 dark:bg-slate-700 p-4 rounded-lg max-h-96 overflow-y-auto text-gray-800 dark:text-gray-200 focus:outline-none focus:ring-2 focus:ring-blue-500"
                   ></textarea>
                 )}
+                <div>
+                  <Button  asChild>
+                    <Link target="_blank" href={`mailto:${formData.account.bankName}?subject=Complaint%for%${formData.scamType}&body=${editableContent?.bank_complaint_email}`}>
+                    Send Email to bank
+                    </Link>
+                  </Button>
+
                 <Button
                   className="w-full mt-4"
+                  size="icon"
+                  variant="outline"
                   onClick={() =>
                     handleCopyToClipboard(editableContent?.bank_complaint_email)
                   }
@@ -783,8 +793,9 @@ export default function ReclaimMePage() {
                     .startsWith("not applicable")}
                 >
                   <Copy />
-                  Copy Edited Email
                 </Button>
+
+                </div>
               </CardContent>
             </Card>
           </div>
