@@ -155,9 +155,9 @@ export default function ReclaimMePage() {
     account: { bankName: "", accountNumber: "" },
     beneficiary: { name: "", bank: "", account: "" },
   };
-
   const [formData, setFormData] = useState<FormData>(initialFormData);
   const [currentStage, setCurrentStage] = useState<
+    | "guide"
     | "form"
     | "generatingAI"
     | "savingReport"
@@ -174,6 +174,9 @@ export default function ReclaimMePage() {
   // Refs for editable text areas
   const policeReportRef = useRef<HTMLTextAreaElement>(null);
   const bankComplaintRef = useRef<HTMLTextAreaElement>(null); // Corrected ref type for textarea
+  useState(() => {
+    setCurrentStage("guide");
+  });
 
   //bank Emails
   const banks = [
@@ -656,6 +659,14 @@ export default function ReclaimMePage() {
     );
   }
 
+  if (currentStage === "guide") {
+    return (
+      <div>
+        Hello <Button onClick={() => setCurrentStage("form")}>Start</Button>
+      </div>
+    );
+  }
+
   // Display Documents State UI
   if (currentStage === "displayDocs" && displayDocs) {
     return (
@@ -776,7 +787,7 @@ export default function ReclaimMePage() {
                   <Button asChild className="w-full">
                     <Link
                       target="_blank"
-                      href={`mailto:${formData.account.bankName}?subject=Complaint%for%${formData.scamType}&body=${editableContent?.bank_complaint_email}`}
+                      href={`mailto:${formData.account.bankName}?subject=Bank Complaints For%${formData.scamType}`}
                     >
                       Send Email to bank
                     </Link>
