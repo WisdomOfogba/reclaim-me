@@ -767,7 +767,7 @@ export default function ReportsList() {
               <p className="text-gray-500 dark:text-gray-400">
                 No reports found matching your criteria.
               </p>
-              <Link href="/dashboard/reports/new" passHref legacyBehavior>
+              <Link href="/dashboard/reports/new" passHref>
                 <Button className="mt-6" variant="default">
                   File Your First Report
                 </Button>
