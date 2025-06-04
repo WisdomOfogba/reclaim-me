@@ -33,7 +33,6 @@ export async function uploadPDF({
           use_filename: true,
           folder: joinFolder(`${email}-${name}.pdf`),
           type: "upload",
-          async: true,
           format: "pdf",
           resource_type: "raw",
         },
@@ -49,8 +48,8 @@ export async function uploadPDF({
       .end(file);
   });
 
-  console.log(upload.url);
+  // console.log(upload, upload.url);
   return {
-    url: upload.url,
+    url: upload.secure_url,
   };
 }
