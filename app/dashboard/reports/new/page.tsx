@@ -661,14 +661,14 @@ export default function ReclaimMePage() {
 
   if (currentStage === "guide") {
     return (
-    <div className="p-6 bg-white rounded-xl shadow-md space-y-4 mx-auto">
-      <h2 className="text-2xl font-semibold text-gray-800">Form Filling Guide</h2>
+    <div className="p-6 max-w-2xl bg-white dark:bg-grad-back dark:text-white rounded-xl shadow-md space-y-4 mx-auto">
+      <h2 className="text-2xl font-semibold text-gray-800 dark:text-white">Form Filling Guide</h2>
 
-      <p className="text-gray-600">
+      <p className="text-gray-600 dark:text-white">
         Please follow the steps below to correctly fill out the form for generating a police report and bank notification email:
       </p>
 
-      <ul className="list-disc list-inside text-gray-700 space-y-2">
+      <ul className="list-disc list-inside text-gray-700 dark:text-white space-y-2">
         <li><strong>Full Name:</strong> Enter your legal name as it appears on your official documents.</li>
         <li><strong>Email Address:</strong> Provide an active email address. This will be used for bank communications.</li>
         <li><strong>Phone Number:</strong> Include a valid contact number for follow-up if necessary.</li>
