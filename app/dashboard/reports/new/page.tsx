@@ -670,11 +670,13 @@ export default function ReclaimMePage() {
 
       <ul className="list-disc list-inside text-gray-700 dark:text-white space-y-2">
         <li><strong>Full Name:</strong> Enter your legal name as it appears on your official documents.</li>
-        <li><strong>Email Address:</strong> Provide an active email address. This will be used for bank communications.</li>
         <li><strong>Phone Number:</strong> Include a valid contact number for follow-up if necessary.</li>
-        <li><strong>Incident Description:</strong> Briefly explain the event (e.g., lost phone, fraud, theft) that requires a police report.</li>
+        <li><strong>Email Address:</strong> Provide an active email address. This will be used for bank communications.</li>
+        <li><strong>Address of Incident:</strong> Provide the address or landmark where the incident occurred.</li>
         <li><strong>Date and Time of Incident:</strong> Be as accurate as possible.</li>
-        <li><strong>Location of Incident:</strong> Provide the address or landmark where the incident occurred.</li>
+        <li><strong>Type of Scam:</strong> Select The type of scam encounterd. if not included choose other </li>
+        <li><strong>What Happened:</strong> Briefly explain the event (e.g., lost phone, fraud, theft) that requires a police report.</li>
+        <li><strong>Financial Informations:</strong> Add the total amount lost, currency and payment method </li>
         <li><strong>Bank Details:</strong> Select or enter the name of your bank and the account involved, if relevant.</li>
         <li><strong>Additional Notes:</strong> Include any extra details that might be helpful in the report.</li>
       </ul>
