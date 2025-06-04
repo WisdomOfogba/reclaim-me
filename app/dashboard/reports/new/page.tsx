@@ -155,9 +155,9 @@ export default function ReclaimMePage() {
     account: { bankName: "", accountNumber: "" },
     beneficiary: { name: "", bank: "", account: "" },
   };
-
   const [formData, setFormData] = useState<FormData>(initialFormData);
   const [currentStage, setCurrentStage] = useState<
+    | "guide"
     | "form"
     | "generatingAI"
     | "savingReport"
@@ -174,6 +174,9 @@ export default function ReclaimMePage() {
   // Refs for editable text areas
   const policeReportRef = useRef<HTMLTextAreaElement>(null);
   const bankComplaintRef = useRef<HTMLTextAreaElement>(null); // Corrected ref type for textarea
+  useState(() => {
+    setCurrentStage("guide");
+  });
 
   //bank Emails
   // TODO: Fix this shit
@@ -657,6 +660,60 @@ export default function ReclaimMePage() {
     );
   }
 
+  if (currentStage === "guide") {
+    return (
+      <div className="p-6 max-w-2xl bg-white dark:bg-grad-back dark:text-white rounded-xl shadow-md space-y-4 mx-auto">
+        <h2 className="text-2xl font-semibold text-gray-800 dark:text-white">
+          Form Filling Guide
+        </h2>
+
+        <p className="text-gray-600 dark:text-white">
+          Please follow the steps below to correctly fill out the form for
+          generating a police report and bank notification email:
+        </p>
+
+        <ul className="list-disc list-inside text-gray-700 dark:text-white space-y-2">
+          <li>
+            <strong>Full Name:</strong> Enter your legal name as it appears on
+            your official documents.
+          </li>
+          <li>
+            <strong>Email Address:</strong> Provide an active email address.
+            This will be used for bank communications.
+          </li>
+          <li>
+            <strong>Phone Number:</strong> Include a valid contact number for
+            follow-up if necessary.
+          </li>
+          <li>
+            <strong>Incident Description:</strong> Briefly explain the event
+            (e.g., lost phone, fraud, theft) that requires a police report.
+          </li>
+          <li>
+            <strong>Date and Time of Incident:</strong> Be as accurate as
+            possible.
+          </li>
+          <li>
+            <strong>Location of Incident:</strong> Provide the address or
+            landmark where the incident occurred.
+          </li>
+          <li>
+            <strong>Bank Details:</strong> Select or enter the name of your bank
+            and the account involved, if relevant.
+          </li>
+          <li>
+            <strong>Additional Notes:</strong> Include any extra details that
+            might be helpful in the report.
+          </li>
+        </ul>
+
+        <div className="pt-4">
+          <Button onClick={() => setCurrentStage("form")}>Start</Button>
+        </div>
+      </div>
+    );
+  }
+
   // Display Documents State UI
   if (currentStage === "displayDocs" && displayDocs) {
     return (
@@ -773,18 +830,18 @@ export default function ReclaimMePage() {
                     className="whitespace-pre-wrap text-sm w-full resize-none min-h-96 bg-gray-50 dark:bg-slate-700 p-4 rounded-lg max-h-96 overflow-y-auto text-gray-800 dark:text-gray-200 focus:outline-none focus:ring-2 focus:ring-blue-500"
                   ></textarea>
                 )}
-                <div>
-                  <Button asChild>
+
+                <div className="flex flex-row w-full gap-2 items-center mt-4">
+                  <Button asChild className="w-full">
                     <Link
                       target="_blank"
-                      href={`mailto:${formData.account.bankName}?subject=Complaint%for%${formData.scamType}&body=${editableContent?.bank_complaint_email}`}
+                      href={`mailto:${formData.account.bankName}?subject=Bank Complaints For ${formData.scamType}`}
                     >
                       Send Email to bank
                     </Link>
                   </Button>
 
                   <Button
-                    className="w-full mt-4"
                     size="icon"
                     variant="outline"
                     onClick={() =>
