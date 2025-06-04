@@ -26,7 +26,7 @@ export function DashboardView({ children }: { children: React.ReactNode }) {
           <ThemeToggle />
         </header>
 
-        <main className="flex-1 space-y-4 p-4 md:p-8 pt-6 slate-50 dark:bg-slate-950">
+        <main className="flex-1 space-y-4 md:p-4 pt-6 slate-50 dark:bg-slate-950">
           {children}
         </main>
       </SidebarInset>
