@@ -684,6 +684,7 @@ export default function ReclaimMePage() {
         <li><strong>Bank Details:</strong> Select or enter the name of your bank and the account involved, if relevant.</li>
         <li><strong>Additional Notes:</strong> Include any extra details that might be helpful in the report.</li>
       </ul>
+      
 
         <div className="pt-4">
           <Button onClick={() => setCurrentStage("form")}>Start</Button>
@@ -834,6 +835,7 @@ export default function ReclaimMePage() {
                     <Copy />
                   </Button>
                 </div>
+                <div className="mt-4">Copy and paste this improved email into your mail client and send directly using the button above.</div>
               </CardContent>
             </Card>
           </div>
