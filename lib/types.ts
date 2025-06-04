@@ -33,3 +33,17 @@ export type ScamReportData = {
     account: string;
   };
 };
+
+export type ApiReport = {
+  id: number;
+  scamType: string | null;
+  status: string | null;
+  incidentDate?: string | null;
+  createdAt?: string | null;
+  pdfLink: string | null; // Assuming this is optional
+  // priority?: string | null; // Uncomment if priority exists
+};
+
+export type ApiReport$1 = Omit<ApiReport, "pdfLink"> & {
+  pdfUrl: string | null;
+};

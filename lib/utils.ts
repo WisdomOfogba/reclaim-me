@@ -239,3 +239,12 @@ Email: sarah.williams@email.com`,
 ];
 
 export const noop = () => {};
+
+export function downloadPDF(pdfLink: string | null, name: string) {
+  if (pdfLink) {
+    const link = document.createElement("a");
+    link.href = pdfLink;
+    link.download = name;
+    link.click();
+  }
+}

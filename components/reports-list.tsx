@@ -40,6 +40,7 @@ import {
   Check,
 } from "lucide-react";
 import Link from "next/link";
+import { downloadPDF } from "@/lib/utils";
 // import { ComplaintObj } from "@/lib/types"; // We'll define ComplaintDisplay based on schema
 // import { getPriorityColor, getStatusColor, complaints as staticComplaints } from "@/lib/utils"; // Will use fetched data
 
@@ -48,7 +49,7 @@ import Link from "next/link";
 interface ComplaintDisplay {
   id: number;
   formattedId: string;
-  name: string | null; // Victim's name
+  name: string; // Victim's name
   phone: string;
   email: string;
   address: string;
@@ -72,6 +73,7 @@ interface ComplaintDisplay {
   createdAt: string; // ISO string from DB
   updatedAt: string; // ISO string from DB
 
+  pdfLink: string | null;
   // Fields from your static data that are not in the current schema
   // We'll handle these gracefully or you can add them to your schema
   // location?: string | null; // Example: could be derived from address
@@ -113,7 +115,9 @@ const getStatusColor = (status: string | null) => {
     default:
       return "bg-gray-100 text-gray-800 dark:bg-gray-700 dark:text-gray-100";
   }
-} */ export default function ReportsList() {
+} */
+
+export default function ReportsList() {
   // Changed component name to PascalCase
   const [allComplaints, setAllComplaints] = useState<ComplaintDisplay[]>([]);
   const [searchTerm, setSearchTerm] = useState("");
@@ -141,8 +145,8 @@ const getStatusColor = (status: string | null) => {
   };
 
   const handleDownload = () => {
-    alert("download button clicked!")
-  }
+    alert("download button clicked!");
+  };
 
   // Pagination state
   const [currentPage, setCurrentPage] = useState(1);
@@ -362,379 +366,396 @@ const getStatusColor = (status: string | null) => {
                     </p>
                     <p>Last Updated: {complaint.updatedAt}</p>
                   </div>
-                  <Dialog>
-                    <DialogTrigger asChild>
-                      <Button
-                        variant="outline"
-                        size="sm"
-                        className="dark:text-gray-300 dark:border-gray-600 dark:hover:bg-slate-700"
-                        onClick={() => setSelectedComplaint(complaint)}
-                      >
-                        <Eye className="mr-2 h-4 w-4" /> View Details
-                      </Button>
-                    </DialogTrigger>
-                    {selectedComplaint &&
-                      selectedComplaint.id === complaint.id && (
-                        <DialogContent className="min-w-[calc(100vw-2rem)] sm:min-w-fit sm:w-4/5 max-w-4xl mx-auto bg-white dark:bg-slate-900 p-0 max-h-[90vh] flex flex-col">
-                          <DialogHeader className="p-6 pb-4 border-b dark:border-slate-700 sticky top-0 bg-white dark:bg-slate-900 z-10">
-                            <DialogTitle className="flex items-center justify-between text-xl text-gray-900 dark:text-gray-100">
-                              <span className="truncate max-w-[calc(100%-150px)]">
-                                Report - {selectedComplaint.formattedId}
-                              </span>
-                              <div className="flex gap-2">
-                                {/* <Badge className={getPriorityColor(selectedComplaint.priority || "Normal")}>{selectedComplaint.priority || "Normal"}</Badge> */}
-                                <Badge
-                                  className={getStatusColor(
-                                    selectedComplaint.status
-                                  )}
-                                >
-                                  {selectedComplaint.status}
-                                </Badge>
-                              </div>
-                            </DialogTitle>
-                            <DialogDescription className="text-gray-600 dark:text-gray-400">
-                              {selectedComplaint.scamType} - Submitted on{" "}
-                              {new Date(
-                                selectedComplaint.createdAt
-                              ).toLocaleDateString()}
-                            </DialogDescription>
-                          </DialogHeader>
+                  <div className="flex gap-x-2.5">
+                    <Button
+                      variant="outline"
+                      // size="sm"
+                      className="p-5 dark:text-gray-300 dark:border-gray-600 dark:hover:bg-slate-700"
+                      onClick={() => {
+                        downloadPDF(complaint.pdfLink, complaint.name!);
+                      }}
+                    >
+                      <Download /> Download PDF
+                    </Button>
 
-                          <div className="overflow-y-auto flex-grow p-6">
-                            <Tabs defaultValue="overview" className="w-full">
-                              <TabsList className="grid w-full grid-cols-2 md:grid-cols-4 gap-2 bg-gray-100 h-auto dark:bg-slate-800 p-1 rounded-md mb-4">
-                                {[
-                                  "overview",
-                                  "victimScammerInfo",
-                                  "aiDocuments",
-                                  "actions",
-                                ].map((tab) => (
-                                  <TabsTrigger
-                                    key={tab}
-                                    value={tab}
-                                    className="p-2 text-xs sm:text-sm text-gray-700 dark:text-gray-300 data-[state=active]:bg-blue-500 data-[state=active]:text-white dark:data-[state=active]:bg-blue-600 rounded-sm transition-colors"
+                    <Dialog>
+                      <DialogTrigger asChild>
+                        <Button
+                          variant="outline"
+                          // size="sm"
+                          className="p-5 dark:text-gray-300 dark:border-gray-600 dark:hover:bg-slate-700"
+                          onClick={() => setSelectedComplaint(complaint)}
+                        >
+                          <Eye className="mr-2 h-4 w-4" /> View Details
+                        </Button>
+                      </DialogTrigger>
+                      {selectedComplaint &&
+                        selectedComplaint.id === complaint.id && (
+                          <DialogContent className="min-w-[calc(100vw-2rem)] sm:min-w-fit sm:w-4/5 max-w-4xl mx-auto bg-white dark:bg-slate-900 p-0 max-h-[90vh] flex flex-col">
+                            <DialogHeader className="p-6 pb-4 border-b dark:border-slate-700 sticky top-0 bg-white dark:bg-slate-900 z-10">
+                              <DialogTitle className="flex items-center justify-between text-xl text-gray-900 dark:text-gray-100">
+                                <span className="truncate max-w-[calc(100%-150px)]">
+                                  Report - {selectedComplaint.formattedId}
+                                </span>
+                                <div className="flex gap-2">
+                                  {/* <Badge className={getPriorityColor(selectedComplaint.priority || "Normal")}>{selectedComplaint.priority || "Normal"}</Badge> */}
+                                  <Badge
+                                    className={getStatusColor(
+                                      selectedComplaint.status
+                                    )}
                                   >
-                                    {tab
-                                      .replace(/([A-Z])/g, " $1")
-                                      .replace(/^./, (str) =>
-                                        str.toUpperCase()
-                                      )}
-                                  </TabsTrigger>
-                                ))}
-                              </TabsList>
+                                    {selectedComplaint.status}
+                                  </Badge>
+                                </div>
+                              </DialogTitle>
+                              <DialogDescription className="text-gray-600 dark:text-gray-400">
+                                {selectedComplaint.scamType} - Submitted on{" "}
+                                {new Date(
+                                  selectedComplaint.createdAt
+                                ).toLocaleDateString()}
+                              </DialogDescription>
+                            </DialogHeader>
 
-                              <TabsContent
-                                value="overview"
-                                className="space-y-4"
-                              >
-                                <Card className="bg-slate-50 dark:bg-slate-800/50">
-                                  <CardHeader>
-                                    <CardTitle className="text-base dark:text-gray-200">
-                                      Incident Details
-                                    </CardTitle>
-                                  </CardHeader>
-                                  <CardContent className="space-y-3 text-sm">
-                                    <div className="grid grid-cols-1 sm:grid-cols-2 gap-x-4 gap-y-2">
-                                      <p>
-                                        <strong className="dark:text-gray-300">
-                                          Incident Date:
-                                        </strong>{" "}
-                                        <span className="dark:text-gray-400">
-                                          {selectedComplaint.incidentDate}
-                                        </span>
-                                      </p>
-                                      <p>
-                                        <strong className="dark:text-gray-300">
-                                          Scam Type:
-                                        </strong>{" "}
-                                        <span className="dark:text-gray-400">
-                                          {selectedComplaint.scamType}
-                                        </span>
-                                      </p>
-                                      {selectedComplaint.amountLost && (
-                                        <p>
-                                          <strong className="dark:text-gray-300">
-                                            Amount Lost:
-                                          </strong>{" "}
-                                          <span className="dark:text-gray-400">
-                                            {selectedComplaint.currency}{" "}
-                                            {selectedComplaint.amountLost.toLocaleString()}
-                                          </span>
-                                        </p>
-                                      )}
-                                      {selectedComplaint.paymentMethod && (
-                                        <p>
-                                          <strong className="dark:text-gray-300">
-                                            Payment Method:
-                                          </strong>{" "}
-                                          <span className="dark:text-gray-400">
-                                            {selectedComplaint.paymentMethod}
-                                          </span>
-                                        </p>
-                                      )}
-                                    </div>
-                                    <div>
-                                      <strong className="dark:text-gray-300">
-                                        Description:
-                                      </strong>{" "}
-                                      <p className="text-gray-600 dark:text-gray-400 mt-1 whitespace-pre-wrap">
-                                        {selectedComplaint.description}
-                                      </p>
-                                    </div>
-                                  </CardContent>
-                                </Card>
-                              </TabsContent>
+                            <div className="overflow-y-auto flex-grow p-6">
+                              <Tabs defaultValue="overview" className="w-full">
+                                <TabsList className="grid w-full grid-cols-2 md:grid-cols-4 gap-2 bg-gray-100 h-auto dark:bg-slate-800 p-1 rounded-md mb-4">
+                                  {[
+                                    "overview",
+                                    "victimScammerInfo",
+                                    "aiDocuments",
+                                    "actions",
+                                  ].map((tab) => (
+                                    <TabsTrigger
+                                      key={tab}
+                                      value={tab}
+                                      className="p-2 text-xs sm:text-sm text-gray-700 dark:text-gray-300 data-[state=active]:bg-blue-500 data-[state=active]:text-white dark:data-[state=active]:bg-blue-600 rounded-sm transition-colors"
+                                    >
+                                      {tab
+                                        .replace(/([A-Z])/g, " $1")
+                                        .replace(/^./, (str) =>
+                                          str.toUpperCase()
+                                        )}
+                                    </TabsTrigger>
+                                  ))}
+                                </TabsList>
 
-                              <TabsContent
-                                value="victimScammerInfo"
-                                className="space-y-4"
-                              >
-                                <Card className="bg-slate-50 dark:bg-slate-800/50">
-                                  <CardHeader>
-                                    <CardTitle className="text-base dark:text-gray-200">
-                                      Victim Information
-                                    </CardTitle>
-                                  </CardHeader>
-                                  <CardContent className="space-y-1 text-sm">
-                                    <p>
-                                      <strong className="dark:text-gray-300">
-                                        Name:
-                                      </strong>{" "}
-                                      <span className="dark:text-gray-400">
-                                        {selectedComplaint.name}
-                                      </span>
-                                    </p>
-                                    <p>
-                                      <strong className="dark:text-gray-300">
-                                        Email:
-                                      </strong>{" "}
-                                      <span className="dark:text-gray-400">
-                                        {selectedComplaint.email}
-                                      </span>
-                                    </p>
-                                    <p>
-                                      <strong className="dark:text-gray-300">
-                                        Phone:
-                                      </strong>{" "}
-                                      <span className="dark:text-gray-400">
-                                        {selectedComplaint.phone}
-                                      </span>
-                                    </p>
-                                    <p>
-                                      <strong className="dark:text-gray-300">
-                                        Address:
-                                      </strong>{" "}
-                                      <span className="dark:text-gray-400">
-                                        {selectedComplaint.address}
-                                      </span>
-                                    </p>
-                                  </CardContent>
-                                </Card>
-                                {selectedComplaint.scammerInfo &&
-                                  (selectedComplaint.scammerInfo.name ||
-                                    selectedComplaint.scammerInfo.bank ||
-                                    selectedComplaint.scammerInfo.account) && (
-                                    <Card className="bg-slate-50 dark:bg-slate-800/50">
-                                      <CardHeader>
-                                        <CardTitle className="text-base dark:text-gray-200">
-                                          Scammer Information (If Provided)
-                                        </CardTitle>
-                                      </CardHeader>
-                                      <CardContent className="space-y-1 text-sm">
-                                        {selectedComplaint.scammerInfo.name && (
-                                          <p>
-                                            <strong className="dark:text-gray-300">
-                                              Name:
-                                            </strong>{" "}
-                                            <span className="dark:text-gray-400">
-                                              {
-                                                selectedComplaint.scammerInfo
-                                                  .name
-                                              }
-                                            </span>
-                                          </p>
-                                        )}
-                                        {selectedComplaint.scammerInfo.bank && (
-                                          <p>
-                                            <strong className="dark:text-gray-300">
-                                              Bank:
-                                            </strong>{" "}
-                                            <span className="dark:text-gray-400">
-                                              {
-                                                selectedComplaint.scammerInfo
-                                                  .bank
-                                              }
-                                            </span>
-                                          </p>
-                                        )}
-                                        {selectedComplaint.scammerInfo
-                                          .account && (
-                                          <p>
-                                            <strong className="dark:text-gray-300">
-                                              Account:
-                                            </strong>{" "}
-                                            <span className="dark:text-gray-400">
-                                              {
-                                                selectedComplaint.scammerInfo
-                                                  .account
-                                              }
-                                            </span>
-                                          </p>
-                                        )}
-                                      </CardContent>
-                                    </Card>
-                                  )}
-                              </TabsContent>
-
-                              <TabsContent
-                                value="aiDocuments"
-                                className="space-y-4"
-                              >
-                                {selectedComplaint.aiConsolingMessage && (
+                                <TabsContent
+                                  value="overview"
+                                  className="space-y-4"
+                                >
                                   <Card className="bg-slate-50 dark:bg-slate-800/50">
                                     <CardHeader>
                                       <CardTitle className="text-base dark:text-gray-200">
-                                        AI Consoling Message
+                                        Incident Details
                                       </CardTitle>
                                     </CardHeader>
-                                    <CardContent>
-                                      <p className="text-sm dark:text-gray-400 whitespace-pre-wrap">
-                                        {selectedComplaint.aiConsolingMessage}
+                                    <CardContent className="space-y-3 text-sm">
+                                      <div className="grid grid-cols-1 sm:grid-cols-2 gap-x-4 gap-y-2">
+                                        <p>
+                                          <strong className="dark:text-gray-300">
+                                            Incident Date:
+                                          </strong>{" "}
+                                          <span className="dark:text-gray-400">
+                                            {selectedComplaint.incidentDate}
+                                          </span>
+                                        </p>
+                                        <p>
+                                          <strong className="dark:text-gray-300">
+                                            Scam Type:
+                                          </strong>{" "}
+                                          <span className="dark:text-gray-400">
+                                            {selectedComplaint.scamType}
+                                          </span>
+                                        </p>
+                                        {selectedComplaint.amountLost && (
+                                          <p>
+                                            <strong className="dark:text-gray-300">
+                                              Amount Lost:
+                                            </strong>{" "}
+                                            <span className="dark:text-gray-400">
+                                              {selectedComplaint.currency}{" "}
+                                              {selectedComplaint.amountLost.toLocaleString()}
+                                            </span>
+                                          </p>
+                                        )}
+                                        {selectedComplaint.paymentMethod && (
+                                          <p>
+                                            <strong className="dark:text-gray-300">
+                                              Payment Method:
+                                            </strong>{" "}
+                                            <span className="dark:text-gray-400">
+                                              {selectedComplaint.paymentMethod}
+                                            </span>
+                                          </p>
+                                        )}
+                                      </div>
+                                      <div>
+                                        <strong className="dark:text-gray-300">
+                                          Description:
+                                        </strong>{" "}
+                                        <p className="text-gray-600 dark:text-gray-400 mt-1 whitespace-pre-wrap">
+                                          {selectedComplaint.description}
+                                        </p>
+                                      </div>
+                                    </CardContent>
+                                  </Card>
+                                </TabsContent>
+
+                                <TabsContent
+                                  value="victimScammerInfo"
+                                  className="space-y-4"
+                                >
+                                  <Card className="bg-slate-50 dark:bg-slate-800/50">
+                                    <CardHeader>
+                                      <CardTitle className="text-base dark:text-gray-200">
+                                        Victim Information
+                                      </CardTitle>
+                                    </CardHeader>
+                                    <CardContent className="space-y-1 text-sm">
+                                      <p>
+                                        <strong className="dark:text-gray-300">
+                                          Name:
+                                        </strong>{" "}
+                                        <span className="dark:text-gray-400">
+                                          {selectedComplaint.name}
+                                        </span>
+                                      </p>
+                                      <p>
+                                        <strong className="dark:text-gray-300">
+                                          Email:
+                                        </strong>{" "}
+                                        <span className="dark:text-gray-400">
+                                          {selectedComplaint.email}
+                                        </span>
+                                      </p>
+                                      <p>
+                                        <strong className="dark:text-gray-300">
+                                          Phone:
+                                        </strong>{" "}
+                                        <span className="dark:text-gray-400">
+                                          {selectedComplaint.phone}
+                                        </span>
+                                      </p>
+                                      <p>
+                                        <strong className="dark:text-gray-300">
+                                          Address:
+                                        </strong>{" "}
+                                        <span className="dark:text-gray-400">
+                                          {selectedComplaint.address}
+                                        </span>
                                       </p>
                                     </CardContent>
                                   </Card>
-                                )}
-                                {selectedComplaint.aiPoliceReportDraft && (
-                                  <Card className="bg-slate-50 dark:bg-slate-800/50">
-                                    <CardHeader className="flex justify-between items-center flex-row w-full">
-                                      <CardTitle className="text-base dark:text-gray-200">
-                                        AI Police Report Draft
-                                      </CardTitle>
+                                  {selectedComplaint.scammerInfo &&
+                                    (selectedComplaint.scammerInfo.name ||
+                                      selectedComplaint.scammerInfo.bank ||
+                                      selectedComplaint.scammerInfo
+                                        .account) && (
+                                      <Card className="bg-slate-50 dark:bg-slate-800/50">
+                                        <CardHeader>
+                                          <CardTitle className="text-base dark:text-gray-200">
+                                            Scammer Information (If Provided)
+                                          </CardTitle>
+                                        </CardHeader>
+                                        <CardContent className="space-y-1 text-sm">
+                                          {selectedComplaint.scammerInfo
+                                            .name && (
+                                            <p>
+                                              <strong className="dark:text-gray-300">
+                                                Name:
+                                              </strong>{" "}
+                                              <span className="dark:text-gray-400">
+                                                {
+                                                  selectedComplaint.scammerInfo
+                                                    .name
+                                                }
+                                              </span>
+                                            </p>
+                                          )}
+                                          {selectedComplaint.scammerInfo
+                                            .bank && (
+                                            <p>
+                                              <strong className="dark:text-gray-300">
+                                                Bank:
+                                              </strong>{" "}
+                                              <span className="dark:text-gray-400">
+                                                {
+                                                  selectedComplaint.scammerInfo
+                                                    .bank
+                                                }
+                                              </span>
+                                            </p>
+                                          )}
+                                          {selectedComplaint.scammerInfo
+                                            .account && (
+                                            <p>
+                                              <strong className="dark:text-gray-300">
+                                                Account:
+                                              </strong>{" "}
+                                              <span className="dark:text-gray-400">
+                                                {
+                                                  selectedComplaint.scammerInfo
+                                                    .account
+                                                }
+                                              </span>
+                                            </p>
+                                          )}
+                                        </CardContent>
+                                      </Card>
+                                    )}
+                                </TabsContent>
+
+                                <TabsContent
+                                  value="aiDocuments"
+                                  className="space-y-4"
+                                >
+                                  {selectedComplaint.aiConsolingMessage && (
+                                    <Card className="bg-slate-50 dark:bg-slate-800/50">
+                                      <CardHeader>
+                                        <CardTitle className="text-base dark:text-gray-200">
+                                          AI Consoling Message
+                                        </CardTitle>
+                                      </CardHeader>
+                                      <CardContent>
+                                        <p className="text-sm dark:text-gray-400 whitespace-pre-wrap">
+                                          {selectedComplaint.aiConsolingMessage}
+                                        </p>
+                                      </CardContent>
+                                    </Card>
+                                  )}
+                                  {selectedComplaint.aiPoliceReportDraft && (
+                                    <Card className="bg-slate-50 dark:bg-slate-800/50">
+                                      <CardHeader className="flex justify-between items-center flex-row w-full">
+                                        <CardTitle className="text-base dark:text-gray-200">
+                                          AI Police Report Draft
+                                        </CardTitle>
                                         <Button
                                           variant="outline"
-                                          onClick={() =>
-                                            handleDownload(
-                                            )
-                                          }
+                                          onClick={() => handleDownload()}
                                           size="icon"
                                         >
                                           <Download />
                                         </Button>
-                                    </CardHeader>
-                                    <CardContent>
-                                      <pre className="text-sm dark:text-gray-400 whitespace-pre-wrap max-h-60 overflow-y-auto">
-                                        {selectedComplaint.aiPoliceReportDraft}
-                                      </pre>
-                                    </CardContent>
-                                  </Card>
-                                )}
-                                {selectedComplaint.aiBankComplaintEmail && (
-                                  <Card className="bg-slate-50 dark:bg-slate-800/50">
-                                    <CardHeader className="flex justify-between items-center flex-row w-full">
-                                      <CardTitle className="text-base dark:text-gray-200">
-                                        AI Bank Complaint Email
-                                      </CardTitle>
-                                      {copied ? (
-                                        <Button variant="outline" size="icon">
-                                          <Check />
-                                        </Button>
-                                      ) : (
-                                        <Button
-                                          variant="outline"
-                                          onClick={() =>
-                                            handleCopy(
-                                              selectedComplaint.aiBankComplaintEmail ??
-                                                undefined
-                                            )
+                                      </CardHeader>
+                                      <CardContent>
+                                        <pre className="text-sm dark:text-gray-400 whitespace-pre-wrap max-h-60 overflow-y-auto">
+                                          {
+                                            selectedComplaint.aiPoliceReportDraft
                                           }
-                                          size="icon"
-                                        >
-                                          <Copy />
-                                        </Button>
-                                      )}
-                                    </CardHeader>
-                                    <CardContent>
-                                      <pre className="text-sm dark:text-gray-400 whitespace-pre-wrap max-h-60 overflow-y-auto">
-                                        {selectedComplaint.aiBankComplaintEmail}
-                                      </pre>
-                                    </CardContent>
-                                  </Card>
-                                )}
-                                {selectedComplaint.aiNextStepsChecklist && (
+                                        </pre>
+                                      </CardContent>
+                                    </Card>
+                                  )}
+                                  {selectedComplaint.aiBankComplaintEmail && (
+                                    <Card className="bg-slate-50 dark:bg-slate-800/50">
+                                      <CardHeader className="flex justify-between items-center flex-row w-full">
+                                        <CardTitle className="text-base dark:text-gray-200">
+                                          AI Bank Complaint Email
+                                        </CardTitle>
+                                        {copied ? (
+                                          <Button variant="outline" size="icon">
+                                            <Check />
+                                          </Button>
+                                        ) : (
+                                          <Button
+                                            variant="outline"
+                                            onClick={() =>
+                                              handleCopy(
+                                                selectedComplaint.aiBankComplaintEmail ??
+                                                  undefined
+                                              )
+                                            }
+                                            size="icon"
+                                          >
+                                            <Copy />
+                                          </Button>
+                                        )}
+                                      </CardHeader>
+                                      <CardContent>
+                                        <pre className="text-sm dark:text-gray-400 whitespace-pre-wrap max-h-60 overflow-y-auto">
+                                          {
+                                            selectedComplaint.aiBankComplaintEmail
+                                          }
+                                        </pre>
+                                      </CardContent>
+                                    </Card>
+                                  )}
+                                  {selectedComplaint.aiNextStepsChecklist && (
+                                    <Card className="bg-slate-50 dark:bg-slate-800/50">
+                                      <CardHeader>
+                                        <CardTitle className="text-base dark:text-gray-200">
+                                          AI Next Steps Checklist
+                                        </CardTitle>
+                                      </CardHeader>
+                                      <CardContent>
+                                        <ul className="list-disc pl-5 space-y-1 text-sm dark:text-gray-400">
+                                          {selectedComplaint.aiNextStepsChecklist
+                                            .split("\n")
+                                            .map(
+                                              (step, i) =>
+                                                step.trim() && (
+                                                  <li key={i}>{step}</li>
+                                                )
+                                            )}
+                                        </ul>
+                                      </CardContent>
+                                    </Card>
+                                  )}
+                                  {!selectedComplaint.aiConsolingMessage &&
+                                    !selectedComplaint.aiPoliceReportDraft && (
+                                      <p className="text-sm text-center text-gray-500 dark:text-gray-400 py-4">
+                                        No AI-generated documents available for
+                                        this report yet.
+                                      </p>
+                                    )}
+                                </TabsContent>
+
+                                <TabsContent
+                                  value="actions"
+                                  className="space-y-4"
+                                >
                                   <Card className="bg-slate-50 dark:bg-slate-800/50">
                                     <CardHeader>
                                       <CardTitle className="text-base dark:text-gray-200">
-                                        AI Next Steps Checklist
+                                        Manage Report
                                       </CardTitle>
                                     </CardHeader>
-                                    <CardContent>
-                                      <ul className="list-disc pl-5 space-y-1 text-sm dark:text-gray-400">
-                                        {selectedComplaint.aiNextStepsChecklist
-                                          .split("\n")
-                                          .map(
-                                            (step, i) =>
-                                              step.trim() && (
-                                                <li key={i}>{step}</li>
-                                              )
+                                    <CardContent className="space-y-2">
+                                      <div className="text-sm text-gray-600 dark:text-gray-400">
+                                        Current Status:{" "}
+                                        <Badge
+                                          className={getStatusColor(
+                                            selectedComplaint.status
                                           )}
-                                      </ul>
+                                        >
+                                          {selectedComplaint.status}
+                                        </Badge>
+                                      </div>
+                                      {/* Add buttons for Update Status, Add Note, etc. here */}
+                                      {/* These would typically trigger other dialogs or forms */}
+                                      <Button
+                                        variant="outline"
+                                        size="sm"
+                                        className="w-full dark:text-gray-300 dark:border-gray-600"
+                                      >
+                                        Update Status (Admin)
+                                      </Button>
+                                      <Button
+                                        variant="outline"
+                                        size="sm"
+                                        className="w-full dark:text-gray-300 dark:border-gray-600"
+                                      >
+                                        Add Internal Note (Admin)
+                                      </Button>
                                     </CardContent>
                                   </Card>
-                                )}
-                                {!selectedComplaint.aiConsolingMessage &&
-                                  !selectedComplaint.aiPoliceReportDraft && (
-                                    <p className="text-sm text-center text-gray-500 dark:text-gray-400 py-4">
-                                      No AI-generated documents available for
-                                      this report yet.
-                                    </p>
-                                  )}
-                              </TabsContent>
-
-                              <TabsContent
-                                value="actions"
-                                className="space-y-4"
-                              >
-                                <Card className="bg-slate-50 dark:bg-slate-800/50">
-                                  <CardHeader>
-                                    <CardTitle className="text-base dark:text-gray-200">
-                                      Manage Report
-                                    </CardTitle>
-                                  </CardHeader>
-                                  <CardContent className="space-y-2">
-                                    <div className="text-sm text-gray-600 dark:text-gray-400">
-                                      Current Status:{" "}
-                                      <Badge
-                                        className={getStatusColor(
-                                          selectedComplaint.status
-                                        )}
-                                      >
-                                        {selectedComplaint.status}
-                                      </Badge>
-                                    </div>
-                                    {/* Add buttons for Update Status, Add Note, etc. here */}
-                                    {/* These would typically trigger other dialogs or forms */}
-                                    <Button
-                                      variant="outline"
-                                      size="sm"
-                                      className="w-full dark:text-gray-300 dark:border-gray-600"
-                                    >
-                                      Update Status (Admin)
-                                    </Button>
-                                    <Button
-                                      variant="outline"
-                                      size="sm"
-                                      className="w-full dark:text-gray-300 dark:border-gray-600"
-                                    >
-                                      Add Internal Note (Admin)
-                                    </Button>
-                                  </CardContent>
-                                </Card>
-                              </TabsContent>
-                            </Tabs>
-                          </div>
-                        </DialogContent>
-                      )}
-                  </Dialog>
+                                </TabsContent>
+                              </Tabs>
+                            </div>
+                          </DialogContent>
+                        )}
+                    </Dialog>
+                  </div>
                 </div>
               </CardContent>
             </Card>

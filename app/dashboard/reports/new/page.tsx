@@ -31,6 +31,7 @@ import {
 } from "lucide-react";
 import { toast } from "sonner";
 import { generatePoliceReportPDF } from "@/components/pdf-generator1";
+import { downloadPDF } from "@/lib/utils";
 
 // DO NOT import generatePoliceReportPDF directly at the top level here.
 // It will be dynamically imported inside handleDownloadPoliceReportPDF to prevent SSR issues.
@@ -473,10 +474,7 @@ export default function ReclaimMePage() {
         reportId: savedReportId || 0, // Fallback to 0 if reportId is not set.
       });
 
-      const linkEl = document.createElement("a");
-      linkEl.href = url;
-      linkEl.download = `${name}.pdf`;
-      linkEl.click();
+      downloadPDF(url, `${name}.pdf`);
     } catch {
       toast.error("Failed to generate Police Report PDF");
       // alert("Failed to generate Police Report PDF. Please try again.");
