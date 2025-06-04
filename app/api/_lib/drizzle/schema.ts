@@ -29,6 +29,8 @@ export const users = pgTable(
     updatedAt: timestamp("updated_at", { mode: "date", withTimezone: true })
       .defaultNow()
       .notNull(),
+
+    hasBeenGuided: boolean("has_been_guided").default(false),
   },
   (table) => [index("users_email_index").on(table.email)]
 );

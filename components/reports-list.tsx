@@ -375,7 +375,8 @@ export default function ReportsList() {
                         downloadPDF(complaint.pdfLink, complaint.name!);
                       }}
                     >
-                      <Download /> Download PDF
+                      <Download />{" "}
+                      <span className="hidden fourf:inline">Download PDF</span>
                     </Button>
 
                     <Dialog>

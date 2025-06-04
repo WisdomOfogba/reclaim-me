@@ -179,6 +179,7 @@ export default function ReclaimMePage() {
   });
 
   //bank Emails
+  // TODO: Fix this shit
   const banks = [
     {
       bank: "Access Bank",
@@ -661,12 +662,15 @@ export default function ReclaimMePage() {
 
   if (currentStage === "guide") {
     return (
-    <div className="p-6 max-w-2xl bg-white dark:bg-grad-back dark:text-white rounded-xl shadow-md space-y-4 mx-auto">
-      <h2 className="text-2xl font-semibold text-gray-800 dark:text-white">Form Filling Guide</h2>
+      <div className="p-6 max-w-2xl bg-white dark:bg-grad-back dark:text-white rounded-xl shadow-md space-y-4 mx-auto">
+        <h2 className="text-2xl font-semibold text-gray-800 dark:text-white">
+          Form Filling Guide
+        </h2>
 
-      <p className="text-gray-600 dark:text-white">
-        Please follow the steps below to correctly fill out the form for generating a police report and bank notification email:
-      </p>
+        <p className="text-gray-600 dark:text-white">
+          Please follow the steps below to correctly fill out the form for
+          generating a police report and bank notification email:
+        </p>
 
       <ul className="list-disc list-inside text-gray-700 dark:text-white space-y-2">
         <li><strong>Full Name:</strong> Enter your legal name as it appears on your official documents.</li>
@@ -681,12 +685,10 @@ export default function ReclaimMePage() {
         <li><strong>Additional Notes:</strong> Include any extra details that might be helpful in the report.</li>
       </ul>
 
-      <div className="pt-4">
-        <Button onClick={() => setCurrentStage("form")}>
-          Start
-        </Button>
+        <div className="pt-4">
+          <Button onClick={() => setCurrentStage("form")}>Start</Button>
+        </div>
       </div>
-    </div>
     );
   }
 
@@ -806,11 +808,12 @@ export default function ReclaimMePage() {
                     className="whitespace-pre-wrap text-sm w-full resize-none min-h-96 bg-gray-50 dark:bg-slate-700 p-4 rounded-lg max-h-96 overflow-y-auto text-gray-800 dark:text-gray-200 focus:outline-none focus:ring-2 focus:ring-blue-500"
                   ></textarea>
                 )}
+
                 <div className="flex flex-row w-full gap-2 items-center mt-4">
                   <Button asChild className="w-full">
                     <Link
                       target="_blank"
-                      href={`mailto:${formData.account.bankName}?subject=Bank Complaints For%${formData.scamType}`}
+                      href={`mailto:${formData.account.bankName}?subject=Bank Complaints For ${formData.scamType}`}
                     >
                       Send Email to bank
                     </Link>

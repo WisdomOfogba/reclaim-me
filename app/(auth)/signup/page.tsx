@@ -1,5 +1,5 @@
 "use client";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import type React from "react";
 import {
   Card,
@@ -42,6 +42,12 @@ export default function SignUpPage() {
   const [errors, setErrors] = useState<Record<string, string>>({});
   const [isLoading, setIsLoading] = useState(false);
   const router = useRouter();
+
+  useEffect(() => {
+    const isGuided = localStorage.getItem("isGuided");
+    if (!isGuided || JSON.parse(isGuided) !== true) {
+    }
+  }, []);
 
   const validateForm = () => {
     const newErrors: Record<string, string> = {};
