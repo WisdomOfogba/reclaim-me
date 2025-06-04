@@ -1,9 +1,17 @@
-// components/pdf-generator.ts
+"use server";
+import { verifyToken } from "@/app/api/_lib/auth";
+import { uploadPDF } from "@/app/api/_lib/cloudinary";
+import { db } from "@/app/api/_lib/drizzle";
+import { complaints } from "@/app/api/_lib/drizzle/schema";
+import { eq } from "drizzle-orm";
+// components/pdf-generator1.ts
 
 // Import jsPDF and jspdf-autotable
 import { jsPDF } from "jspdf";
 import "jspdf-autotable"; // This extends the jsPDF prototype
 import type { UserOptions } from "jspdf-autotable"; // For typing autoTable options
+import { cookies } from "next/headers";
+import { redirect } from "next/navigation";
 
 // You'll need to decide how to handle fonts with jsPDF.
 // For standard fonts, jsPDF has built-in support.
@@ -254,5 +262,29 @@ export const generatePoliceReportPDF = async ({
   doc.text(splitNote, margin, y);
 
   // Final Save/Download
-  doc.save(`Police_Report_RM-${reportId.toString().padStart(6, "0")}.pdf`);
+  // doc.save(`Police_Report_RM-${reportId.toString().padStart(6, "0")}.pdf`);
+  const blob = doc.output("blob");
+
+  // Get the users email from his verified token
+  const token = (await cookies()).get("token");
+  if (!token) {
+    redirect("/signin");
+  }
+  const { email, id } = await verifyToken(token.value).catch(() => {
+    redirect("/signin");
+  });
+
+  const name = `Police_Report_RM-${reportId.toString().padStart(6, "0")}`;
+  const { url } = await uploadPDF({
+    name,
+    email,
+    file: Buffer.from(await blob.arrayBuffer()),
+  });
+
+  await db
+    .update(complaints)
+    .set({ pdfLink: url })
+    .where(eq(complaints.userId, id));
+
+  return { url, name };
 };

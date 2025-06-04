@@ -93,7 +93,7 @@ export async function POST(request: NextRequest) {
     }
     // console.log(restOfData);
 
-    const newComplaintData = {
+    const newComplaintData: typeof complaints._.inferInsert = {
       ...restOfData,
       userId,
       incidentDate: incidentDate, // Storing as string, as schema is timestamp(mode: 'string')

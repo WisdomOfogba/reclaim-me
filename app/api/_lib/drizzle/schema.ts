@@ -30,9 +30,7 @@ export const users = pgTable(
       .defaultNow()
       .notNull(),
   },
-  (table) => ({
-    emailIndex: index("users_email_index").on(table.email),
-  })
+  (table) => [index("users_email_index").on(table.email)]
 );
 
 // Complaints table
@@ -45,6 +43,7 @@ export const complaints = pgTable(
     phone: varchar("phone_number", { length: 20 }).notNull(),
     email: varchar("email_address", { length: 100 }).notNull(),
     address: varchar("address", { length: 255 }).notNull(),
+    pdfLink: text("pdf_link").default(""),
     scamType: varchar("scam_type", { length: 100 }).notNull(),
     incidentDate: timestamp("incident_date", {
       mode: "string",
@@ -78,12 +77,12 @@ export const complaints = pgTable(
       .defaultNow()
       .notNull(),
   },
-  (table) => ({
-    complaintNameIndex: index("complaints_name_index").on(table.name),
-    scamTypeIndex: index("complaints_scam_type_index").on(table.scamType),
-    statusIndex: index("complaints_status_index").on(table.status),
-    emailIndex: index("complaints_email_index").on(table.email), // Added index on email for faster lookups
-  })
+  (table) => [
+    index("complaints_name_index").on(table.name),
+    index("complaints_scam_type_index").on(table.scamType),
+    index("complaints_status_index").on(table.status),
+    index("complaints_email_index").on(table.email), // Added index on email for faster lookups
+  ]
 );
 
 // Tokens table

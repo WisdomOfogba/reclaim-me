@@ -30,6 +30,7 @@ import {
   Download,
 } from "lucide-react";
 import { toast } from "sonner";
+import { generatePoliceReportPDF } from "@/components/pdf-generator1";
 
 // DO NOT import generatePoliceReportPDF directly at the top level here.
 // It will be dynamically imported inside handleDownloadPoliceReportPDF to prevent SSR issues.
@@ -458,39 +459,42 @@ export default function ReclaimMePage() {
   const handleDownloadPoliceReportPDF = async () => {
     // Dynamically import pdf-generator only when the button is clicked (client-side).
     // This is crucial to prevent pdfmake from running on the server during build/prerendering.
-    const { generatePoliceReportPDF } = await import(
-      "@/components/pdf-generator1"
-    );
 
     if (!editableContent || !formData) {
-      alert("No content or form data available to generate PDF.");
+      // alert("No content or form data available to generate PDF.");
+      toast.error("No content or form data available to generate PDF.");
       return;
     }
 
     try {
-      await generatePoliceReportPDF({
+      const { url, name } = await generatePoliceReportPDF({
         formData,
         policeReport: editableContent.police_report_draft, // Use the currently editable content.
         reportId: savedReportId || 0, // Fallback to 0 if reportId is not set.
       });
+
+      const linkEl = document.createElement("a");
+      linkEl.href = url;
+      linkEl.download = `${name}.pdf`;
+      linkEl.click();
     } catch {
-      // console.error("Failed to generate Police Report PDF:", error);
-      alert("Failed to generate Police Report PDF. Please try again.");
+      toast.error("Failed to generate Police Report PDF");
+      // alert("Failed to generate Police Report PDF. Please try again.");
     }
   };
 
   // Handles copying content to the clipboard.
   const handleCopyToClipboard = (content: string | null | undefined) => {
     if (!content) {
-      alert("No content to copy.");
+      toast.info("No content to copy.");
       return;
     }
     navigator.clipboard
       .writeText(content)
-      .then(() => alert("Copied to clipboard!"))
+      .then(() => toast.success("Copied to clipboard!"))
       .catch(() => {
         // console.error("Failed to copy text: ", err);
-        alert("Failed to copy.");
+        toast.error("Failed to copy.");
       });
   };
 
