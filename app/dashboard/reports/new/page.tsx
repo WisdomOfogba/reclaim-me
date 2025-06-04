@@ -292,9 +292,7 @@ export default function ReclaimMePage() {
           beneficiary: { ...prev.beneficiary, [beneficiaryField]: value },
         }));
       } else {
-        const accountField = field.split(
-          "."
-        )[1] as keyof FormData["account"];
+        const accountField = field.split(".")[1] as keyof FormData["account"];
         setFormData((prev) => ({
           ...prev,
           account: { ...prev.account, [accountField]: value },
@@ -774,27 +772,31 @@ export default function ReclaimMePage() {
                     className="whitespace-pre-wrap text-sm w-full resize-none min-h-96 bg-gray-50 dark:bg-slate-700 p-4 rounded-lg max-h-96 overflow-y-auto text-gray-800 dark:text-gray-200 focus:outline-none focus:ring-2 focus:ring-blue-500"
                   ></textarea>
                 )}
-                <div>
-                  <Button  asChild>
-                    <Link target="_blank" href={`mailto:${formData.account.bankName}?subject=Complaint%for%${formData.scamType}&body=${editableContent?.bank_complaint_email}`}>
-                    Send Email to bank
+                <div className="flex flex-row w-full gap-2">
+                  <Button asChild className="w-full">
+                    <Link
+                      target="_blank"
+                      href={`mailto:${formData.account.bankName}?subject=Complaint%for%${formData.scamType}&body=${editableContent?.bank_complaint_email}`}
+                    >
+                      Send Email to bank
                     </Link>
                   </Button>
 
-                <Button
-                  className="w-full mt-4"
-                  size="icon"
-                  variant="outline"
-                  onClick={() =>
-                    handleCopyToClipboard(editableContent?.bank_complaint_email)
-                  }
-                  disabled={displayDocs.bank_complaint_email
-                    .toLowerCase()
-                    .startsWith("not applicable")}
-                >
-                  <Copy />
-                </Button>
-
+                  <Button
+                    className="w-full mt-4"
+                    size="icon"
+                    variant="outline"
+                    onClick={() =>
+                      handleCopyToClipboard(
+                        editableContent?.bank_complaint_email
+                      )
+                    }
+                    disabled={displayDocs.bank_complaint_email
+                      .toLowerCase()
+                      .startsWith("not applicable")}
+                  >
+                    <Copy />
+                  </Button>
                 </div>
               </CardContent>
             </Card>
@@ -1089,7 +1091,9 @@ export default function ReclaimMePage() {
                         </SelectTrigger>
                         <SelectContent className="bg-white dark:bg-slate-800 dark:text-slate-200">
                           {banks.map((bank, i) => (
-                            <SelectItem value={bank.email ?? ""} key={i}>{bank.bank}</SelectItem>
+                            <SelectItem value={bank.email ?? ""} key={i}>
+                              {bank.bank}
+                            </SelectItem>
                           ))}
                         </SelectContent>
                       </Select>
@@ -1109,7 +1113,10 @@ export default function ReclaimMePage() {
                         max={10}
                         min={10}
                         onChange={(e) =>
-                          updateFormData("account.accountNumber", e.target.value)
+                          updateFormData(
+                            "account.accountNumber",
+                            e.target.value
+                          )
                         }
                         placeholder="1234567890"
                       />
