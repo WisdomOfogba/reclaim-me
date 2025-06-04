@@ -772,7 +772,7 @@ export default function ReclaimMePage() {
                     className="whitespace-pre-wrap text-sm w-full resize-none min-h-96 bg-gray-50 dark:bg-slate-700 p-4 rounded-lg max-h-96 overflow-y-auto text-gray-800 dark:text-gray-200 focus:outline-none focus:ring-2 focus:ring-blue-500"
                   ></textarea>
                 )}
-                <div className="flex flex-row w-full gap-2">
+                <div className="flex flex-row w-full gap-2 items-center mt-4">
                   <Button asChild className="w-full">
                     <Link
                       target="_blank"
@@ -783,7 +783,6 @@ export default function ReclaimMePage() {
                   </Button>
 
                   <Button
-                    className="w-full mt-4"
                     size="icon"
                     variant="outline"
                     onClick={() =>
